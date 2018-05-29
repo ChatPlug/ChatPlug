@@ -2,7 +2,7 @@ from .threadbridge import ThreadBridge
 from fbchat.models import *
 from pyrogram.api import functions
 from pyrogram.api import types
-
+from .fbmessagehandler import FBMessageHandler
 from .models import *
 
 
@@ -23,10 +23,7 @@ class Bridge:
         """Handles facebook messages and sends them to corresponding telegram chat"""
         thread = self.getBridgeForFacebookId(thread_id).thread
         if thread is not None:
-            self.networkClient.telegramClient.send_message(
-                thread.telegramChatId,
-                message_object.text
-            )
+            FBMessageHandler(author_id, message_object, thread, thread_type, self.networkClient)
 
     def registerThread(self, thread):
         """Registers FacegramBridge to stack"""
