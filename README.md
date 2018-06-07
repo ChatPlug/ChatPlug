@@ -2,10 +2,10 @@
   <img src="./facegram_logo.png" width="250" height="250" alt="Logo">
 </p>
 
-# facegram
+# :bridge_at_night: facegram
 FacegramBridge is and simple and extensible Facebook - Telegram bridge
 
-# Requirements
+# :ballot_box_with_check:	 Requirements
 To use this you will need:
 - Two Telegram accounts
    - Your main telegram account
@@ -14,6 +14,9 @@ To use this you will need:
 - Your Facebook account
 
 
-# Starting
+# :electric_plug: Starting
 To start run `pip install` and `python3 main.py`. It will create all the nessesary config files. To import conversation, add your facebook conversation id to `conversations.json`. Facegram will generate the rest for you (Telegram chat).
 
+# :warning: Disclamer
+
+We do not guarantee that this bridge will work correctly. We are not responsible for getting banned on Facebook and/or Telegram. Use at your own discretion.
