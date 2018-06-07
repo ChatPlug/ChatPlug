@@ -1,5 +1,5 @@
 
-![./facegram_logo.png](Logo)
+![Logo](./facegram_logo.png)
 
 # facegram
 FacegramBridge is and simple and extensible Facebook-Telegram bridge
