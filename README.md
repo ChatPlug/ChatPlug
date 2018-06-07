@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="./facegram_logo.png" width="250" height="250" alt="Logo">
+</p>
+
 # facegram
 FacegramBridge is and simple and extensible Facebook-Telegram bridge
 
