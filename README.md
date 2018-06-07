@@ -3,7 +3,7 @@
 </p>
 
 # facegram
-FacegramBridge is and simple and extensible Facebook-Telegram bridge
+FacegramBridge is and simple and extensible Facebook - Telegram bridge
 
 # Requirements
 To use this you will need:
