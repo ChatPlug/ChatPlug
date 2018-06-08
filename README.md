@@ -3,7 +3,7 @@
 </p>
 
 # :bridge_at_night: facegram
-FacegramBridge is and simple and extensible Facebook - Telegram bridge. Reclaim your privacy now, don't let Zuckbot spy on you  and drain your battery. :battery: :moneybag:
+FacegramBridge is and simple and extensible Facebook (Messenger) - Telegram bridge. Reclaim your privacy now, don't let Zuckbot spy on you  and drain your battery. :battery: :moneybag:
 <p align="center">
   <img src="https://media.giphy.com/media/dSdvPrKU0w8WGo4c9L/giphy.gif">
 </p>
@@ -14,6 +14,7 @@ FacegramBridge is and simple and extensible Facebook - Telegram bridge. Reclaim 
 </p>
 
 To use this you will need:
+- Python 3
 - Two Telegram accounts
    - Your main telegram account
    - A secondary account, which will be used by the bridge (unfortunately you will also need another phone number) 
@@ -22,8 +23,20 @@ To use this you will need:
 
 
 # :electric_plug: Getting started
-To start run `pip install` and `python3 main.py`. It will create all the nessesary config files. Fill necessary config information in generated `config.ini` file. 
-To import conversation, simply message your second telegram account account with `/help` to list and import your recent facebook threads. However, every incoming message from facebook will register its sender in Facegram, so you don't need to import all of your contacts manually :smile:.
+First of all you will need to install the required libraries. You will have to run this command:
+
+```sh
+pip install
+```
+After installing the dependencies you can start the bridge:
+
+```sh
+python main.py
+```
+On first run the program will create a file called `config.ini` where you have to add your credentials.
+# :iphone: Usage
+
+Everytime you recieve a message on Facebook a new conversation with this person group will be created on telegram. However when you want to create the conversation manually you can message the bot with a `/import` command and the ID of the conversation (full help available with `/help`).
 
 # :warning: Disclamer
 
