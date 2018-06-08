@@ -29,5 +29,9 @@ To import conversation, simply message your second telegram account account with
 
 We do not guarantee that this bridge will work correctly. We are not responsible for getting banned on Facebook and/or Telegram. Use at your own discretion.
 
+All product and company names are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them.
+
+Facebook and the Facebook logo are trademarks or registered trademarks of Facebook, Inc., used under license agreement.
+
 # :scroll: License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
