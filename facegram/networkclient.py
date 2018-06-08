@@ -3,6 +3,7 @@ from pyrogram.api import functions
 from pyrogram.api import types
 from .fbclienthandler import FBClientHandler
 from fbchat import Client as FacebookClient
+from fbchat import ThreadType
 from pyrogram import MessageHandler
 from .models import *
 
@@ -25,7 +26,7 @@ class NetworkClient(object):
     def registerBridge(self, bridge):
         """Registers Bridge and adds Telegram handlers"""
         self.fbClient.bridge = bridge
-        self.telegramClient.add_handler(MessageHandler(bridge.telegramMessageHandler))
+        self.telegramClient.add_handler(MessageHandler(bridge.telegramMessageHandler), 1)
 
     def stop(self):
         """Stops telegram and facebook client (Loggout)"""
@@ -49,8 +50,11 @@ class NetworkClient(object):
             )
         )
         chatId = update.chats[0].id
-        # Returns [facebookThreadId, telegramChatId, telegramUsername] 
-        return [threadId, chatId, self.username]
+        isGroup = False
+        if (thread.type is ThreadType.GROUP):
+            isGroup = True
+        # Returns [facebookThreadId, telegramChatId, telegramUsername, threadtype] 
+        return [threadId, chatId, self.username, isGroup]
 
     def lookupUser(self, username):
         """ Creates FacegramUser from telegram username """

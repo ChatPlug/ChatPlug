@@ -1,1 +1,1 @@
-__all__ = ["facegrambridge", "config", "bridge", "fbclienthandler", "models", "networkclient", "threadbridge", "fbmessagehandler"]
+__all__ = ["facegrambridge", "config", "bridge", "fbclienthandler", "models", "networkclient", "threadbridge", "fbmessagehandler", "telegrammessagehandler", "commands_handler"]

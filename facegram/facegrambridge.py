@@ -1,6 +1,7 @@
 from .config import FacegramConfig
 from .bridge import Bridge
 from .networkclient import NetworkClient
+from .commands_handler import CommandsHandler
 
 class FacegramBridge(object):
     def __init__(self):
@@ -9,9 +10,10 @@ class FacegramBridge(object):
     def startBridge(self):
         """Starts FacegramBridge"""
         self.createNetworkClient()
-        self.bridge = Bridge(self.networkClient)
+        self.bridge = Bridge(self.networkClient, self.config)
         self.loadConversations()
         self.registerBridgeHandlers()
+        CommandsHandler(self.networkClient, self.bridge, self.config)
         self.networkClient.fbClient.listen()
         
     def createNetworkClient(self):
@@ -27,14 +29,7 @@ class FacegramBridge(object):
     
     def loadConversations(self):
         """This function reads conversations from config, and creates missing conversations in telegram"""
-        threads = self.config.loadThreads()
-        for i, thread in enumerate(threads):
-            # Create conversation if certain informations are missing(telegramId, telegramUsername)
-            if (len(thread) == 1):
-                threads[i] = self.networkClient.createConversation(thread[0])
-                # Update config
-                self.config.updateThreads(threads)
-            self.bridge.registerThread(threads[i])
+        self.bridge.registerThreads(self.config.loadThreads())
 
     def stopBridge(self):
         """Stops bridge"""

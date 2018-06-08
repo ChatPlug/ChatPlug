@@ -45,6 +45,7 @@ class FacegramConfig(object):
                 return self.loadThreads()
 
     """Writes full conversation to file"""
-    def updateThreads(self, threads):
+    def addThread(self, thread):
+        threads = self.loadThreads()
         with open('conversations.json', 'w') as conversationFile:
-            conversationFile.write(json.dumps(threads))
+            conversationFile.write(json.dumps(threads+[thread]))
