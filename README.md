@@ -24,4 +24,4 @@ To start run `pip install` and `python3 main.py`. It will create all the nessesa
 We do not guarantee that this bridge will work correctly. We are not responsible for getting banned on Facebook and/or Telegram. Use at your own discretion.
 
 # :scroll: License
-This project is licensed under the MIT License - see the LICENSE.md file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
