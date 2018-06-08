@@ -16,9 +16,12 @@ To use this you will need:
 - Your Facebook account
 
 
-# :electric_plug: Starting
+# :electric_plug: Getting started
 To start run `pip install` and `python3 main.py`. It will create all the nessesary config files. To import conversation, add your facebook conversation id to `conversations.json`. Facegram will generate the rest for you (Telegram chat).
 
 # :warning: Disclamer
 
 We do not guarantee that this bridge will work correctly. We are not responsible for getting banned on Facebook and/or Telegram. Use at your own discretion.
+
+# :scroll: License
+This project is licensed under the MIT License - see the LICENSE.md file for details
