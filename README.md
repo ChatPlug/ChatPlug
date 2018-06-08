@@ -22,7 +22,8 @@ To use this you will need:
 
 
 # :electric_plug: Getting started
-To start run `pip install` and `python3 main.py`. It will create all the nessesary config files. To import conversation, add your facebook conversation id to `conversations.json`. Facegram will generate the rest for you (Telegram chat).
+To start run `pip install` and `python3 main.py`. It will create all the nessesary config files. Fill necessary config information in generated `config.ini` file. 
+To import conversation, simply message your second telegram account account with `/help` to list and import your recent facebook threads. However, every incoming message from facebook will register its sender in Facegram, so you don't need to import all of your contacts manually :smile:.
 
 # :warning: Disclamer
 
