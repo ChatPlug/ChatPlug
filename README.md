@@ -8,6 +8,10 @@ FacegramBridge is and simple and extensible Facebook (Messenger) - Telegram brid
   <img src="https://media.giphy.com/media/dSdvPrKU0w8WGo4c9L/giphy.gif">
 </p>
 
+# :question: How does it work?
+
+Everytime you recieve a message on Messenger it will be relayed to a specific conversation on telegram. When you reply via Telegram the message will be relayed the other way round. This way you don't have to install Facebook Messenger on your phone.
+
 # :ballot_box_with_check:	 Requirements
 <p align="center">
   <img src="./facegram_equation.png" width="250"  alt="Logo">
