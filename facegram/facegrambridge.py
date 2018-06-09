@@ -24,7 +24,7 @@ class FacegramBridge(object):
             configuration["FACEBOOK"]["password"],
             configuration["TELEGRAM"]["api_id"],
             configuration["TELEGRAM"]["api_hash"],
-            "feelfreelinux"
+            configuration["TELEGRAM"]["username"]
         )
     
     def loadConversations(self):
