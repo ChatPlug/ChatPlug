@@ -43,7 +43,7 @@ On first run the program will create a file called `config.ini` where you have t
 Everytime you recieve a message on Facebook a new conversation with this person group will be created on telegram. However when you want to create the conversation manually you can message the bot with a `/import` command and the ID of the conversation (full help available with `/help`).
 
 # :clap: Contributing
-If you want to help with the project, you can [https://github.com/feelfreelinux/facegram/issues](some issues). All help is much appreciated :smile:
+If you want to help with the project, you can [some issues](https://github.com/feelfreelinux/facegram/issues). All help is much appreciated :smile:
 
 # :warning: Disclamer
 
