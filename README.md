@@ -2,6 +2,8 @@
   <img src="./facegram_logo.png" width="250" height="250" alt="Logo">
 </p>
 
+
+[![Discord](https://discordapp.com/api/guilds/456875835954298890/embed.png)](https://discord.gg/eWAgMUG)
 # :bridge_at_night: facegram
 FacegramBridge is a simple and extensible Facebook (Messenger) - Telegram bridge. Reclaim your privacy now, don't let Zuckbot spy on you  and drain your battery. :battery: :moneybag:
 <p align="center">
