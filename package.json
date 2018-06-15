@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A simple and extensible facebook-telegram bridge",
   "main": "/dist/index",
+  "typings": "/src/types/index.d.ts",
   "scripts": {
     "start": "npm run serve",
     "dev": "npm run build && npm run serve",
