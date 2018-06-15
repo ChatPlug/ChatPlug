@@ -1,3 +1,3 @@
-import * as data from '../sampleconfig.json'
+import { Facegram } from './facegram'
 
-console.log(data)
+const facegram = new Facegram()
