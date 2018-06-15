@@ -1,0 +1,4 @@
+interface Service {
+    initialize()
+    
+}

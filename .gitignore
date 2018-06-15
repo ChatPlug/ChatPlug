@@ -1,5 +1,1 @@
-config.ini
-facegram_sessions.session
-conversations.json
-downloads/
-__pycache__
+.node_modules
