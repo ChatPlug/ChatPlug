@@ -2,9 +2,16 @@
   "name": "facegram",
   "version": "1.0.0",
   "description": "A simple and extensible facebook-telegram bridge",
-  "main": "index.js",
+  "main": "/dist/index",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm run serve",
+    "dev": "npm run build && npm run serve",
+    "build": "npm run build-ts && npm run tslint",
+    "serve": "node dist/index.js",
+    "test": "jest --forceExit --verbose",
+    "build-ts": "tsc",
+    "watch-ts": "tsc -w",
+    "tslint": "tslint -c tslint.json -p tsconfig.json"
   },
   "repository": {
     "type": "git",
@@ -30,6 +37,26 @@
     "telegram-mtproto": "^2.2.2"
   },
   "devDependencies": {
-    "@types/facebook-chat-api": "github:legion44/typed-facebook-chat-api"
+    "@types/jest": "^23.1.0",
+    "@types/node": "^10.3.3",
+    "ts-jest": "^22.4.6",
+    "ts-node": "^6.1.1",
+    "tslint": "^5.10.0",
+    "tslint-config-standard": "^7.0.0",
+    "typescript": "^2.9.2"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
   }
 }
