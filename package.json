@@ -33,6 +33,7 @@
   },
   "homepage": "https://github.com/feelfreelinux/facegram#readme",
   "dependencies": {
+    "discord.js": "^11.3.2",
     "facebook-chat-api": "^1.6.0",
     "rxjs": "^6.2.1",
     "telegram-mtproto": "^2.2.2"
