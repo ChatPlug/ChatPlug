@@ -1,6 +1,6 @@
 import { IFacegramService, IFacegramMessage } from './models'
 import { Subject } from 'rxjs'
-import { FacebookConfig } from './facebookconfig';
+import { FacebookConfig } from './facebookconfig'
 import facebook from 'facebook-chat-api'
 import { createInterface } from 'readline'
 
