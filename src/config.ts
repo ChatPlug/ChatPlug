@@ -18,6 +18,11 @@ const DEFAULT_CONFIG = {
       email: 'account email',
       password: 'account password',
       forceLogin: true
+    },
+
+    discord: {
+      enabled: true,
+      token: 'discord bot token'
     }
   },
 
