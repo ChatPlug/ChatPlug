@@ -1,5 +1,6 @@
-export interface TelegramConfig {
-  enabled: boolean
+import { IFacegramServiceConfig } from './models'
+
+export interface TelegramConfig extends IFacegramServiceConfig {
   apiId: string
   apiHash: string
   phoneNumber: string
