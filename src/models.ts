@@ -16,3 +16,7 @@ export interface IFacegramService {
 export interface IFacegramServiceConnection {
   [service: string]: string
 }
+
+export interface IFacegramServiceConfig {
+  enabled: boolean
+}
