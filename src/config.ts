@@ -5,7 +5,7 @@ const CONFIG_FILE_PATH = './config.json'
 const DEFAULT_CONFIG = {
   services: {
     telegram: {
-      enabled: true,
+      enabled: false,
       apiId: 'telegram account apiId',
       apiHash: 'telegram account apiHash',
       phoneNumber: 'telegram account phone number',
@@ -14,14 +14,14 @@ const DEFAULT_CONFIG = {
     },
 
     facebook: {
-      enabled: true,
+      enabled: false,
       email: 'account email',
       password: 'account password',
       forceLogin: true
     },
 
     discord: {
-      enabled: true,
+      enabled: false,
       token: 'discord bot token'
     }
   },

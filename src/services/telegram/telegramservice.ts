@@ -1,4 +1,5 @@
-import { IFacegramService, IFacegramMessage } from '../../models'
+import { IFacegramMessage } from '../../models'
+import { FacegramService } from '../service'
 import { Subject } from 'rxjs'
 import { TelegramConfig } from './telegramconfig'
 import MTProto from 'telegram-mtproto'
@@ -29,7 +30,8 @@ const api = {
 
 const server = { dev: false }
 
-export class TelegramService implements IFacegramService {
+export class TelegramService implements FacegramService {
+  isEnabled: boolean
   name = 'telegram'
   messageSubject = Subject.create()
   receiveMessageSubject: Subject<IFacegramMessage>
@@ -39,6 +41,7 @@ export class TelegramService implements IFacegramService {
   constructor (config: TelegramConfig, receiveSubject: Subject<IFacegramMessage>) {
     this.receiveMessageSubject = receiveSubject
     this.config = config
+    this.isEnabled = config.enabled
   }
 
   async initialize () {

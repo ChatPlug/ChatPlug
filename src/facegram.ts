@@ -1,13 +1,14 @@
 import { FacegramConfig } from './config'
 import { IFacegramService, IFacegramMessage } from './models'
 import { Subject } from 'rxjs'
-import { TelegramService } from './telegramservice'
-import { FacebookService } from './facebookservice'
-import { DiscordService } from './discordservice'
+import { TelegramService } from './services/telegram/telegramservice'
+import { FacebookService } from './services/facebook/facebookservice'
+import { DiscordService } from './services/discord/discordservice'
+import { FacegramService } from './services/service'
 
 export class Facegram {
   config: FacegramConfig
-  services: Array<IFacegramService>
+  services: Array<FacegramService>
   incomingMessagePublisher: Subject<IFacegramMessage>
 
   constructor () {
@@ -17,20 +18,24 @@ export class Facegram {
   }
 
   async startBridge () {
-    await this.registerServices()
+    this.registerServices()
+    await this.initiateServices()
   }
 
-  async registerServices () {
-    const telegram = new TelegramService(this.config.getConfigForServiceName('telegram'), this.incomingMessagePublisher)
-    this.services.push(telegram)
-    await telegram.initialize()
+  registerServices () {
+    this.services.push(new TelegramService(this.config.getConfigForServiceName('telegram'), this.incomingMessagePublisher))
+    this.services.push(new FacebookService(this.config.getConfigForServiceName('facebook'), this.incomingMessagePublisher))
+    this.services.push(new DiscordService(this.config.getConfigForServiceName('discord'), this.incomingMessagePublisher))
+  }
 
-    const facebook = new FacebookService(this.config.getConfigForServiceName('facebook'), this.incomingMessagePublisher)
-    this.services.push(facebook)
-    await facebook.initialize()
-
-    const discord = new DiscordService(this.config.getConfigForServiceName('discord'), this.incomingMessagePublisher)
-    this.services.push(discord)
-    await discord.initialize()
+  async initiateServices () {
+    this.services.forEach((service) => {
+      if (service.isEnabled) {
+        console.log('Initializing enabled service ' + service.name)
+        service.initialize()
+      } else {
+        console.log('Service disabled ' + service.name)
+      }
+    })
   }
 }

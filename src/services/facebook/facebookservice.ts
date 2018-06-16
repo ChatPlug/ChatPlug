@@ -1,4 +1,5 @@
-import { IFacegramService, IFacegramMessage } from '.../models'
+import { IFacegramMessage } from '../../models'
+import { FacegramService } from '../service'
 import { Subject } from 'rxjs'
 import { FacebookConfig } from './facebookconfig'
 import facebook from 'facebook-chat-api'
@@ -9,7 +10,8 @@ const rl = createInterface({
   output: process.stdout
 })
 
-export class FacebookService implements IFacegramService {
+export class FacebookService implements FacegramService {
+  isEnabled: boolean
   name = 'facebook'
   messageSubject = Subject.create()
   receiveMessageSubject: Subject<IFacegramMessage>
@@ -19,6 +21,7 @@ export class FacebookService implements IFacegramService {
   constructor (config: FacebookConfig, receiveSubject: Subject<IFacegramMessage>) {
     this.receiveMessageSubject = receiveSubject
     this.config = config
+    this.isEnabled = config.enabled
   }
 
   initialize () {
