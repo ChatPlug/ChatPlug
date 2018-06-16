@@ -11,10 +11,16 @@ export class Facegram {
   constructor () {
     this.config = new FacegramConfig()
     this.incomingMessagePublisher = Subject.create()
-    this.registerServices()
+    this.services = []
   }
 
-  registerServices () {
-    this.services.push(new TelegramService(this.config.getConfigForServiceName('telegram'), this.incomingMessagePublisher))
+  async startBridge () {
+    await this.registerServices()
+  }
+
+  async registerServices () {
+    const telegram = new TelegramService(this.config.getConfigForServiceName('telegram'), this.incomingMessagePublisher)
+    this.services.push(telegram)
+    await telegram.initialize()
   }
 }

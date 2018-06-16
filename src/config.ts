@@ -38,7 +38,7 @@ export class FacegramConfig {
   }
 
   getConfigForServiceName (name: string) {
-    return this.jsonConfig['services'].name
+    return this.jsonConfig['services'][name]
   }
 
   writeConfig (config: any) {
