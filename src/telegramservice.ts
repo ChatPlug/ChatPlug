@@ -32,12 +32,12 @@ const server = { dev: false }
 export class TelegramService implements IFacegramService {
   name = 'telegram'
   messageSubject = Subject.create()
-  recieveMessageSubject: Subject<IFacegramMessage>
+  receiveMessageSubject: Subject<IFacegramMessage>
   config: TelegramConfig
   telegram = MTProto({ api, server })
 
-  constructor (config: TelegramConfig, recieveSubject: Subject<IFacegramMessage>) {
-    this.recieveMessageSubject = recieveSubject
+  constructor (config: TelegramConfig, receiveSubject: Subject<IFacegramMessage>) {
+    this.receiveMessageSubject = receiveSubject
     this.config = config
   }
 

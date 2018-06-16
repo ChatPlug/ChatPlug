@@ -12,7 +12,7 @@ FacegramBridge is a simple and extensible Facebook (Messenger) - Telegram bridge
 
 # :question: How does it work?
 
-Everytime you recieve a message on Messenger it will be relayed to a specific conversation on telegram. When you reply via Telegram the message will be relayed the other way round. This way you don't have to install Facebook Messenger on your phone.
+Everytime you receive a message on Messenger it will be relayed to a specific conversation on telegram. When you reply via Telegram the message will be relayed the other way round. This way you don't have to install Facebook Messenger on your phone.
 
 # :ballot_box_with_check:	 Requirements
 <p align="center">
@@ -42,7 +42,7 @@ python main.py
 On first run the program will create a file called `config.ini` where you have to add your credentials.
 # :iphone: Usage
 
-Everytime you recieve a message on Facebook a new conversation with this person group will be created on telegram. However when you want to create the conversation manually you can message the bot with a `/import` command and the ID of the conversation (full help available with `/help`).
+Everytime you receive a message on Facebook a new conversation with this person group will be created on telegram. However when you want to create the conversation manually you can message the bot with a `/import` command and the ID of the conversation (full help available with `/help`).
 
 # :clap: Contributing
 If you want to help with the project, you can have a look at [some issues](https://github.com/feelfreelinux/facegram/issues). All help is much appreciated :smile:
