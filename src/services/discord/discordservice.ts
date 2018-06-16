@@ -1,4 +1,4 @@
-import { IFacegramService, IFacegramMessage } from './models'
+import { IFacegramService, IFacegramMessage } from '../../models'
 import { Subject } from 'rxjs'
 import { DiscordConfig } from './discordconfig'
 import { Client as DiscordClient } from 'discord.js'
@@ -16,6 +16,6 @@ export class DiscordService implements IFacegramService {
   }
 
   async initialize () {
-    return await this.discord.login(this.config.token)
+    return this.discord.login(this.config.token)
   }
 }

@@ -1,4 +1,4 @@
-import { IFacegramServiceConfig } from './models'
+import { IFacegramServiceConfig } from '../../models'
 
 export interface TelegramConfig extends IFacegramServiceConfig {
   apiId: string

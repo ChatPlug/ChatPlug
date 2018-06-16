@@ -1,4 +1,4 @@
-import { IFacegramService, IFacegramMessage } from './models'
+import { IFacegramService, IFacegramMessage } from '../../models'
 import { Subject } from 'rxjs'
 import { TelegramConfig } from './telegramconfig'
 import MTProto from 'telegram-mtproto'
