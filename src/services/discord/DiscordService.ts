@@ -23,7 +23,7 @@ export class DiscordService implements FacegramService {
 
   async initialize () {
     this.receiveMessageSubject.subscribe(async message => {
-      if (!message.target) return
+      if (!message.target) return undefined
 
       const channel = this.discord.channels.get(message.target.id)
       if (!channel || channel.type !== 'text') return log.warn('discord', `Channel ${message.target} not found!`)
