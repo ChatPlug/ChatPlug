@@ -4,6 +4,7 @@ import { Subject } from 'rxjs'
 import { FacebookConfig } from './FacebookConfig'
 import facebook from 'facebook-chat-api'
 import { createInterface } from 'readline'
+import { ExchangeManager } from '../../ExchangeManager'
 
 const rl = createInterface({
   input: process.stdin,
@@ -18,8 +19,8 @@ export class FacebookService implements FacegramService {
   config: FacebookConfig
   facebook: any
 
-  constructor (config: FacebookConfig, receiveSubject: Subject<IFacegramMessage>) {
-    this.receiveMessageSubject = receiveSubject
+  constructor (config: FacebookConfig, exchangeManager: ExchangeManager) {
+    this.receiveMessageSubject = exchangeManager.messageSubject
     this.config = config
     this.isEnabled = config.enabled
   }

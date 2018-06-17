@@ -2,43 +2,34 @@ import { FacegramConfig } from './FacegramConfig'
 import { IFacegramMessage } from './models'
 import { Subject } from 'rxjs'
 import { TelegramService } from './services/telegram/TelegramService'
-import { FacebookService } from './services/facebook/FacebookService'
 import { DiscordService } from './services/discord/DiscordService'
+import { FacebookService } from './services/facebook/FacebookService'
 import { FacegramService } from './services/Service'
 import { ThreadConnectionsManager } from './ThreadConnectionsManager'
+import { ServiceManager } from './ServiceManager'
+import { ExchangeManager } from './ExchangeManager'
 
 export class Facegram {
   config: FacegramConfig
-  services: Array<FacegramService>
+  exchangeManager: ExchangeManager
+  serviceManager = new ServiceManager()
   threadConnectionsManager: ThreadConnectionsManager
   incomingMessagePublisher: Subject<IFacegramMessage>
 
   constructor () {
     this.config = new FacegramConfig()
     this.threadConnectionsManager = new ThreadConnectionsManager(this.config.getThreadConnections())
-    this.incomingMessagePublisher = Subject.create()
-    this.services = []
+    this.exchangeManager = new ExchangeManager(this.threadConnectionsManager, this.serviceManager)
   }
 
   async startBridge () {
     this.registerServices()
-    await this.initiateServices()
+    await this.serviceManager.initiateServices()
   }
 
   registerServices () {
-    this.services.push(new TelegramService(this.config.getConfigForServiceName('telegram'), this.incomingMessagePublisher))
-    this.services.push(new FacebookService(this.config.getConfigForServiceName('facebook'), this.incomingMessagePublisher))
-    this.services.push(new DiscordService(this.config.getConfigForServiceName('discord'), this.incomingMessagePublisher))
-  }
-
-  async initiateServices () {
-    this.services.forEach((service) => {
-      if (service.isEnabled) {
-        console.log('Initializing enabled service ' + service.name)
-        service.initialize()
-      } else {
-        console.log('Service disabled ' + service.name)
-      }
-    })
+    this.serviceManager.registerService(new TelegramService(this.config.getConfigForServiceName('telegram'), this.exchangeManager))
+    this.serviceManager.registerService(new FacebookService(this.config.getConfigForServiceName('facebook'), this.exchangeManager))
+    this.serviceManager.registerService(new DiscordService(this.config.getConfigForServiceName('discord'), this.exchangeManager))
   }
 }

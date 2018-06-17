@@ -3,6 +3,7 @@ import { FacegramService } from '../Service'
 import { Subject } from 'rxjs'
 import { DiscordConfig } from './DiscordConfig'
 import { Client as DiscordClient } from 'discord.js'
+import { ExchangeManager } from '../../ExchangeManager'
 
 export class DiscordService implements FacegramService {
   isEnabled: boolean
@@ -12,8 +13,8 @@ export class DiscordService implements FacegramService {
   config: DiscordConfig
   discord = new DiscordClient()
 
-  constructor (config: DiscordConfig, receiveSubject: Subject<IFacegramMessage>) {
-    this.receiveMessageSubject = receiveSubject
+  constructor (config: DiscordConfig, exchangeManager: ExchangeManager) {
+    this.receiveMessageSubject = exchangeManager.messageSubject
     this.config = config
     this.isEnabled = config.enabled
   }

@@ -6,6 +6,7 @@ import MTProto from 'telegram-mtproto'
 import crypto from 'crypto'
 
 import { createInterface } from 'readline'
+import { ExchangeManager } from '../../ExchangeManager'
 
 const rl = createInterface({
   input: process.stdin,
@@ -38,8 +39,8 @@ export class TelegramService implements FacegramService {
   config: TelegramConfig
   telegram = MTProto({ api, server })
 
-  constructor (config: TelegramConfig, receiveSubject: Subject<IFacegramMessage>) {
-    this.receiveMessageSubject = receiveSubject
+  constructor (config: TelegramConfig, exchangeManager: ExchangeManager) {
+    this.receiveMessageSubject = exchangeManager.messageSubject
     this.config = config
     this.isEnabled = config.enabled
   }
