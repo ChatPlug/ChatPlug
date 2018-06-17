@@ -28,7 +28,7 @@ export class DiscordService implements FacegramService {
       const channel = this.discord.channels.get(message.target.id)
       if (!channel || channel.type !== 'text') return log.warn('discord', `Channel ${message.target} not found!`)
 
-      let webhook = this.webhooks.find('channelID', message.target)
+      let webhook = this.webhooks.find('channelID', message.target.id)
       if (!webhook) {
         webhook = await (channel as TextChannel).createWebhook(
           `Facegram ${(channel as TextChannel).name}`.substr(0, 32),
