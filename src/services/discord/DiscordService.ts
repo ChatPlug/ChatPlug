@@ -10,8 +10,9 @@ import {
   Webhook,
 } from 'discord.js'
 import { ExchangeManager } from '../../ExchangeManager'
+import { ThreadConnectionsManager } from '../../ThreadConnectionsManager'
 
-export class DiscordService implements FacegramService {
+export default class DiscordService implements FacegramService {
   isEnabled: boolean
   name = 'discord'
   exchangeManager: ExchangeManager
@@ -20,7 +21,7 @@ export class DiscordService implements FacegramService {
   discord = new DiscordClient()
   webhooks: Collection<string, Webhook>
 
-  constructor(config: DiscordConfig, exchangeManager: ExchangeManager) {
+  constructor(config: DiscordConfig, exchangeManager: ExchangeManager, threadConnectionsManager: ThreadConnectionsManager) {
     this.exchangeManager = exchangeManager
     this.config = config
     this.isEnabled = config.enabled

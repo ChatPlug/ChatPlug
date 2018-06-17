@@ -8,6 +8,7 @@ import crypto from 'crypto'
 
 import { createInterface } from 'readline'
 import { ExchangeManager } from '../../ExchangeManager'
+import { ThreadConnectionsManager } from '../../ThreadConnectionsManager'
 
 const rl = createInterface({
   input: process.stdin,
@@ -32,7 +33,7 @@ const api = {
 
 const server = { dev: false }
 
-export class TelegramService implements FacegramService {
+export default class TelegramService implements FacegramService {
   isEnabled: boolean
   name = 'telegram'
   messageSubject: Subject<IFacegramMessage>
@@ -40,7 +41,7 @@ export class TelegramService implements FacegramService {
   config: TelegramConfig
   telegram = MTProto({ api, server })
 
-  constructor(config: TelegramConfig, exchangeManager: ExchangeManager) {
+  constructor(config: TelegramConfig, exchangeManager: ExchangeManager,  threadConnectionsManager: ThreadConnectionsManager) {
     this.messageSubject = exchangeManager.messageSubject
     this.config = config
     this.isEnabled = config.enabled

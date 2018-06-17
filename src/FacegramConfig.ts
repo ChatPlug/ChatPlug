@@ -5,6 +5,7 @@ import { IFacegramConnection } from './models'
 const CONFIG_FILE_PATH = './config.json'
 
 const DEFAULT_CONFIG = {
+  loadedServices: [],
   services: {
     telegram: {
       enabled: false,
@@ -50,6 +51,10 @@ export class FacegramConfig {
 
   getConfigForServiceName (name: string) {
     return this.jsonConfig['services'][name]
+  }
+
+  getLoadedServices(): string[] {
+    return this.jsonConfig.loadedServices
   }
 
   getThreadConnections (): IFacegramConnection[] {

@@ -1,9 +1,6 @@
 import { FacegramConfig } from './FacegramConfig'
 import { IFacegramMessage } from './models'
 import { Subject } from 'rxjs'
-import { TelegramService } from './services/telegram/TelegramService'
-import { DiscordService } from './services/discord/DiscordService'
-import { FacebookService } from './services/facebook/FacebookService'
 import { FacegramService } from './services/Service'
 import { ThreadConnectionsManager } from './ThreadConnectionsManager'
 import { ServiceManager } from './ServiceManager'
@@ -38,23 +35,11 @@ export class Facegram {
   }
 
   registerServices() {
-    this.serviceManager.registerService(
-      new TelegramService(
-        this.config.getConfigForServiceName('telegram'),
-        this.exchangeManager,
-      ),
-    )
-    this.serviceManager.registerService(
-      new FacebookService(
-        this.config.getConfigForServiceName('facebook'),
-        this.exchangeManager,
-      ),
-    )
-    this.serviceManager.registerService(
-      new DiscordService(
-        this.config.getConfigForServiceName('discord'),
-        this.exchangeManager,
-      ),
-    )
+    // Get services from config/loadedServices and register then in service manager
+    this.config.getLoadedServices().forEach((moduleName) => {
+      const service = new (require('./services/' + moduleName) as any).default(
+        this.config.getConfigForServiceName(moduleName.substr(0, moduleName.indexOf('/'))), this.exchangeManager, this.threadConnectionsManager)
+      this.serviceManager.registerService(service)
+    })
   }
 }

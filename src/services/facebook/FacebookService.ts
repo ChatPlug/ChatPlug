@@ -6,13 +6,14 @@ import { FacebookConfig } from './FacebookConfig'
 import facebook from 'facebook-chat-api'
 import { createInterface } from 'readline'
 import { ExchangeManager } from '../../ExchangeManager'
+import { ThreadConnectionsManager } from '../../ThreadConnectionsManager'
 
 const rl = createInterface({
   input: process.stdin,
   output: process.stdout,
 })
 
-export class FacebookService implements FacegramService {
+export default class FacebookService implements FacegramService {
   isEnabled: boolean
   name = 'facebook'
   messageSubject: Subject<IFacegramMessage>
@@ -20,7 +21,7 @@ export class FacebookService implements FacegramService {
   config: FacebookConfig
   facebook: any
 
-  constructor(config: FacebookConfig, exchangeManager: ExchangeManager) {
+  constructor(config: FacebookConfig, exchangeManager: ExchangeManager, threadConnectionsManager: ThreadConnectionsManager) {
     this.messageSubject = exchangeManager.messageSubject
     this.config = config
     this.isEnabled = config.enabled
