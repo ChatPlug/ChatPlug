@@ -7,15 +7,15 @@ export interface ServiceMap {
 
 export class ServiceManager {
   services: ServiceMap
-  constructor () {
+  constructor() {
     this.services = {}
   }
 
-  registerService (service: FacegramService) {
+  registerService(service: FacegramService) {
     this.services[service.name] = service
   }
 
-  getRegisteredServices (): FacegramService[] {
+  getRegisteredServices(): FacegramService[] {
     const registeredServices: FacegramService[] = []
 
     for (const key in this.services) {
@@ -25,8 +25,8 @@ export class ServiceManager {
     return registeredServices
   }
 
-  async initiateServices () {
-    this.getRegisteredServices().forEach((service) => {
+  async initiateServices() {
+    this.getRegisteredServices().forEach(service => {
       if (service.isEnabled) {
         log.info('services', `Service ${service.name} enabled, initializing...`)
         service.initialize()
@@ -36,7 +36,11 @@ export class ServiceManager {
     })
   }
 
-  async terminateServices () {
-    return Promise.all(this.getRegisteredServices().filter(service => service.isEnabled).map(service => service.terminate()))
+  async terminateServices() {
+    return Promise.all(
+      this.getRegisteredServices()
+        .filter(service => service.isEnabled)
+        .map(service => service.terminate()),
+    )
   }
 }

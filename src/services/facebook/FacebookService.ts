@@ -20,35 +20,47 @@ export class FacebookService implements FacegramService {
   config: FacebookConfig
   facebook: any
 
-  constructor (config: FacebookConfig, exchangeManager: ExchangeManager) {
+  constructor(config: FacebookConfig, exchangeManager: ExchangeManager) {
     this.messageSubject = exchangeManager.messageSubject
     this.config = config
     this.isEnabled = config.enabled
   }
 
-  initialize () {
+  initialize() {
     return new Promise((resolve, reject) => {
-      facebook({
-        email: this.config.email,
-        password: this.config.password,
-      },       {
-        forceLogin: this.config.forceLogin,
-        logLevel: process.env.NODE_ENV === 'development' ? 'info' : 'warn',
-      },       async (err, api) => {
-        if (err) {
-          if (err.error !== 'login-approval') return reject(err)
-          log.info('facebook', 'Login approval pending...')
-          const code = await new Promise(result => rl.question('Enter login approval code to your Facebook account (SMS or Google Authenticator app): ', result))
-          err.continue(code)
-        }
-        this.facebook = api
-        log.info('facebook', 'Logged in as', this.config.email)
-        resolve()
-      })
+      facebook(
+        {
+          email: this.config.email,
+          password: this.config.password,
+        },
+        {
+          forceLogin: this.config.forceLogin,
+          logLevel: process.env.NODE_ENV === 'development' ? 'info' : 'warn',
+        },
+        async (err, api) => {
+          if (err) {
+            if (err.error !== 'login-approval') return reject(err)
+            log.info('facebook', 'Login approval pending...')
+            const code = await new Promise(result =>
+              rl.question(
+                'Enter login approval code to your ' +
+                  'Facebook account (SMS or Google Authenticator app): ',
+                result,
+              ),
+            )
+            err.continue(code)
+          }
+          this.facebook = api
+          log.info('facebook', 'Logged in as', this.config.email)
+          resolve()
+        },
+      )
     })
   }
 
-  terminate () {
-    return new Promise((resolve, reject) => this.facebook.logout(err => err ? reject(err) : resolve()))
+  terminate() {
+    return new Promise((resolve, reject) =>
+      this.facebook.logout(err => (err ? reject(err) : resolve())),
+    )
   }
 }

@@ -3,6 +3,7 @@
     "rules": {
         "no-unused-variable": false,
         "no-unused-expression": false,
-        "semicolon": [true, "never"]
+        "semicolon": [true, "never"],
+        "ter-arrow-parens": false
     }
 }
