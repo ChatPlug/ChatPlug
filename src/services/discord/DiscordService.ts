@@ -1,7 +1,7 @@
 import { IFacegramMessage } from '../../models'
-import { FacegramService } from '../service'
+import { FacegramService } from '../Service'
 import { Subject } from 'rxjs'
-import { DiscordConfig } from './discordconfig'
+import { DiscordConfig } from './DiscordConfig'
 import { Client as DiscordClient } from 'discord.js'
 
 export class DiscordService implements FacegramService {

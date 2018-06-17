@@ -1,11 +1,18 @@
-import { Observable, Subject } from 'rxjs'
+import { Subject } from 'rxjs'
+import { FacegramService } from './services/Service'
 
 export interface IFacegramMessage {
   message: string
-  attachments: { url: string, name: string }[]
+  attachments: IFacegramAttachement[]
   author: string
-  origin: IFacegramService
-  serviceConnection: IFacegramServiceConnection
+  origin: FacegramService
+  thread: IFacegramThread
+  serviceConnection: IFacegramConnection
+}
+
+export interface IFacegramAttachement {
+  url: string,
+  name: string
 }
 
 export interface IFacegramService {
@@ -13,8 +20,13 @@ export interface IFacegramService {
   messageSubject: Subject<IFacegramMessage>
 }
 
-export interface IFacegramServiceConnection {
-  [service: string]: string
+export interface IFacegramThread {
+  id: string
+  service: string
+}
+
+export interface IFacegramConnection {
+  services: IFacegramThread[]
 }
 
 export interface IFacegramServiceConfig {

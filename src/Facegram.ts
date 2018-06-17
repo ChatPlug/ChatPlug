@@ -1,18 +1,21 @@
-import { FacegramConfig } from './config'
-import { IFacegramService, IFacegramMessage } from './models'
+import { FacegramConfig } from './FacegramConfig'
+import { IFacegramMessage } from './models'
 import { Subject } from 'rxjs'
-import { TelegramService } from './services/telegram/telegramservice'
-import { FacebookService } from './services/facebook/facebookservice'
-import { DiscordService } from './services/discord/discordservice'
-import { FacegramService } from './services/service'
+import { TelegramService } from './services/telegram/TelegramService'
+import { FacebookService } from './services/facebook/FacebookService'
+import { DiscordService } from './services/discord/DiscordService'
+import { FacegramService } from './services/Service'
+import { ThreadConnectionsManager } from './ThreadConnectionsManager'
 
 export class Facegram {
   config: FacegramConfig
   services: Array<FacegramService>
+  threadConnectionsManager: ThreadConnectionsManager
   incomingMessagePublisher: Subject<IFacegramMessage>
 
   constructor () {
     this.config = new FacegramConfig()
+    this.threadConnectionsManager = new ThreadConnectionsManager(this.config.getThreadConnections())
     this.incomingMessagePublisher = Subject.create()
     this.services = []
   }

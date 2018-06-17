@@ -1,7 +1,7 @@
 import { IFacegramMessage } from '../../models'
-import { FacegramService } from '../service'
+import { FacegramService } from '../Service'
 import { Subject } from 'rxjs'
-import { TelegramConfig } from './telegramconfig'
+import { TelegramConfig } from './TelegramConfig'
 import MTProto from 'telegram-mtproto'
 import crypto from 'crypto'
 

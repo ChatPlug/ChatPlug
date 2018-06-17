@@ -1,4 +1,5 @@
 import fs = require('fs')
+import { IFacegramConnection } from './models'
 
 const CONFIG_FILE_PATH = './config.json'
 
@@ -44,6 +45,10 @@ export class FacegramConfig {
 
   getConfigForServiceName (name: string) {
     return this.jsonConfig['services'][name]
+  }
+
+  getThreadConnections (): IFacegramConnection[] {
+    return this.jsonConfig['serviceConnections']
   }
 
   writeConfig (config: any) {
