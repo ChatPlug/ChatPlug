@@ -38,7 +38,8 @@ export class DiscordService implements FacegramService {
       }
       webhook.send(message.message, {
         username: message.author.username,
-        avatarURL: message.author.avatar
+        avatarURL: message.author.avatar,
+        files: message.attachments.map(file => ({ attachment: file.url, name: file.name }))
       }).then().catch(err => log.error('discord', err))
     })
 
@@ -46,7 +47,7 @@ export class DiscordService implements FacegramService {
       if (this.webhooks.has(message.author.id) || message.author.username === this.discord.user.username) return
       const facegramMessage = {
         message: message.content,
-        attachments: [],
+        attachments: message.attachments.map(file => ({ name: file.filename, url: file.url })),
         author: {
           username: message.author.username,
           avatar: message.author.avatarURL,
