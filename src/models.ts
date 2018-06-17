@@ -22,6 +22,7 @@ export interface IFacegramService {
 export interface IFacegramThread {
   id: string
   service: string
+  name: string
 }
 
 export interface IFacegramUser {
