@@ -31,7 +31,8 @@ export class FacebookService implements FacegramService {
         email: this.config.email,
         password: this.config.password
       }, {
-        forceLogin: this.config.forceLogin
+        forceLogin: this.config.forceLogin,
+        logLevel: process.env.NODE_ENV === 'development' ? 'info' : 'warn'
       }, async (err, api) => {
         if (err) {
           if (err.error !== 'login-approval') return reject(err)

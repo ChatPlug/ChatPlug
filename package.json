@@ -6,7 +6,7 @@
   "typings": "/src/types/index.d.ts",
   "scripts": {
     "start": "npm run serve",
-    "dev": "npm run build && npm run serve",
+    "dev": "npm run build && NODE_ENV=development npm run serve",
     "build": "npm run build-ts && npm run tslint",
     "serve": "node dist/index.js",
     "test": "jest --forceExit --verbose",
