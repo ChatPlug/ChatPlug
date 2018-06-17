@@ -69,7 +69,7 @@ export class DiscordService implements FacegramService {
         // save them to a new collection
         this.webhooks = new Collection()
         this.webhooks = this.webhooks.concat(...allWebhooks)
-        log.silly('discord: webhooks', this.webhooks)
+        log.silly('discord: webhooks', '%o', this.webhooks)
       }).catch(err => log.error('discord', err))
       log.info('discord', 'Logged in as', this.discord.user.username)
     }).catch(err => log.error('discord', err))
