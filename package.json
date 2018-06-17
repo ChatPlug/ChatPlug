@@ -35,12 +35,14 @@
   "dependencies": {
     "discord.js": "^11.3.2",
     "facebook-chat-api": "^1.6.0",
+    "npmlog": "^4.1.2",
     "rxjs": "^6.2.1",
     "telegram-mtproto": "^2.2.2"
   },
   "devDependencies": {
     "@types/jest": "^23.1.0",
     "@types/node": "^10.3.3",
+    "@types/npmlog": "^4.1.0",
     "ts-jest": "^22.4.6",
     "ts-node": "^6.1.1",
     "tslint": "^5.10.0",

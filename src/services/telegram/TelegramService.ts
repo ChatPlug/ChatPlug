@@ -1,3 +1,4 @@
+import log from 'npmlog'
 import { IFacegramMessage } from '../../models'
 import { FacegramService } from '../Service'
 import { Subject } from 'rxjs'
@@ -46,7 +47,7 @@ export class TelegramService implements FacegramService {
   }
 
   async initialize () {
-    console.log('Sending authorization code to telegram user ' + this.config.telegramUsername)
+    log.info('telegram', 'Sending authorization code to telegram user', this.config.telegramUsername)
     const { phone_code_hash } = await this.telegram('auth.sendCode', {
       phone_number  : this.config.phoneNumber,
       api_id        : this.config.apiId,
@@ -76,7 +77,6 @@ export class TelegramService implements FacegramService {
         passwordHash
       })
     }
-
-    console.log(result.user.first_name)
+    log.info('telegram', 'Logged in as', result.user.first_name)
   }
 }

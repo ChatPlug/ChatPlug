@@ -1,4 +1,5 @@
 import fs = require('fs')
+import log from 'npmlog'
 import { IFacegramConnection } from './models'
 
 const CONFIG_FILE_PATH = './config.json'
@@ -35,7 +36,7 @@ export class FacegramConfig {
     // If config file doesn't exist, create one
     if (!fs.existsSync(CONFIG_FILE_PATH)) {
       this.writeConfig(DEFAULT_CONFIG)
-      console.log('written default config')
+      log.info('config', 'Writted default config to ' + CONFIG_FILE_PATH)
       process.exit(0)
     }
 

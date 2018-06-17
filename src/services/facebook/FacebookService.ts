@@ -1,3 +1,4 @@
+import log from 'npmlog'
 import { IFacegramMessage } from '../../models'
 import { FacegramService } from '../Service'
 import { Subject } from 'rxjs'
@@ -36,11 +37,12 @@ export class FacebookService implements FacegramService {
       }, async (err, api) => {
         if (err) {
           if (err.error !== 'login-approval') return reject(err)
-          console.log('Login approval pending...')
+          log.info('facebook', 'Login approval pending...')
           let code = await new Promise(result => rl.question('Enter login approval code to your Facebook account (SMS or Google Authenticator app): ', result))
           err.continue(code)
         }
         this.facebook = api
+        log.info('facebook', 'Logged in as', this.config.email)
         resolve()
       })
     })

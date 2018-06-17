@@ -1,3 +1,4 @@
+import log from 'npmlog'
 import { IFacegramMessage } from '../../models'
 import { FacegramService } from '../Service'
 import { Subject } from 'rxjs'
@@ -20,6 +21,6 @@ export class DiscordService implements FacegramService {
   }
 
   async initialize () {
-    return this.discord.login(this.config.token)
+    return this.discord.login(this.config.token).then(() => log.info('discord', 'Logged in as', this.discord.user.username))
   }
 }

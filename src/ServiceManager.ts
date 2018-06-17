@@ -1,3 +1,4 @@
+import log from 'npmlog'
 import { FacegramService } from './services/Service'
 
 export interface ServiceMap {
@@ -27,10 +28,10 @@ export class ServiceManager {
   async initiateServices () {
     this.getRegisteredServices().forEach((service) => {
       if (service.isEnabled) {
-        console.log('Initializing enabled service ' + service.name)
+        log.info('services', `Service ${service.name} enabled, initializing...`)
         service.initialize()
       } else {
-        console.log('Service disabled ' + service.name)
+        log.info('services', `Service ${service.name} disabled`)
       }
     })
   }

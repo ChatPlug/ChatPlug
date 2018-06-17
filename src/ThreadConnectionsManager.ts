@@ -1,3 +1,4 @@
+import log from 'npmlog'
 import { IFacegramConnection, IFacegramThread } from './models'
 
 export class ThreadConnectionsManager {
@@ -5,7 +6,7 @@ export class ThreadConnectionsManager {
 
   constructor (connections: IFacegramConnection[]) {
     this.connections = connections
-    console.log('Registered ' + connections.length + ' service connections')
+    log.info('', `Registered ${connections.length} service connections`)
   }
 
   getAllReceiversForThread (thread: IFacegramThread): IFacegramThread[] {
