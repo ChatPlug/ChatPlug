@@ -1,7 +1,7 @@
 import { IFacegramServiceConfig } from '../../models'
 
 export interface FacebookConfig extends IFacegramServiceConfig {
-  login: string
+  email: string
   password: string
   forceLogin: boolean
 }

@@ -28,7 +28,7 @@ export class FacebookService implements FacegramService {
   initialize () {
     return new Promise((resolve, reject) => {
       facebook({
-        email: this.config.login,
+        email: this.config.email,
         password: this.config.password
       }, {
         forceLogin: this.config.forceLogin
