@@ -47,4 +47,8 @@ export class DiscordService implements FacegramService {
     })
     return this.discord.login(this.config.token).then(() => log.info('discord', 'Logged in as', this.discord.user.username))
   }
+
+  terminate () {
+    return this.discord.destroy()
+  }
 }

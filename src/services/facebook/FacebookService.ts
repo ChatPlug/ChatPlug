@@ -47,4 +47,8 @@ export class FacebookService implements FacegramService {
       })
     })
   }
+
+  terminate () {
+    return new Promise((resolve, reject) => this.facebook.logout(err => err ? reject(err) : resolve()))
+  }
 }

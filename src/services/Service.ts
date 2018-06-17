@@ -7,4 +7,6 @@ export interface FacegramService {
   receiveMessageSubject: Subject<IFacegramMessage>
 
   initialize ()
+
+  terminate ()
 }

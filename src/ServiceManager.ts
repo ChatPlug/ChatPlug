@@ -35,4 +35,8 @@ export class ServiceManager {
       }
     })
   }
+
+  async terminateServices () {
+    return Promise.all(this.getRegisteredServices().filter(service => service.isEnabled).map(service => service.terminate()))
+  }
 }

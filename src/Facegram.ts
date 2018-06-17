@@ -27,6 +27,10 @@ export class Facegram {
     await this.serviceManager.initiateServices()
   }
 
+  async stopBridge () {
+    await this.serviceManager.terminateServices()
+  }
+
   registerServices () {
     this.serviceManager.registerService(new TelegramService(this.config.getConfigForServiceName('telegram'), this.exchangeManager))
     this.serviceManager.registerService(new FacebookService(this.config.getConfigForServiceName('facebook'), this.exchangeManager))

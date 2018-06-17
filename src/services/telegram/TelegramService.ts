@@ -79,4 +79,10 @@ export class TelegramService implements FacegramService {
     }
     log.info('telegram', 'Logged in as', result.user.first_name)
   }
+
+  terminate () {
+    // currently not available
+    // zerobias/telegram-mtproto#122
+    return
+  }
 }
