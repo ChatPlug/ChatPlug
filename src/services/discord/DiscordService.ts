@@ -13,7 +13,6 @@ export class DiscordService implements FacegramService {
   receiveMessageSubject: Subject<IFacegramMessage> = new Subject()
   config: DiscordConfig
   discord = new DiscordClient()
-  webhooks: Collection<string, Webhook>
 
   constructor (config: DiscordConfig, exchangeManager: ExchangeManager) {
     this.exchangeManager = exchangeManager
@@ -28,22 +27,19 @@ export class DiscordService implements FacegramService {
       const channel = this.discord.channels.get(message.target.id)
       if (!channel || channel.type !== 'text') return log.warn('discord', `Channel ${message.target} not found!`)
 
-      let webhook = this.webhooks.find('channelID', message.target)
-      if (!webhook) {
-        webhook = await (channel as TextChannel).createWebhook(
+      let webhook = (await this.getAllWebhooks()).find('channelID', message.target)
+      if (!webhook) webhook = await (channel as TextChannel).createWebhook(
           `Facegram ${(channel as TextChannel).name}`.substr(0, 32),
           'https://github.com/feelfreelinux/facegram/raw/master/facegram_logo.png'
         )
-        this.webhooks.set(webhook.id, webhook)
-      }
       webhook.send(message.message, {
         username: message.author.username,
         avatarURL: message.author.avatar
       }).then().catch(err => log.error('discord', err))
     })
 
-    this.discord.on('message', (message) => {
-      if (this.webhooks.has(message.author.id) || message.author.username === this.discord.user.username) return
+    this.discord.on('message', async (message) => {
+      if ((await this.getAllWebhooks()).has(message.author.id) || message.author.username === this.discord.user.username) return
       const facegramMessage = {
         message: message.content,
         attachments: [],
@@ -61,20 +57,20 @@ export class DiscordService implements FacegramService {
       this.exchangeManager.messageSubject.next(facegramMessage)
     })
     return this.discord.login(this.config.token).then(async () => {
-      // get array of collections of webhooks from all guilds
-      Promise.all(this.discord.guilds.map(guild => guild.fetchWebhooks())).then(allWebhooks => {
-        // filter them to get only Facegram's webhooks
-        allWebhooks = allWebhooks.map(webhooks => webhooks.filter(webhook => webhook.name.startsWith('Facegram')))
-        // save them to a new collection
-        this.webhooks = new Collection()
-        this.webhooks = this.webhooks.concat(...allWebhooks)
-        log.silly('discord: webhooks', this.webhooks)
-      }).catch(err => log.error('discord', err))
       log.info('discord', 'Logged in as', this.discord.user.username)
     }).catch(err => log.error('discord', err))
   }
 
   terminate () {
     return this.discord.destroy()
+  }
+
+  async getAllWebhooks () : Promise<Collection<string, Webhook>> {
+    // get array of collections of webhooks from all guilds
+    let allWebhooks = await Promise.all(this.discord.guilds.map(guild => guild.fetchWebhooks()))
+    // filter them to get only Facegram's webhooks
+    allWebhooks = allWebhooks.map(webhooks => webhooks.filter(webhook => webhook.name.startsWith('Facegram')))
+
+    return new Collection<string, Webhook>().concat(...allWebhooks)
   }
 }
