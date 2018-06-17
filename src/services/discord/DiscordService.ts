@@ -1,4 +1,4 @@
-import npmlog from 'npmlog'
+import log from 'npmlog'
 import { IFacegramMessage } from '../../models'
 import { FacegramService } from '../Service'
 import { Subject } from 'rxjs'

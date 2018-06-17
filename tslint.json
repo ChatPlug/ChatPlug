@@ -4,6 +4,8 @@
         "no-unused-variable": false,
         "no-unused-expression": false,
         "semicolon": [true, "never"],
-        "ter-arrow-parens": false
+        "ter-arrow-parens": false,
+        "import-name": false,
+        "max-line-length": false
     }
 }

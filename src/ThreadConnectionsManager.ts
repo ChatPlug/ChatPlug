@@ -1,4 +1,4 @@
-import npmlog from 'npmlog'
+import log from 'npmlog'
 import { IFacegramConnection, IFacegramThread } from './models'
 
 export class ThreadConnectionsManager {

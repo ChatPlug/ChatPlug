@@ -1,4 +1,4 @@
-import npmlog from 'npmlog'
+import log from 'npmlog'
 import { FacegramService } from './services/Service'
 
 export interface ServiceMap {

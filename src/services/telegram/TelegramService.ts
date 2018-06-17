@@ -1,9 +1,9 @@
-import npmlog from 'npmlog'
+import log from 'npmlog'
 import { IFacegramMessage } from '../../models'
 import { FacegramService } from '../Service'
 import { Subject } from 'rxjs'
 import { TelegramConfig } from './TelegramConfig'
-import telegramMtproto from 'telegram-mtproto'
+import MTProto from 'telegram-mtproto'
 import crypto from 'crypto'
 
 import { createInterface } from 'readline'

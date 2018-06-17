@@ -1,9 +1,9 @@
-import npmlog from 'npmlog'
+import log from 'npmlog'
 import { IFacegramMessage } from '../../models'
 import { FacegramService } from '../Service'
 import { Subject } from 'rxjs'
 import { FacebookConfig } from './FacebookConfig'
-import facebookChatApi from 'facebook-chat-api'
+import facebook from 'facebook-chat-api'
 import { createInterface } from 'readline'
 import { ExchangeManager } from '../../ExchangeManager'
 

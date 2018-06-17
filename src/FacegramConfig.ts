@@ -1,5 +1,5 @@
 import fs = require('fs')
-import npmlog from 'npmlog'
+import log from 'npmlog'
 import { IFacegramConnection } from './models'
 
 const CONFIG_FILE_PATH = './config.json'
