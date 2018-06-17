@@ -38,7 +38,7 @@ export class FacegramConfig {
     // If config file doesn't exist, create one
     if (!fs.existsSync(CONFIG_FILE_PATH)) {
       this.writeConfig(DEFAULT_CONFIG)
-      log.info('config', 'Writted default config to ' + CONFIG_FILE_PATH)
+      log.info('config', 'Written default config to ' + CONFIG_FILE_PATH)
       process.exit(0)
     }
 
