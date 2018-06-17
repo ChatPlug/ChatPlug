@@ -15,13 +15,13 @@ const rl = createInterface({
 export class FacebookService implements FacegramService {
   isEnabled: boolean
   name = 'facebook'
-  messageSubject = Subject.create()
-  receiveMessageSubject: Subject<IFacegramMessage>
+  messageSubject: Subject<IFacegramMessage>
+  receiveMessageSubject: Subject<IFacegramMessage> = new Subject()
   config: FacebookConfig
   facebook: any
 
   constructor (config: FacebookConfig, exchangeManager: ExchangeManager) {
-    this.receiveMessageSubject = exchangeManager.messageSubject
+    this.messageSubject = exchangeManager.messageSubject
     this.config = config
     this.isEnabled = config.enabled
   }

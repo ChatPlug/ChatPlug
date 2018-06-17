@@ -12,14 +12,17 @@ export class ExchangeManager {
   constructor (threadConnectionsManager: ThreadConnectionsManager, serviceManager: ServiceManager) {
     this.threadConnectionsManager = threadConnectionsManager
     this.serviceManager = serviceManager
-    this.messageSubject = Subject.create()
-    this.notificationSubject = Subject.create()
+    this.messageSubject = new Subject()
+    this.notificationSubject = new Subject()
 
-    this.messageSubject.subscribe((message) => {
-      const threads = threadConnectionsManager.getAllReceiversForThread(message.origin)
-      threads.forEach((thread) => {
-        serviceManager.services[thread.service].messageSubject.next(message)
-      })
+    this.messageSubject.subscribe({
+      next: (message) => {
+        const threads = threadConnectionsManager.getAllReceiversForThread(message.origin)
+        threads.forEach((thread) => {
+          message.target = thread
+          serviceManager.services[thread.service].receiveMessageSubject.next(message)
+        })
+      }
     })
   }
 }

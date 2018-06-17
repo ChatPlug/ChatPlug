@@ -35,13 +35,13 @@ const server = { dev: false }
 export class TelegramService implements FacegramService {
   isEnabled: boolean
   name = 'telegram'
-  messageSubject = Subject.create()
-  receiveMessageSubject: Subject<IFacegramMessage>
+  messageSubject: Subject<IFacegramMessage>
+  receiveMessageSubject: Subject<IFacegramMessage> = new Subject()
   config: TelegramConfig
   telegram = MTProto({ api, server })
 
   constructor (config: TelegramConfig, exchangeManager: ExchangeManager) {
-    this.receiveMessageSubject = exchangeManager.messageSubject
+    this.messageSubject = exchangeManager.messageSubject
     this.config = config
     this.isEnabled = config.enabled
   }

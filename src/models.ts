@@ -6,7 +6,7 @@ export interface IFacegramMessage {
   attachments: IFacegramAttachement[]
   author: string
   origin: IFacegramThread
-  serviceConnection: IFacegramConnection
+  target?: IFacegramThread
 }
 
 export interface IFacegramAttachement {
