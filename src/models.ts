@@ -4,7 +4,7 @@ import { FacegramService } from './services/Service'
 export interface IFacegramMessage {
   message: string
   attachments: IFacegramAttachement[]
-  author: string
+  author: IFacegramUser
   origin: IFacegramThread
   target?: IFacegramThread
 }
@@ -22,6 +22,12 @@ export interface IFacegramService {
 export interface IFacegramThread {
   id: string
   service: string
+}
+
+export interface IFacegramUser {
+  username: string
+  avatar?: string
+  id?: string
 }
 
 export interface IFacegramConnection {
