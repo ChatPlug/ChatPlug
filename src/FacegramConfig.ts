@@ -28,7 +28,9 @@ const DEFAULT_CONFIG = {
     }
   },
 
-  serviceConnections: []
+  serviceConnections: [],
+
+  logLevel: 'info'
 }
 export class FacegramConfig {
   jsonConfig: any
@@ -42,6 +44,8 @@ export class FacegramConfig {
 
     // Read config
     this.jsonConfig = JSON.parse(fs.readFileSync(CONFIG_FILE_PATH, 'utf-8'))
+    if (this.jsonConfig.logLevel) log.level = this.jsonConfig.logLevel
+    if (process.env.LOG_LEVEL) log.level = process.env.LOG_LEVEL
   }
 
   getConfigForServiceName (name: string) {
