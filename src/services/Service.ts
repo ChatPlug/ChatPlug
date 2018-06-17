@@ -1,12 +1,12 @@
-import { IFacegramMessage } from '../models'
-import { Subject } from 'rxjs'
+import { IFacegramMessage } from '../models';
+import { Subject } from 'rxjs';
 
 export interface FacegramService {
-  isEnabled: boolean
-  name: string
-  receiveMessageSubject: Subject<IFacegramMessage>
+  isEnabled: boolean;
+  name: string;
+  receiveMessageSubject: Subject<IFacegramMessage>;
 
-  initialize ()
+  initialize ();
 
-  terminate ()
+  terminate ();
 }

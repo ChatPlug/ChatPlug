@@ -1,5 +1,5 @@
-import { IFacegramServiceConfig } from '../../models'
+import { IFacegramServiceConfig } from '../../models';
 
 export interface DiscordConfig extends IFacegramServiceConfig {
-  token: string
+  token: string;
 }

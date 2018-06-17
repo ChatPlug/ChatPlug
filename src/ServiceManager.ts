@@ -1,42 +1,42 @@
-import log from 'npmlog'
-import { FacegramService } from './services/Service'
+import npmlog from 'npmlog';
+import { FacegramService } from './services/Service';
 
 export interface ServiceMap {
-  [name: string]: FacegramService
+  [name: string]: FacegramService;
 }
 
 export class ServiceManager {
-  services: ServiceMap
+  services: ServiceMap;
   constructor () {
-    this.services = {}
+    this.services = {};
   }
 
   registerService (service: FacegramService) {
-    this.services[service.name] = service
+    this.services[service.name] = service;
   }
 
   getRegisteredServices (): FacegramService[] {
-    const registeredServices: FacegramService[] = []
+    const registeredServices: FacegramService[] = [];
 
     for (const key in this.services) {
-      registeredServices.push(this.services[key])
+      registeredServices.push(this.services[key]);
     }
 
-    return registeredServices
+    return registeredServices;
   }
 
   async initiateServices () {
     this.getRegisteredServices().forEach((service) => {
       if (service.isEnabled) {
-        log.info('services', `Service ${service.name} enabled, initializing...`)
-        service.initialize()
+        log.info('services', `Service ${service.name} enabled, initializing...`);
+        service.initialize();
       } else {
-        log.info('services', `Service ${service.name} disabled`)
+        log.info('services', `Service ${service.name} disabled`);
       }
-    })
+    });
   }
 
   async terminateServices () {
-    return Promise.all(this.getRegisteredServices().filter(service => service.isEnabled).map(service => service.terminate()))
+    return Promise.all(this.getRegisteredServices().filter(service => service.isEnabled).map(service => service.terminate()));
   }
 }
