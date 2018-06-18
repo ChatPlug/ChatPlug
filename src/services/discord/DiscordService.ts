@@ -44,9 +44,10 @@ export default class DiscordService implements FacegramService {
         )
         this.webhooks.set(webhook.id, webhook)
       }
+
       webhook
         .send(message.message, {
-          username: message.author.username,
+          username: trim(message.author.username),
           avatarURL: message.author.avatar,
           files: message.attachments.map(file => ({
             attachment: file.url,
@@ -107,4 +108,8 @@ export default class DiscordService implements FacegramService {
   terminate() {
     return this.discord.destroy()
   }
+}
+
+function trim(str: string): string {
+  return str.length <= 32 ? str.length === 1 ? str + '.' : str : str.substr(0, 29) + '...'
 }
