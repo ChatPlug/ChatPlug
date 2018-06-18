@@ -62,11 +62,9 @@ export default class DiscordService implements FacegramService {
       if (
         this.webhooks.has(message.author.id) ||
         message.author.username === this.discord.user.username
-      ) {
-        return
-      }
+      ) return
       const facegramMessage = {
-        message: message.content,
+        message: message.cleanContent,
         attachments: message.attachments.map(file => ({
           name: file.filename,
           url: file.url,
