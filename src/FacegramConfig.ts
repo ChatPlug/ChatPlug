@@ -9,6 +9,7 @@ const DEFAULT_CONFIG = {
   services: {
     telegram: {
       enabled: false,
+      masterMode: false,
       apiId: 'telegram account apiId',
       apiHash: 'telegram account apiHash',
       phoneNumber: 'telegram account phone number',
