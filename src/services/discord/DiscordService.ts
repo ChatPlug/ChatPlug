@@ -110,6 +110,6 @@ export default class DiscordService implements FacegramService {
   }
 }
 
-function trim (str: string): string {
+function trim(str: string): string {
   return str.length <= 32 ? str.length === 1 ? str + '.' : str : str.substr(0, 29) + '...'
 }
