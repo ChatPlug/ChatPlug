@@ -63,6 +63,8 @@ export default class DiscordService implements FacegramService {
         this.webhooks.has(message.author.id) ||
         message.author.username === this.discord.user.username
       ) return
+
+      // TODO: embed handling
       const facegramMessage = {
         message: message.cleanContent,
         attachments: message.attachments.map(file => ({
