@@ -1,6 +1,6 @@
 import log from 'npmlog'
 import TelegramBot from 'node-telegram-bot-api'
-import { IFacegramMessage } from '../../models'
+import { IFacegramMessage, IFacegramAttachement } from '../../models'
 import { FacegramService } from '../Service'
 import { Subject } from 'rxjs'
 import { TelegramConfig } from './TelegramConfig'
@@ -31,7 +31,7 @@ export default class TelegramService implements FacegramService {
   messageSubject: Subject<IFacegramMessage>
   receiveMessageSubject: Subject<IFacegramMessage> = new Subject()
   config: TelegramConfig
-  botClient: any
+  botClient: TelegramBot
   telegram = MTProto({ api, server })
 
   constructor(config: TelegramConfig, exchangeManager: ExchangeManager,  threadConnectionsManager: ThreadConnectionsManager) {
@@ -48,17 +48,33 @@ export default class TelegramService implements FacegramService {
 
     this.receiveMessageSubject.subscribe({
       next: (msg) => {
+        const formattedMsg = '*' + msg.author.username + '*' + ': ' + msg.message
         this.botClient.sendMessage(
           Number(msg.target!!.id),
-          msg.author.username + ': ' + msg.message,
+          formattedMsg,
+          { parse_mode: 'Markdown' },
         )
+        msg.attachments.forEach((attachment) => {
+          this.botClient.sendPhoto(msg.target!!.id, attachment.url)
+        })
       },
     })
 
-    this.botClient.on('message', (msg: TelegramBot.Message) => {
+    this.botClient.on('message', async (msg: TelegramBot.Message) => {
+      let listOfAttachments: IFacegramAttachement[] = []
+      if (msg.photo) {
+        const photoId = msg.photo[msg.photo.length - 1].file_id
+        const picUrl = await this.botClient.getFileLink(photoId)
+        if (typeof picUrl === 'string') {
+          listOfAttachments = [{
+            url: picUrl,
+            name: /[^/]*$/.exec(picUrl as string)!![0],
+          } as IFacegramAttachement]
+        }
+      }
       const facegramMessage = {
         message: msg.text,
-        attachments: [],
+        attachments: listOfAttachments,
         author: {
           username: msg.from!!.username,
           avatar: '',
