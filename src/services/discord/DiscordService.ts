@@ -11,6 +11,7 @@ import {
 } from 'discord.js'
 import { ExchangeManager } from '../../ExchangeManager'
 import { ThreadConnectionsManager } from '../../ThreadConnectionsManager'
+import { DiscordMessageHandler } from './DiscordMessageHandler'
 
 export default class DiscordService implements FacegramService {
   isEnabled: boolean
@@ -18,8 +19,8 @@ export default class DiscordService implements FacegramService {
   exchangeManager: ExchangeManager
   receiveMessageSubject: Subject<IFacegramMessage> = new Subject()
   config: DiscordConfig
+  messageHandler: DiscordMessageHandler
   discord = new DiscordClient()
-  webhooks: Collection<string, Webhook>
 
   constructor(config: DiscordConfig, exchangeManager: ExchangeManager, threadConnectionsManager: ThreadConnectionsManager) {
     this.exchangeManager = exchangeManager
@@ -28,62 +29,11 @@ export default class DiscordService implements FacegramService {
   }
 
   async initialize() {
-    this.receiveMessageSubject.subscribe(async (message) => {
-      if (!message.target) return
+    this.messageHandler = new DiscordMessageHandler(this.discord, this.exchangeManager.messageSubject)
 
-      const channel = this.discord.channels.get(message.target.id)
-      if (!channel || channel.type !== 'text') {
-        return log.warn('discord', `Channel ${message.target} not found!`)
-      }
+    this.receiveMessageSubject.subscribe(this.messageHandler.onIncomingMessage)
 
-      let webhook = this.webhooks.find('channelID', message.target.id)
-      if (!webhook) {
-        webhook = await (channel as TextChannel).createWebhook(
-          `Facegram ${(channel as TextChannel).name}`.substr(0, 32),
-          'https://github.com/feelfreelinux/facegram/raw/master/facegram_logo.png',
-        )
-        this.webhooks.set(webhook.id, webhook)
-      }
-
-      webhook
-        .send(message.message, {
-          username: trim(message.author.username),
-          avatarURL: message.author.avatar,
-          files: message.attachments.map(file => ({
-            attachment: file.url,
-            name: file.name,
-          })),
-        })
-        .then()
-        .catch(err => log.error('discord', err))
-    })
-
-    this.discord.on('message', (message) => {
-      if (
-        this.webhooks.has(message.author.id) ||
-        message.author.username === this.discord.user.username
-      ) return
-
-      // TODO: embed handling
-      const facegramMessage = {
-        message: message.cleanContent,
-        attachments: message.attachments.map(file => ({
-          name: file.filename,
-          url: file.url,
-        })),
-        author: {
-          username: message.author.username,
-          avatar: message.author.avatarURL,
-          id: message.author.id,
-        },
-        origin: {
-          id: message.channel.id,
-          service: this.name,
-        },
-      } as IFacegramMessage
-
-      this.exchangeManager.messageSubject.next(facegramMessage)
-    })
+    this.discord.on('message', this.messageHandler.onOutgoingMessage)
     return this.discord
       .login(this.config.token)
       .then(async () => {
@@ -95,9 +45,11 @@ export default class DiscordService implements FacegramService {
               webhooks.filter(webhook => webhook.name.startsWith('Facegram')),
             )
             // save them to a new collection
-            this.webhooks = new Collection()
-            this.webhooks = this.webhooks.concat(...filteredWebhooks)
-            log.silly('discord: webhooks', '%o', this.webhooks)
+            let webhooks = new Collection() as Collection<string, Webhook>
+            webhooks = webhooks.concat(...filteredWebhooks)
+            log.silly('discord: webhooks', '%o', webhooks)
+
+            this.messageHandler.loadWebhooks(webhooks)
           })
           .catch(err => log.error('discord', err))
         log.info('discord', 'Logged in as', this.discord.user.username)
@@ -108,8 +60,4 @@ export default class DiscordService implements FacegramService {
   terminate() {
     return this.discord.destroy()
   }
-}
-
-function trim(str: string): string {
-  return str.length <= 32 ? str.length === 1 ? str + '.' : str : str.substr(0, 29) + '...'
 }
