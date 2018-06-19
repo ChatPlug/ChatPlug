@@ -135,6 +135,7 @@ export default class FacebookService implements FacegramService {
   }
 
   terminate() {
+    if (!this.facebook) return log.info('facebook', 'Not logged in')
     return new Promise((resolve, reject) =>
       this.facebook.logout(err => (err ? reject(err) : resolve())),
     )
