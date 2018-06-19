@@ -7,8 +7,7 @@ import facebook from 'facebook-chat-api'
 import { createInterface } from 'readline'
 import { ExchangeManager } from '../../ExchangeManager'
 import { ThreadConnectionsManager } from '../../ThreadConnectionsManager'
-import { promisify } from 'util'
-import { parse } from 'url'
+import { FacebookMessageHandler } from './FacebookMessageHandler'
 
 const rl = createInterface({
   input: process.stdin,
@@ -21,9 +20,9 @@ export default class FacebookService implements FacegramService {
   messageSubject: Subject<IFacegramMessage>
   receiveMessageSubject: Subject<IFacegramMessage> = new Subject()
   config: FacebookConfig
+  messageHandler: FacebookMessageHandler
   facebook: any
   stopListening: any
-  handledMessages: any[] = []
 
   constructor(config: FacebookConfig, exchangeManager: ExchangeManager, threadConnectionsManager: ThreadConnectionsManager) {
     this.messageSubject = exchangeManager.messageSubject
@@ -34,17 +33,9 @@ export default class FacebookService implements FacegramService {
   async initialize () {
     await this.login()
 
-    this.receiveMessageSubject.subscribe(async message => {
-      if (!message.target) return
-      this.facebook.sendMessage(
-        {
-          body: `*${message.author.username}*: ${message.message}`,
-          attachment: await Promise.all(message.attachments.map(attach => attach.url).map(getStreamFromURL)),
-        },
-        message.target.id,
-        err => { if (err) log.error('facebook', err) },
-      )
-    })
+    this.messageHandler = new FacebookMessageHandler(this.facebook, this.messageSubject)
+
+    this.receiveMessageSubject.subscribe(this.messageHandler.onIncomingMessage)
 
     this.stopListening = this.facebook.listen(this.listener)
   }
@@ -59,52 +50,11 @@ export default class FacebookService implements FacegramService {
       this.stopListening()
       this.login().then(() => {
         log.info('facebook', 'Reconnected to Facebook')
+        this.messageHandler.setClient(this.facebook)
         this.stopListening = this.facebook.listen(this.listener)
       })
     }
-
-    // Duplicates handling
-    if (this.handledMessages.includes(message.messageID)) return log.verbose('facebook', 'Possible duplicate message, ignoring')
-    if (this.handledMessages.length > 100) this.handledMessages.splice(100)
-    this.handledMessages.push(message.messageID)
-
-    // TODO: add logging to this part of the script
-    const thread = await promisify(this.facebook.getThreadInfo)(message.threadID)
-    const sender = (await promisify(this.facebook.getUserInfo)(message.senderID))[message.senderID]
-
-    const facegramMessage = {
-      message: message.body,
-      attachments: message.attachments.map(attach => {
-        if (attach.type === 'share') return // TODO: parse share attachments correctly
-
-        let url = attach.image || attach.url
-        if (!url) return // failsafe, but it shouldn't happen
-
-        if (url.match(/^(http|https):\/\/l\.facebook\.com\/l\.php/i)) {
-          url = parse(url, true).query.u
-        }
-
-        if (parse(url).pathname === '/safe_image.php') {
-          url = parse(url, true).query.url
-        }
-
-        return {
-          url,
-          name: (parse(url).pathname || 'filename').split('/').pop(),
-        }
-      }).filter(x => x),
-      author: {
-        username: thread.nicknames[message.senderID] || sender.name,
-        avatar: `https://graph.facebook.com/${message.senderID}/picture?width=128`,
-        id: message.senderID,
-      },
-      origin: {
-        id: thread.threadID,
-        service: this.name,
-      },
-    } as IFacegramMessage
-
-    this.messageSubject.next(facegramMessage)
+    this.messageHandler.onOutgoingMessage(message)
   }
 
   login () {
@@ -140,8 +90,4 @@ export default class FacebookService implements FacegramService {
       this.facebook.logout(err => (err ? reject(err) : resolve())),
     )
   }
-}
-
-function getStreamFromURL(url) {
-  return new Promise((resolve, reject) => require('https').get(url, res => resolve(res)))
 }
