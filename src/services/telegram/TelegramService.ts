@@ -90,9 +90,11 @@ export default class TelegramService implements FacegramService {
       // send a message to the chat acknowledging receipt of their message
       this.messageSubject.next(facegramMessage)
     })
+    log.info('telegram', 'Registered bot handlers')
   }
 
   terminate() {
+    this.botClient.stopPolling()
     // currently not available
     // zerobias/telegram-mtproto#122
     return
