@@ -7,7 +7,7 @@
   "scripts": {
     "start": "npm run serve",
     "dev": "npm run tslint && ts-node src/index.ts",
-    "build": "npm run build-ts && npm run tslint",
+    "build": "npm run tslint && rm -r dist && npm run build-ts  && pkg . --outdir bin",
     "serve": "node dist/index.js",
     "test": "jest --forceExit --verbose",
     "build-ts": "tsc",
@@ -33,7 +33,6 @@
   },
   "homepage": "https://github.com/feelfreelinux/facegram#readme",
   "dependencies": {
-    "@types/node-telegram-bot-api": "^0.30.1",
     "discord.js": "^11.3.2",
     "facebook-chat-api": "^1.6.0",
     "node-telegram-bot-api": "^0.30.0",
@@ -44,7 +43,9 @@
   "devDependencies": {
     "@types/jest": "^23.1.0",
     "@types/node": "^10.3.3",
+    "@types/node-telegram-bot-api": "^0.30.1",
     "@types/npmlog": "^4.1.0",
+    "pkg": "^4.3.1",
     "ts-jest": "^22.4.6",
     "ts-node": "^6.1.1",
     "tslint": "^5.10.0",
@@ -65,5 +66,9 @@
       "json",
       "node"
     ]
+  },
+  "bin": "dist/index.js",
+  "pkg": {
+    "scripts": "dist/**/*.js"
   }
 }
