@@ -124,7 +124,7 @@ export default class FacebookService implements FacegramService {
             log.info('facebook', 'Login approval pending...')
             const message = 'Enter login approval code to your Facebook account (SMS or Google Authenticator app): '
             const code = await new Promise(result => rl.question(message, result))
-            err.continue(code)
+            return err.continue(code)
           }
           this.facebook = api
           log.info('facebook', 'Logged in as', this.config.email)
