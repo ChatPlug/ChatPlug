@@ -30,7 +30,7 @@ To use this you will need:
 
 # :electric_plug: Quick start
 
-You can grab the binaries HERE. *(TODO: Add link)*
+You can grab the binaries [here](https://github.com/feelfreelinux/facegram/releases).
 
 
 ~~A configuration guide will run when you first start facegram.~~ (TODO: remove strikethrough when ready)
