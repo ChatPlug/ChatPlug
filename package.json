@@ -7,9 +7,9 @@
   "scripts": {
     "start": "npm run serve",
     "dev": "npm run tslint && ts-node src/index.ts",
-    "build": "npm run tslint && rm -r dist && npm run build-ts  && pkg . --outdir bin",
+    "build": "npm run tslint && rm -r dist && npm run build-ts && pkg . --outdir bin",
     "serve": "node dist/index.js",
-    "test": "jest --forceExit --verbose",
+    "test": "npm run tslint && rm -r dist && npm run build-ts",
     "build-ts": "tsc",
     "watch-ts": "tsc -w",
     "tslint": "tslint -c tslint.json -p tsconfig.json"
@@ -52,20 +52,6 @@
     "tslint-config-airbnb": "^5.9.2",
     "tslint-config-standard": "^7.0.0",
     "typescript": "^2.9.2"
-  },
-  "jest": {
-    "transform": {
-      "^.+\\.tsx?$": "ts-jest"
-    },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
-    ]
   },
   "bin": "dist/index.js",
   "pkg": {
