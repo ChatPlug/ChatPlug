@@ -7,9 +7,9 @@
   "scripts": {
     "start": "npm run serve",
     "dev": "npm run tslint && ts-node src/index.ts",
-    "build": "npm run tslint && rm -r dist && npm run build-ts && pkg . --outdir bin",
+    "build": "npm run tslint && rm -rf dist && npm run build-ts && pkg . --outdir bin",
     "serve": "node dist/index.js",
-    "test": "npm run tslint && rm -r dist && npm run build-ts",
+    "test": "npm run tslint && rm -rf dist && npm run build-ts",
     "build-ts": "tsc",
     "watch-ts": "tsc -w",
     "tslint": "tslint -c tslint.json -p tsconfig.json"
