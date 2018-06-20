@@ -1,0 +1,17 @@
+language: node_js
+node_js:
+  - "9"
+cache:
+  directories:
+    - "node_modules"
+deploy:
+  provider: releases
+  api_key:
+    secure: YOUR_API_KEY_ENCRYPTED
+  file:
+    - "bin/facegram-linux"
+    - "bin/facegram-macos"
+    - "bin/facegram-win.exe"
+  skip_cleanup: true
+  on:
+    tags: true
