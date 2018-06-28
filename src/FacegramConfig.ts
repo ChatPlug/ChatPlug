@@ -28,6 +28,11 @@ const DEFAULT_CONFIG = {
       enabled: false,
       token: 'discord bot token',
     },
+
+    grpc: {
+      enabled: false,
+      port: 5319,
+    },
   },
 
   serviceConnections: [],

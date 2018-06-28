@@ -1,0 +1,14 @@
+import "models.proto";
+
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.feelfree.plugchat.messages";
+option java_outer_classname = "MessagesProto";
+option objc_class_prefix = "MS";
+
+package messages;
+
+service MessagesService {
+  rpc SendMessage (Message) returns (Message) {}
+}

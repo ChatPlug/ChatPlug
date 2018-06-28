@@ -1,0 +1,30 @@
+package models;
+
+message Thread {
+  string id = 1;
+  string service = 2;
+  string name = 3;
+}
+
+message ThreadConnection {
+  repeated Thread services = 1;
+}
+
+message User {
+  string id = 1;
+  string avatar = 2;
+  string username = 3;
+}
+
+message Message {
+  string message = 1;
+  repeated Attachement attachements = 2;
+  User author = 3;
+  Thread origin = 4;
+  Thread target = 5;
+}
+
+message Attachement {
+  string url = 1;
+  string name = 2;
+}
