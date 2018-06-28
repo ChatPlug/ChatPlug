@@ -11,6 +11,7 @@ import { createInterface } from 'readline'
 import { ExchangeManager } from '../../ExchangeManager'
 import { ThreadConnectionsManager } from '../../ThreadConnectionsManager'
 import { TelegramMessageHandler } from './TelegramMessageHandler'
+import { FacegramConfig } from '../../FacegramConfig'
 
 const api = {
   invokeWithLayer: 0xda9b0d0d,
@@ -35,7 +36,7 @@ export default class TelegramService implements FacegramService {
   botClient: TelegramBot
   telegram = MTProto({ api, server })
 
-  constructor(config: TelegramConfig, exchangeManager: ExchangeManager,  threadConnectionsManager: ThreadConnectionsManager) {
+  constructor(config: TelegramConfig, exchangeManager: ExchangeManager,  threadConnectionsManager: ThreadConnectionsManager, facegramConfig: FacegramConfig) {
     this.messageSubject = exchangeManager.messageSubject
     this.config = config
     this.isEnabled = config.enabled

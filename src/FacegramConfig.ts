@@ -55,6 +55,11 @@ export class FacegramConfig {
     if (process.env.LOG_LEVEL) log.level = process.env.LOG_LEVEL
   }
 
+  addThreadConnection(threadConnection: IFacegramConnection) {
+    this.jsonConfig.serviceConnections.push(threadConnection)
+    this.writeConfig(this.jsonConfig)
+  }
+
   getConfigForServiceName (name: string) {
     return this.jsonConfig['services'][name]
   }

@@ -38,7 +38,7 @@ export class Facegram {
     // Get services from config/loadedServices and register then in service manager
     this.config.getLoadedServices().forEach((moduleName) => {
       const service = new (require('./services/' + moduleName) as any).default(
-        this.config.getConfigForServiceName(moduleName.substr(0, moduleName.indexOf('/'))), this.exchangeManager, this.threadConnectionsManager)
+        this.config.getConfigForServiceName(moduleName.substr(0, moduleName.indexOf('/'))), this.exchangeManager, this.threadConnectionsManager, this.config)
       this.serviceManager.registerService(service)
     })
   }

@@ -1,4 +1,11 @@
-package models;
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.feelfree.plugchat.messages";
+option java_outer_classname = "MessagesProto";
+option objc_class_prefix = "MS";
+
+package chatplug;
 
 message Thread {
   string id = 1;
@@ -18,7 +25,7 @@ message User {
 
 message Message {
   string message = 1;
-  repeated Attachement attachements = 2;
+  repeated Attachement attachments = 2;
   User author = 3;
   Thread origin = 4;
   Thread target = 5;

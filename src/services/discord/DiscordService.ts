@@ -12,6 +12,7 @@ import {
 import { ExchangeManager } from '../../ExchangeManager'
 import { ThreadConnectionsManager } from '../../ThreadConnectionsManager'
 import { DiscordMessageHandler } from './DiscordMessageHandler'
+import { FacebookConfig } from '../facebook/FacebookConfig'
 
 export default class DiscordService implements FacegramService {
   isEnabled: boolean
@@ -22,7 +23,7 @@ export default class DiscordService implements FacegramService {
   messageHandler: DiscordMessageHandler
   discord = new DiscordClient()
 
-  constructor(config: DiscordConfig, exchangeManager: ExchangeManager, threadConnectionsManager: ThreadConnectionsManager) {
+  constructor(config: DiscordConfig, exchangeManager: ExchangeManager, threadConnectionsManager: ThreadConnectionsManager, facegramConfig: FacebookConfig) {
     this.exchangeManager = exchangeManager
     this.config = config
     this.isEnabled = config.enabled
