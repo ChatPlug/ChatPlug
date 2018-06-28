@@ -10,5 +10,9 @@ option objc_class_prefix = "MS";
 package chatplug;
 
 service MessagesService {
-  rpc SendMessage (Message) returns (Message) {}
+  rpc SendMessage (Message) returns (Message);
+  rpc ListenMessages (ListenMessagesRequest) returns (stream Message);
+}
+
+message ListenMessagesRequest {
 }

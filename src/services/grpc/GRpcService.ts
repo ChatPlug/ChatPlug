@@ -28,7 +28,7 @@ export default class GRpcService implements FacegramService {
   constructor(config: GRpcConfig, exchangeManager: ExchangeManager, threadConnectionsManager: ThreadConnectionsManager, facegramConfig: FacegramConfig) {
     this.messageSubject = exchangeManager.messageSubject
     this.config = config
-    this.messagesService = new MessagesService(exchangeManager, threadConnectionsManager, facegramConfig)
+    this.messagesService = new MessagesService(exchangeManager, threadConnectionsManager, facegramConfig, this.receiveMessageSubject)
     this.connectionsService = new ConnectionsService(exchangeManager, threadConnectionsManager, facegramConfig)
     this.isEnabled = config.enabled
   }
@@ -41,9 +41,10 @@ export default class GRpcService implements FacegramService {
     this.server.bind('0.0.0.0:' + this.config.port, grpc.ServerCredentials.createInsecure())
     this.server.start()
 
-    log.info('facebook', 'GRpc api running under port ' + this.config.port)
+    log.info('grpc', 'GRpc api running under port ' + this.config.port)
   }
 
   terminate() {
+    this.server.forceShutdown()
   }
 }
