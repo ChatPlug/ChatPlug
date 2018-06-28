@@ -7,10 +7,10 @@ import { TelegramConfig } from './TelegramConfig'
 import { telegramClientLogin, telegramMtProtoServer } from './MtProtoClientLogic'
 import MTProto from 'telegram-mtproto'
 import crypto from 'crypto'
-
 import { createInterface } from 'readline'
 import { ExchangeManager } from '../../ExchangeManager'
 import { ThreadConnectionsManager } from '../../ThreadConnectionsManager'
+import { TelegramMessageHandler } from './TelegramMessageHandler'
 
 const api = {
   invokeWithLayer: 0xda9b0d0d,
@@ -28,6 +28,7 @@ const server = {
 export default class TelegramService implements FacegramService {
   isEnabled: boolean
   name = 'telegram'
+  messageHandler: TelegramMessageHandler
   messageSubject: Subject<IFacegramMessage>
   receiveMessageSubject: Subject<IFacegramMessage> = new Subject()
   config: TelegramConfig
@@ -46,49 +47,12 @@ export default class TelegramService implements FacegramService {
       telegramClientLogin(this.telegram, this.config.apiId, this.config.apiHash, this.config.phoneNumber)
     }
 
-    this.receiveMessageSubject.subscribe({
-      next: (msg) => {
-        const formattedMsg = '*' + msg.author.username + '*' + ': ' + msg.message
-        this.botClient.sendMessage(
-          Number(msg.target!!.id),
-          formattedMsg,
-          { parse_mode: 'Markdown' },
-        )
-        msg.attachments.forEach((attachment) => {
-          this.botClient.sendPhoto(msg.target!!.id, attachment.url)
-        })
-      },
-    })
+    this.messageHandler = new TelegramMessageHandler(this.botClient, this.messageSubject)
+
+    this.receiveMessageSubject.subscribe(this.messageHandler.onIncomingMessage)
 
     this.botClient.on('message', async (msg: TelegramBot.Message) => {
-      let listOfAttachments: IFacegramAttachement[] = []
-      if (msg.photo) {
-        const photoId = msg.photo[msg.photo.length - 1].file_id
-        const picUrl = await this.botClient.getFileLink(photoId)
-        if (typeof picUrl === 'string') {
-          listOfAttachments = [{
-            url: picUrl,
-            name: /[^/]*$/.exec(picUrl as string)!![0],
-          } as IFacegramAttachement]
-        }
-      }
-      const facegramMessage = {
-        message: msg.text,
-        attachments: listOfAttachments,
-        author: {
-          username: msg.from!!.username,
-          avatar: '',
-          id: msg.from!!.id.toString(),
-        },
-        origin: {
-          id: msg.chat!!.id.toString(),
-          name: msg.chat!!.first_name,
-          service: this.name,
-        },
-      } as IFacegramMessage
-
-      // send a message to the chat acknowledging receipt of their message
-      this.messageSubject.next(facegramMessage)
+      this.messageHandler.onOutgoingMessage(msg)
     })
     log.info('telegram', 'Registered bot handlers')
   }

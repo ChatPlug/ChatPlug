@@ -2,15 +2,15 @@ import { FacegramMessageHandler } from '../MessageHandler'
 import { IFacegramMessage } from '../../models'
 import { Subject } from 'rxjs'
 import log from 'npmlog'
-import { Collection, Webhook, TextChannel } from 'discord.js'
+import { Client as DiscordClient, Collection, Webhook, TextChannel } from 'discord.js'
 
 export class DiscordMessageHandler implements FacegramMessageHandler {
-  client: any
+  client: DiscordClient
   messageSubject: Subject<IFacegramMessage>
   name = 'discord'
   webhooks: Collection<string, Webhook>
 
-  constructor(client, subject: Subject<IFacegramMessage>) {
+  constructor(client: DiscordClient, subject: Subject<IFacegramMessage>) {
     this.client = client
     this.messageSubject = subject
   }
