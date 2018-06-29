@@ -84,8 +84,10 @@ function trim(str: string): string {
 }
 
 function resolveMentions(message: string, channel: any): string {
-  const matches = message.match(/@[^# ]{2,32}/g)
-  if (!matches || !matches[0]) return message
+  let msg = message
+  if (!message) return message
+  const matches = msg.match(/@[^# ]{2,32}/g)
+  if (!matches || !matches[0]) return msg
 
   for (let match of matches) {
     match = match.substr(1)
@@ -93,18 +95,18 @@ function resolveMentions(message: string, channel: any): string {
     const role = channel.guild.roles.find(role => role.name.toLowerCase() === match.toLowerCase())
     if (role) {
       if (!role.mentionable) log.verbose('handleMentions', 'Role', match, 'not mentionable!')
-      message = message.replace(`@${match}`, role)
+      msg = msg.replace(`@${match}`, role)
       break
     }
 
     const user = channel.guild.members.find(user =>
       (user.nickname && user.nickname.toLowerCase() === match.toLowerCase()) ||
-      (user.user.username.toLowerCase() === match.toLowerCase())
+      (user.user.username.toLowerCase() === match.toLowerCase()),
     )
     if (user) {
-      message = message.replace(`@${match}`, user)
+      msg = msg.replace(`@${match}`, user)
     }
   }
 
-  return message
+  return msg
 }
