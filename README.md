@@ -4,18 +4,18 @@
 
 
 [![Discord](https://discordapp.com/api/guilds/456875835954298890/embed.png)](https://discord.gg/eWAgMUG)
-# :bridge_at_night: facegram
+# :bridge_at_night: ChatPlug
 *TODO: update description with new services*
-FacegramBridge is a simple and extensible Facebook (Messenger) - Telegram bridge. Reclaim your privacy now, don't let Zuckbot spy on you  and drain your battery. :battery: :moneybag:
+ChatPlug is a simple and extensible bridge between Facebook (Messenger), Discord and Telegram. Reclaim your privacy now, don't let Zuckbot spy on you  and drain your battery. :battery: :moneybag:
 <p align="center">
   <img src="https://media.giphy.com/media/dSdvPrKU0w8WGo4c9L/giphy.gif">
 </p>
 
 # :question: How does it work?
-*TODO: update description with new services*
-Everytime you receive a message on Messenger it will be relayed to a specific conversation on telegram. When you reply via Telegram the message will be relayed the other way round. This way you don't have to install Facebook Messenger on your phone.
 
-# :ballot_box_with_check:	 Requirements
+Everytime ChatPlug receives a message, it will be relayed to another chat on any configured platform. This way you don't have to install Facebook Messenger on your phone.
+
+# :ballot_box_with_check: Requirements
 <p align="center">
   <img src="./facegram_equation.png" width="250"  alt="Logo">
 </p>
@@ -30,27 +30,25 @@ To use this you will need:
 
 # :electric_plug: Quick start
 
-You can grab the binaries [here](https://github.com/feelfreelinux/facegram/releases).
+You can grab the binaries [here](https://github.com/feelfreelinux/ChatPlug/releases).
 
 
-~~A configuration guide will run when you first start facegram.~~ (TODO: remove strikethrough when ready)
+~~A configuration guide will run when you first start ChatPlug.~~ (TODO: remove strikethrough when ready)
 
 # Custom build
 
-Facegram now uses node (Typescript).
+ChatPlug now uses TypeScript on Node.js.
 
 *TODO: Add instructions when ready*
 
 
-TODO: add 
 On first run the program will create a file called `config.json` where you have to add your services.
 # :iphone: Usage
 
 *TODO: update*
-Everytime you receive a message on Facebook a new conversation with this person group will be created on telegram. However when you want to create the conversation manually you can message the bot with a `/import` command and the ID of the conversation (full help available with `/help`).
 
 # :clap: Contributing
-If you want to help with the project, you can have a look at [some issues](https://github.com/feelfreelinux/facegram/issues). All help is much appreciated :smile:
+If you want to help with the project, you can have a look at [some issues](https://github.com/feelfreelinux/ChatPlug/issues). All help is much appreciated :smile:
 
 # :warning: Disclamer
 
