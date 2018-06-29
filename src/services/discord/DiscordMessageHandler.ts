@@ -59,6 +59,8 @@ export class DiscordMessageHandler implements FacegramMessageHandler {
       this.webhooks.set(webhook.id, webhook)
     }
 
+    message.message = handleMentions(message.message, channel)
+
     webhook
       .send(message.message, {
         username: trim(message.author.username),
@@ -79,4 +81,30 @@ export class DiscordMessageHandler implements FacegramMessageHandler {
 
 function trim(str: string): string {
   return str.length <= 32 ? str.length === 1 ? str + '.' : str : str.substr(0, 29) + '...'
+}
+
+function resolveMentions(message: string, channel: any): string {
+  const matches = message.match(/@[^# ]{2,32}/g)
+  if (!matches || !matches[0]) return message
+
+  for (let match of matches) {
+    match = match.substr(1)
+
+    const role = channel.guild.roles.find(role => role.name.toLowerCase() === match.toLowerCase())
+    if (role) {
+      if (!role.mentionable) log.verbose('handleMentions', 'Role', match, 'not mentionable!')
+      message = message.replace(`@${match}`, role)
+      break
+    }
+
+    const user = channel.guild.members.find(user =>
+      (user.nickname && user.nickname.toLowerCase() === match.toLowerCase()) ||
+      (user.user.username.toLowerCase() === match.toLowerCase())
+    )
+    if (user) {
+      message = message.replace(`@${match}`, user)
+    }
+  }
+
+  return message
 }
