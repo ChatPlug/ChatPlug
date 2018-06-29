@@ -1,10 +1,9 @@
 <p align="center">
-  <img src="./chatplug-icon.svg" width="250" height="250" alt="Logo">
+  <img src="./chatplug.v2-text.svg" width="300" height="300" alt="Logo">
 </p>
 
 
 [![Discord](https://discordapp.com/api/guilds/456875835954298890/embed.png)](https://discord.gg/eWAgMUG)
-# :bridge_at_night: ChatPlug
 *TODO: update description with new services*
 ChatPlug is a simple and extensible bridge between Facebook (Messenger), Discord and Telegram. Reclaim your privacy now, don't let Zuckbot spy on you  and drain your battery. :battery: :moneybag:
 <p align="center">
