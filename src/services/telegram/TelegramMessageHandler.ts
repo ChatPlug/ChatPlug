@@ -30,12 +30,14 @@ export class TelegramMessageHandler implements FacegramMessageHandler {
         } as IFacegramAttachement]
       }
     }
+    const profilePics = await this.client.getUserProfilePhotos(message.from!!.id)
+    const avatar = profilePics instanceof Error ? '' : await this.client.getFileLink(profilePics.photos[0][0].file_id)
     const facegramMessage = {
       message: message.text,
       attachments: listOfAttachments,
       author: {
+        avatar,
         username: message.from!!.username,
-        avatar: '',
         id: message.from!!.id.toString(),
       },
       origin: {
