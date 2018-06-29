@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./chatplug.v2-text.svg" width="400" height="400" alt="Logo">
+  <a href="https://github.com/feelfreelinux/chatplug"><img src="./chatplug.v2-text.svg" width="400" height="400" alt="Logo"></a>
 </p>
 
 
