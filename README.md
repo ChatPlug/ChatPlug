@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./facegram_logo.png" width="250" height="250" alt="Logo">
+  <img src="./chatplug-icon.svg" width="250" height="250" alt="Logo">
 </p>
 
 
