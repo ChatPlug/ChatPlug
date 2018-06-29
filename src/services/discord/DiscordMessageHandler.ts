@@ -59,7 +59,7 @@ export class DiscordMessageHandler implements FacegramMessageHandler {
       this.webhooks.set(webhook.id, webhook)
     }
 
-    message.message = handleMentions(message.message, channel)
+    message.message = resolveMentions(message.message, channel)
 
     webhook
       .send(message.message, {
