@@ -1,7 +1,7 @@
 {
   "name": "facegram",
   "version": "1.0.0",
-  "description": "A simple and extensible facebook-telegram bridge",
+  "description": "A simple and extensible bridge",
   "main": "/dist/index",
   "typings": "/src/types/index.d.ts",
   "scripts": {
@@ -16,7 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/feelfreelinux/facegram.git"
+    "url": "git+https://github.com/feelfreelinux/ChatPlug.git"
   },
   "keywords": [
     "facebook",
@@ -29,9 +29,9 @@
   "author": "feelfreelinux",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/feelfreelinux/facegram/issues"
+    "url": "https://github.com/feelfreelinux/ChatPlug/issues"
   },
-  "homepage": "https://github.com/feelfreelinux/facegram#readme",
+  "homepage": "https://github.com/feelfreelinux/ChatPlug#readme",
   "dependencies": {
     "discord.js": "^11.3.2",
     "facebook-chat-api": "^1.6.0",
@@ -40,8 +40,8 @@
     "node-telegram-bot-api": "^0.30.0",
     "npmlog": "^4.1.2",
     "rxjs": "^6.2.1",
-    "telegram-mtproto": "^2.2.2"
-  },
+    "tdl": "^3.8.1"
+    },
   "devDependencies": {
     "@types/jest": "^23.1.0",
     "@types/node": "^10.3.3",

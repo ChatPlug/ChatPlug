@@ -6,15 +6,18 @@ const CONFIG_FILE_PATH = './config.json'
 
 const DEFAULT_CONFIG = {
   loadedServices: [],
+  useFallbackService: false,
+  fallbackService: 'grpc',
   services: {
     telegram: {
       enabled: false,
-      masterMode: false,
-      apiId: 'telegram account apiId',
-      apiHash: 'telegram account apiHash',
-      phoneNumber: 'telegram account phone number',
-      telegramUsername: 'telegram account username',
       botToken: 'bot token from botfather',
+    },
+
+    telegramThreadImporter: {
+      apiId: 'your apiId',
+      apiHash: 'your api hash',
+      phoneNumber: 'your telegram phone number',
     },
 
     facebook: {
