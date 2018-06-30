@@ -1,6 +1,6 @@
 import fs = require('fs')
 import log from 'npmlog'
-import { IFacegramConnection } from './models'
+import { IChatPlugConnection } from './models'
 
 const CONFIG_FILE_PATH = './config.json'
 
@@ -39,7 +39,7 @@ const DEFAULT_CONFIG = {
 
   logLevel: 'info',
 }
-export class FacegramConfig {
+export class ChatPlugConfig {
   jsonConfig: any
   constructor () {
     // If config file doesn't exist, create one
@@ -55,7 +55,7 @@ export class FacegramConfig {
     if (process.env.LOG_LEVEL) log.level = process.env.LOG_LEVEL
   }
 
-  addThreadConnection(threadConnection: IFacegramConnection) {
+  addThreadConnection(threadConnection: IChatPlugConnection) {
     this.jsonConfig.serviceConnections.push(threadConnection)
     this.writeConfig(this.jsonConfig)
   }
@@ -68,7 +68,7 @@ export class FacegramConfig {
     return this.jsonConfig.loadedServices
   }
 
-  getThreadConnections (): IFacegramConnection[] {
+  getThreadConnections (): IChatPlugConnection[] {
     return this.jsonConfig['serviceConnections']
   }
 

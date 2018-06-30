@@ -1,40 +1,40 @@
 import { Subject } from 'rxjs'
-import { FacegramService } from './services/Service'
+import { ChatPlugService } from './services/Service'
 
-export interface IFacegramMessage {
+export interface IChatPlugMessage {
   message: string
-  attachments: IFacegramAttachement[]
-  author: IFacegramUser
-  origin: IFacegramThread
-  target?: IFacegramThread
+  attachments: IChatPlugAttachement[]
+  author: IChatPlugUser
+  origin: IChatPlugThread
+  target?: IChatPlugThread
 }
 
-export interface IFacegramAttachement {
+export interface IChatPlugAttachement {
   url: string
   name: string
 }
 
-export interface IFacegramService {
+export interface IChatPlugService {
   name: string
-  messageSubject: Subject<IFacegramMessage>
+  messageSubject: Subject<IChatPlugMessage>
 }
 
-export interface IFacegramThread {
+export interface IChatPlugThread {
   id: string
   service: string
   name: string
 }
 
-export interface IFacegramUser {
+export interface IChatPlugUser {
   username: string
   avatar?: string
   id?: string
 }
 
-export interface IFacegramConnection {
-  services: IFacegramThread[]
+export interface IChatPlugConnection {
+  services: IChatPlugThread[]
 }
 
-export interface IFacegramServiceConfig {
+export interface IChatPlugServiceConfig {
   enabled: boolean
 }

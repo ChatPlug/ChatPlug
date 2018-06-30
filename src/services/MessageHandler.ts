@@ -1,11 +1,11 @@
-import { IFacegramMessage } from '../models'
+import { IChatPlugMessage } from '../models'
 import { Subject } from 'rxjs'
 
 export interface FacegramMessageHandler {
-  messageSubject: Subject<IFacegramMessage>
+  messageSubject: Subject<IChatPlugMessage>
   name: string
 
   onOutgoingMessage(message: any)
 
-  onIncomingMessage(message: IFacegramMessage)
+  onIncomingMessage(message: IChatPlugMessage)
 }

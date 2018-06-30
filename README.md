@@ -15,19 +15,6 @@ ChatPlug is a simple and extensible bridge between Facebook (Messenger), Discord
 
 Everytime ChatPlug receives a message, it will be relayed to another chat on any configured platform. This way you don't have to install Facebook Messenger on your phone.
 
-# :ballot_box_with_check: Requirements
-<p align="center">
-  <img src="./facegram_equation.png" width="250"  alt="Logo">
-</p>
-
-To use this you will need:
-- Two Telegram accounts
-   - Your main telegram account
-   - A secondary account, which will be used by the bridge (unfortunately you will also need another phone number) 
-- An API key for the second account https://core.telegram.org/api/obtaining_api_id
-- Your Facebook account
-
-
 # :electric_plug: Quick start
 
 You can grab the binaries [here](https://github.com/feelfreelinux/ChatPlug/releases).

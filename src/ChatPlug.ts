@@ -1,20 +1,20 @@
-import { FacegramConfig } from './FacegramConfig'
-import { IFacegramMessage } from './models'
+import { ChatPlugConfig } from './ChatPlugConfig'
+import { IChatPlugMessage } from './models'
 import { Subject } from 'rxjs'
-import { FacegramService } from './services/Service'
+import { ChatPlugService } from './services/Service'
 import { ThreadConnectionsManager } from './ThreadConnectionsManager'
 import { ServiceManager } from './ServiceManager'
 import { ExchangeManager } from './ExchangeManager'
 
-export class Facegram {
-  config: FacegramConfig
+export class ChatPlug {
+  config: ChatPlugConfig
   exchangeManager: ExchangeManager
   serviceManager = new ServiceManager()
   threadConnectionsManager: ThreadConnectionsManager
-  incomingMessagePublisher: Subject<IFacegramMessage>
+  incomingMessagePublisher: Subject<IChatPlugMessage>
 
   constructor() {
-    this.config = new FacegramConfig()
+    this.config = new ChatPlugConfig()
     const threadConnections = this.config.getThreadConnections()
     this.threadConnectionsManager = new ThreadConnectionsManager(
       threadConnections,

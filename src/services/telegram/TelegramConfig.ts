@@ -1,6 +1,6 @@
-import { IFacegramServiceConfig } from '../../models'
+import { IChatPlugServiceConfig } from '../../models'
 
-export interface TelegramConfig extends IFacegramServiceConfig {
+export interface TelegramConfig extends IChatPlugServiceConfig {
   apiId?: string
   masterMode: boolean
   apiHash?: string

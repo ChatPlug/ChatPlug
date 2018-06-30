@@ -1,13 +1,13 @@
 import { ThreadConnectionsManager } from './ThreadConnectionsManager'
 import { Subject } from 'rxjs'
-import { IFacegramMessage } from './models'
+import { IChatPlugMessage } from './models'
 import { ServiceManager } from './ServiceManager'
 
 export class ExchangeManager {
   threadConnectionsManager: ThreadConnectionsManager
   serviceManager: ServiceManager
-  messageSubject: Subject<IFacegramMessage>
-  notificationSubject: Subject<IFacegramMessage>
+  messageSubject: Subject<IChatPlugMessage>
+  notificationSubject: Subject<IChatPlugMessage>
 
   constructor (threadConnectionsManager: ThreadConnectionsManager, serviceManager: ServiceManager) {
     this.threadConnectionsManager = threadConnectionsManager

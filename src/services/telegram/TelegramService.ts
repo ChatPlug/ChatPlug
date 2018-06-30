@@ -1,7 +1,7 @@
 import log from 'npmlog'
 import TelegramBot from 'node-telegram-bot-api'
-import { IFacegramMessage, IFacegramAttachement } from '../../models'
-import { FacegramService } from '../Service'
+import { IChatPlugMessage, IChatPlugAttachement } from '../../models'
+import { ChatPlugService } from '../Service'
 import { Subject } from 'rxjs'
 import { TelegramConfig } from './TelegramConfig'
 import { telegramClientLogin, telegramMtProtoServer } from './MtProtoClientLogic'
@@ -11,7 +11,7 @@ import { createInterface } from 'readline'
 import { ExchangeManager } from '../../ExchangeManager'
 import { ThreadConnectionsManager } from '../../ThreadConnectionsManager'
 import { TelegramMessageHandler } from './TelegramMessageHandler'
-import { FacegramConfig } from '../../FacegramConfig'
+import { ChatPlugConfig } from '../../ChatPlugConfig'
 
 const api = {
   invokeWithLayer: 0xda9b0d0d,
@@ -26,17 +26,17 @@ const server = {
   dev: false,
 }
 
-export default class TelegramService implements FacegramService {
+export default class TelegramService implements ChatPlugService {
   isEnabled: boolean
   name = 'telegram'
   messageHandler: TelegramMessageHandler
-  messageSubject: Subject<IFacegramMessage>
-  receiveMessageSubject: Subject<IFacegramMessage> = new Subject()
+  messageSubject: Subject<IChatPlugMessage>
+  receiveMessageSubject: Subject<IChatPlugMessage> = new Subject()
   config: TelegramConfig
   botClient: TelegramBot
   telegram = MTProto({ api, server })
 
-  constructor(config: TelegramConfig, exchangeManager: ExchangeManager,  threadConnectionsManager: ThreadConnectionsManager, facegramConfig: FacegramConfig) {
+  constructor(config: TelegramConfig, exchangeManager: ExchangeManager,  threadConnectionsManager: ThreadConnectionsManager, facegramConfig: ChatPlugConfig) {
     this.messageSubject = exchangeManager.messageSubject
     this.config = config
     this.isEnabled = config.enabled

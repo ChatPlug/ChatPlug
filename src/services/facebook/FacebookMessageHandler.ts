@@ -1,5 +1,5 @@
 import { FacegramMessageHandler } from '../MessageHandler'
-import { IFacegramMessage } from '../../models'
+import { IChatPlugMessage } from '../../models'
 import { promisify } from 'util'
 import { Subject } from 'rxjs'
 import { parse } from 'url'
@@ -7,11 +7,11 @@ import log from 'npmlog'
 
 export class FacebookMessageHandler implements FacegramMessageHandler {
   client: any
-  messageSubject: Subject<IFacegramMessage>
+  messageSubject: Subject<IChatPlugMessage>
   name = 'facebook'
   handledMessages: any[] = []
 
-  constructor(client, subject: Subject<IFacegramMessage>) {
+  constructor(client, subject: Subject<IChatPlugMessage>) {
     this.client = client
     this.messageSubject = subject
   }
@@ -56,12 +56,12 @@ export class FacebookMessageHandler implements FacegramMessageHandler {
         id: thread.threadID,
         service: this.name,
       },
-    } as IFacegramMessage
+    } as IChatPlugMessage
 
     this.messageSubject.next(facegramMessage)
   }
 
-  onIncomingMessage = async (message: IFacegramMessage) => {
+  onIncomingMessage = async (message: IChatPlugMessage) => {
     if (!message.target) return
     this.client.sendMessage(
       {

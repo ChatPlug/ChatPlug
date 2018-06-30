@@ -1,6 +1,6 @@
 import { FacegramMessageHandler } from '../MessageHandler'
 import TelegramBot from 'node-telegram-bot-api'
-import { IFacegramMessage, IFacegramAttachement } from '../../models'
+import { IChatPlugMessage, IChatPlugAttachement } from '../../models'
 import { promisify } from 'util'
 import { Subject } from 'rxjs'
 import { parse } from 'url'
@@ -8,18 +8,18 @@ import log from 'npmlog'
 
 export class TelegramMessageHandler implements FacegramMessageHandler {
   client: TelegramBot
-  messageSubject: Subject<IFacegramMessage>
+  messageSubject: Subject<IChatPlugMessage>
   name = 'telegram'
   handledMessages: any[] = []
 
-  constructor(client: TelegramBot, subject: Subject<IFacegramMessage>) {
+  constructor(client: TelegramBot, subject: Subject<IChatPlugMessage>) {
     this.client = client
     this.messageSubject = subject
   }
 
   async onOutgoingMessage(message: TelegramBot.Message) {
     // Duplicates handling
-    let listOfAttachments: IFacegramAttachement[] = []
+    let listOfAttachments: IChatPlugAttachement[] = []
     if (message.photo) {
       const photoId = message.photo[message.photo.length - 1].file_id
       const picUrl = await this.client.getFileLink(photoId)
@@ -27,7 +27,7 @@ export class TelegramMessageHandler implements FacegramMessageHandler {
         listOfAttachments = [{
           url: picUrl,
           name: /[^/]*$/.exec(picUrl as string)!![0],
-        } as IFacegramAttachement]
+        } as IChatPlugAttachement]
       }
     }
     const profilePics = await this.client.getUserProfilePhotos(message.from!!.id)
@@ -45,13 +45,13 @@ export class TelegramMessageHandler implements FacegramMessageHandler {
         name: message.chat!!.first_name,
         service: this.name,
       },
-    } as IFacegramMessage
+    } as IChatPlugMessage
 
     // send a message to the chat acknowledging receipt of their message
     this.messageSubject.next(facegramMessage)
   }
 
-  onIncomingMessage = async (message: IFacegramMessage) => {
+  onIncomingMessage = async (message: IChatPlugMessage) => {
     if (!message.target) return
     const formattedMsg = '*' + message.author.username + '*' + ': ' + message.message
     this.client.sendMessage(

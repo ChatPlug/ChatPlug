@@ -1,5 +1,5 @@
-import { IFacegramServiceConfig } from '../../models'
+import { IChatPlugServiceConfig } from '../../models'
 
-export interface DiscordConfig extends IFacegramServiceConfig {
+export interface DiscordConfig extends IChatPlugServiceConfig {
   token: string
 }

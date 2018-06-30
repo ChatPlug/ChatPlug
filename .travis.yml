@@ -9,9 +9,9 @@ deploy:
   api_key:
     secure: YOUR_API_KEY_ENCRYPTED
   file:
-    - "bin/facegram-linux"
-    - "bin/facegram-macos"
-    - "bin/facegram-win.exe"
+    - "bin/chatplug-linux"
+    - "bin/chatplug-macos"
+    - "bin/chatplug-win.exe"
   skip_cleanup: true
   on:
     tags: true

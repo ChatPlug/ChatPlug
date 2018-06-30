@@ -1,8 +1,8 @@
 import log from 'npmlog'
-import { FacegramService } from './services/Service'
+import { ChatPlugService } from './services/Service'
 
 export interface ServiceMap {
-  [name: string]: FacegramService
+  [name: string]: ChatPlugService
 }
 
 export class ServiceManager {
@@ -11,12 +11,12 @@ export class ServiceManager {
     this.services = {}
   }
 
-  registerService(service: FacegramService) {
+  registerService(service: ChatPlugService) {
     this.services[service.name] = service
   }
 
-  getRegisteredServices(): FacegramService[] {
-    const registeredServices: FacegramService[] = []
+  getRegisteredServices(): ChatPlugService[] {
+    const registeredServices: ChatPlugService[] = []
 
     for (const key in this.services) {
       registeredServices.push(this.services[key])

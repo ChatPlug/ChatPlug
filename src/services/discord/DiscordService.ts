@@ -1,6 +1,6 @@
 import log from 'npmlog'
-import { IFacegramMessage } from '../../models'
-import { FacegramService } from '../Service'
+import { IChatPlugMessage } from '../../models'
+import { ChatPlugService } from '../Service'
 import { Subject } from 'rxjs'
 import { DiscordConfig } from './DiscordConfig'
 import {
@@ -14,11 +14,11 @@ import { ThreadConnectionsManager } from '../../ThreadConnectionsManager'
 import { DiscordMessageHandler } from './DiscordMessageHandler'
 import { FacebookConfig } from '../facebook/FacebookConfig'
 
-export default class DiscordService implements FacegramService {
+export default class DiscordService implements ChatPlugService {
   isEnabled: boolean
   name = 'discord'
   exchangeManager: ExchangeManager
-  receiveMessageSubject: Subject<IFacegramMessage> = new Subject()
+  receiveMessageSubject: Subject<IChatPlugMessage> = new Subject()
   config: DiscordConfig
   messageHandler: DiscordMessageHandler
   discord = new DiscordClient()

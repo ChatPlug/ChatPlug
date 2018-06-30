@@ -1,16 +1,16 @@
 import log from 'npmlog'
-import { IFacegramConnection, IFacegramThread } from './models'
+import { IChatPlugConnection, IChatPlugThread } from './models'
 
 export class ThreadConnectionsManager {
-  connections: IFacegramConnection[]
+  connections: IChatPlugConnection[]
 
-  constructor (connections: IFacegramConnection[]) {
+  constructor (connections: IChatPlugConnection[]) {
     this.connections = connections
     log.info('', `Registered ${connections.length} service connections`)
   }
 
-  getAllReceiversForThread (thread: IFacegramThread): IFacegramThread[] {
-    const threads: IFacegramThread[] = []
+  getAllReceiversForThread (thread: IChatPlugThread): IChatPlugThread[] {
+    const threads: IChatPlugThread[] = []
 
     this.connections.forEach((connection) => {
       if (connection.services.some(e => e.id === thread.id)) {

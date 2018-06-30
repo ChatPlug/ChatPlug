@@ -1,16 +1,16 @@
 import { FacegramMessageHandler } from '../MessageHandler'
-import { IFacegramMessage } from '../../models'
+import { IChatPlugMessage } from '../../models'
 import { Subject } from 'rxjs'
 import log from 'npmlog'
 import { Client as DiscordClient, Collection, Webhook, TextChannel } from 'discord.js'
 
 export class DiscordMessageHandler implements FacegramMessageHandler {
   client: DiscordClient
-  messageSubject: Subject<IFacegramMessage>
+  messageSubject: Subject<IChatPlugMessage>
   name = 'discord'
   webhooks: Collection<string, Webhook>
 
-  constructor(client: DiscordClient, subject: Subject<IFacegramMessage>) {
+  constructor(client: DiscordClient, subject: Subject<IChatPlugMessage>) {
     this.client = client
     this.messageSubject = subject
   }
@@ -37,12 +37,12 @@ export class DiscordMessageHandler implements FacegramMessageHandler {
         id: message.channel.id,
         service: this.name,
       },
-    } as IFacegramMessage
+    } as IChatPlugMessage
 
     this.messageSubject.next(facegramMessage)
   }
 
-  onIncomingMessage = async (message: IFacegramMessage) => {
+  onIncomingMessage = async (message: IChatPlugMessage) => {
     if (!message.target) return
 
     const channel = this.client.channels.get(message.target.id)

@@ -1,6 +1,6 @@
 import log from 'npmlog'
-import { IFacegramMessage, IFacegramThread } from '../../models'
-import { FacegramService } from '../Service'
+import { IChatPlugMessage, IChatPlugThread } from '../../models'
+import { ChatPlugService } from '../Service'
 import { Subject } from 'rxjs'
 import { FacebookConfig } from './FacebookConfig'
 import facebook from 'facebook-chat-api'
@@ -8,23 +8,24 @@ import { createInterface } from 'readline'
 import { ExchangeManager } from '../../ExchangeManager'
 import { ThreadConnectionsManager } from '../../ThreadConnectionsManager'
 import { FacebookMessageHandler } from './FacebookMessageHandler'
+import { ChatPlugConfig } from '../../ChatPlugConfig'
 
 const rl = createInterface({
   input: process.stdin,
   output: process.stdout,
 })
 
-export default class FacebookService implements FacegramService {
+export default class FacebookService implements ChatPlugService {
   isEnabled: boolean
   name = 'facebook'
-  messageSubject: Subject<IFacegramMessage>
-  receiveMessageSubject: Subject<IFacegramMessage> = new Subject()
+  messageSubject: Subject<IChatPlugMessage>
+  receiveMessageSubject: Subject<IChatPlugMessage> = new Subject()
   config: FacebookConfig
   messageHandler: FacebookMessageHandler
   facebook: any
   stopListening: any
 
-  constructor(config: FacebookConfig, exchangeManager: ExchangeManager, threadConnectionsManager: ThreadConnectionsManager) {
+  constructor(config: FacebookConfig, exchangeManager: ExchangeManager, threadConnectionsManager: ThreadConnectionsManager, facegramConfig: ChatPlugConfig) {
     this.messageSubject = exchangeManager.messageSubject
     this.config = config
     this.isEnabled = config.enabled

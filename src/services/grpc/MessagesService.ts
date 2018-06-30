@@ -1,19 +1,19 @@
 import { ExchangeManager } from '../../ExchangeManager'
 import { ThreadConnectionsManager } from '../../ThreadConnectionsManager'
 import * as grpc from 'grpc'
-import { FacegramConfig } from '../../FacegramConfig'
+import { ChatPlugConfig } from '../../ChatPlugConfig'
 import { Subject } from 'rxjs'
-import { IFacegramMessage } from '../../models'
+import { IChatPlugMessage } from '../../models'
 const PROTO_PATH = __dirname + '/../../protos/messages.proto'
 import log from 'npmlog'
 
 export class MessagesService {
-  config: FacegramConfig
-  messageSubject: Subject<IFacegramMessage>
+  config: ChatPlugConfig
+  messageSubject: Subject<IChatPlugMessage>
   exchangeManager: ExchangeManager
   threadConnectionsManager: ThreadConnectionsManager
 
-  constructor(exchangeManager: ExchangeManager, threadConnectionsManager: ThreadConnectionsManager, facegramConfig: FacegramConfig, messageSubject: Subject<IFacegramMessage>) {
+  constructor(exchangeManager: ExchangeManager, threadConnectionsManager: ThreadConnectionsManager, facegramConfig: ChatPlugConfig, messageSubject: Subject<IChatPlugMessage>) {
     this.messageSubject = messageSubject
     this.exchangeManager = exchangeManager
     this.threadConnectionsManager = threadConnectionsManager

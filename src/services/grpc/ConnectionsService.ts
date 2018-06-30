@@ -1,16 +1,17 @@
-import { IFacegramConnection } from '../../models'
+import { IChatPlugConnection } from '../../models'
 import { ExchangeManager } from '../../ExchangeManager'
 import { ThreadConnectionsManager } from '../../ThreadConnectionsManager'
 import * as grpc from 'grpc'
-import { FacegramConfig } from '../../FacegramConfig'
+import { ChatPlugConfig } from '../../ChatPlugConfig'
 const PROTO_PATH = __dirname + '/../../protos/connections.proto'
+import log from 'npmlog'
 
 export class ConnectionsService {
-  config: FacegramConfig
+  config: ChatPlugConfig
   exchangeManager: ExchangeManager
   threadConnectionsManager: ThreadConnectionsManager
 
-  constructor(exchangeManager: ExchangeManager, threadConnectionsManager: ThreadConnectionsManager, facegramConfig: FacegramConfig) {
+  constructor(exchangeManager: ExchangeManager, threadConnectionsManager: ThreadConnectionsManager, facegramConfig: ChatPlugConfig) {
     this.exchangeManager = exchangeManager
     this.threadConnectionsManager = threadConnectionsManager
     this.config = facegramConfig
@@ -21,7 +22,7 @@ export class ConnectionsService {
   }
 
   createConnection = (call: any, callback: any) => {
-    const connection = call.request as IFacegramConnection
+    const connection = call.request as IChatPlugConnection
     this.config.addThreadConnection(connection)
     callback(null, connection)
   }
@@ -31,5 +32,6 @@ export class ConnectionsService {
       getConnections: this.getConnections,
       createConnection: this.createConnection,
     })
+    log.info('grpc', 'ConnectionsService up and running...')
   }
 }

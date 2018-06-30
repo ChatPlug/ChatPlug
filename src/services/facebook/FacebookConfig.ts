@@ -1,6 +1,6 @@
-import { IFacegramServiceConfig } from '../../models'
+import { IChatPlugServiceConfig } from '../../models'
 
-export interface FacebookConfig extends IFacegramServiceConfig {
+export interface FacebookConfig extends IChatPlugServiceConfig {
   email: string
   password: string
   forceLogin: boolean

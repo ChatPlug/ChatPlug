@@ -1,31 +1,31 @@
 import log from 'npmlog'
-import { IFacegramMessage } from '../../models'
-import { FacegramService } from '../Service'
+import { IChatPlugMessage } from '../../models'
+import { ChatPlugService } from '../Service'
 import { Subject } from 'rxjs'
 import { GRpcConfig } from './GRpcConfig'
 import { ExchangeManager } from '../../ExchangeManager'
 import { ThreadConnectionsManager } from '../../ThreadConnectionsManager'
 import * as grpc from 'grpc'
 import { ConnectionsService } from './ConnectionsService'
-import { FacegramConfig } from '../../FacegramConfig'
+import { ChatPlugConfig } from '../../ChatPlugConfig'
 import { MessagesService } from './MessagesService'
 
 const CONNECTIONS_PROTO_PATH = __dirname + '/../../protos/connections.proto'
 
 const connectionsProto = grpc.load(CONNECTIONS_PROTO_PATH).chatplug
 
-export default class GRpcService implements FacegramService {
+export default class GRpcService implements ChatPlugService {
   isEnabled: boolean
   server: grpc.Server
   name = 'grpc'
 
   connectionsService: ConnectionsService
   messagesService: MessagesService
-  messageSubject: Subject<IFacegramMessage>
-  receiveMessageSubject: Subject<IFacegramMessage> = new Subject()
+  messageSubject: Subject<IChatPlugMessage>
+  receiveMessageSubject: Subject<IChatPlugMessage> = new Subject()
   config: GRpcConfig
 
-  constructor(config: GRpcConfig, exchangeManager: ExchangeManager, threadConnectionsManager: ThreadConnectionsManager, facegramConfig: FacegramConfig) {
+  constructor(config: GRpcConfig, exchangeManager: ExchangeManager, threadConnectionsManager: ThreadConnectionsManager, facegramConfig: ChatPlugConfig) {
     this.messageSubject = exchangeManager.messageSubject
     this.config = config
     this.messagesService = new MessagesService(exchangeManager, threadConnectionsManager, facegramConfig, this.receiveMessageSubject)
