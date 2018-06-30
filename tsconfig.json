@@ -10,7 +10,7 @@
         "sourceMap": true,
         "outDir": "dist",
         "lib": [
-            "es7"
+            "es2017"
         ],
         "baseUrl": ".",
         "paths": {
