@@ -49,11 +49,10 @@ export default class FacebookService implements ChatPlugService {
       log.warn('facebook', 'Message is undefined/null, internet connection may be unavailable')
       log.info('facebook', 'Reconnecting...')
       this.stopListening()
-      this.login().then(() => {
-        log.info('facebook', 'Reconnected to Facebook')
-        this.messageHandler.setClient(this.facebook)
-        this.stopListening = this.facebook.listen(this.listener)
-      })
+      await this.login()
+      log.info('facebook', 'Reconnected to Facebook')
+      this.messageHandler.setClient(this.facebook)
+      this.stopListening = this.facebook.listen(this.listener)
     }
     this.messageHandler.onOutgoingMessage(message)
   }
