@@ -40,8 +40,9 @@
     "node-telegram-bot-api": "^0.30.0",
     "npmlog": "^4.1.2",
     "rxjs": "^6.2.1",
-    "tdl": "^3.8.1"
-    },
+    "tdl": "^3.8.1",
+    "@iarna/toml": "^1.7.0"
+  },
   "devDependencies": {
     "@types/jest": "^23.1.0",
     "@types/node": "^10.3.3",
