@@ -34,6 +34,8 @@ export default class TelegramService implements ChatPlugService {
       this.messageHandler.onOutgoingMessage(msg)
     })
     log.info('telegram', 'Registered bot handlers')
+    const user = await this.botClient.getMe()
+    console.log(user)
   }
 
   terminate() {

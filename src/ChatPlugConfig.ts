@@ -4,7 +4,7 @@ import path from 'path'
 import TOML from '@iarna/toml'
 import { IChatPlugConnection } from './models'
 
-const CONFIG_FOLDER_PATH = path.join(__dirname, 'config')
+const CONFIG_FOLDER_PATH = path.join(__dirname, '../config')
 
 const DEFAULTS = {
   core: {
@@ -51,7 +51,7 @@ export class ChatPlugConfig {
       const configPath = path.join(CONFIG_FOLDER_PATH, configName + '.toml')
       if (!fs.existsSync(configPath)) {
         log.info('config', `Writing default ${configName} config to ${configPath}`)
-        fs.writeFileSync(configPath, DEFAULTS[configName])
+        fs.writeFileSync(configPath, TOML.stringify(DEFAULTS[configName]))
       }
     })
 
