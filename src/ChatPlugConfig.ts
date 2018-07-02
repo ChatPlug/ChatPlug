@@ -80,6 +80,10 @@ export class ChatPlugConfig {
     return this.tomlConfig.core.serviceConnections
   }
 
+  getCoreConfig(): any {
+    return this.tomlConfig.core
+  }
+
   writeConfig (config: any) {
     Object.entries(config).forEach(([serviceName, serviceConfig]) => {
       fs.writeFileSync(path.join(CONFIG_FOLDER_PATH, serviceName + '.toml'), TOML.stringify(serviceConfig))

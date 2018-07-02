@@ -22,6 +22,7 @@ export class ChatPlug {
     this.exchangeManager = new ExchangeManager(
       this.threadConnectionsManager,
       this.serviceManager,
+      this.config,
     )
   }
 

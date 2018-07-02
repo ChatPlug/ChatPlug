@@ -36,6 +36,7 @@ export class DiscordMessageHandler implements FacegramMessageHandler {
       origin: {
         id: message.channel.id,
         service: this.name,
+        name: message.guild.name + ' #' + message.channel.name,
       },
     } as IChatPlugMessage
 

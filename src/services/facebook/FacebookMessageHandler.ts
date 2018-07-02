@@ -26,6 +26,12 @@ export class FacebookMessageHandler implements FacegramMessageHandler {
     const thread = await promisify(this.client.getThreadInfo)(message.threadID)
     const sender = (await promisify(this.client.getUserInfo)(message.senderID))[message.senderID]
 
+    let threadName = sender.name
+
+    if (message.isGroup) {
+      threadName = thread.threadName
+    }
+
     const facegramMessage = {
       message: message.body,
       attachments: message.attachments.map(attach => {
@@ -54,6 +60,7 @@ export class FacebookMessageHandler implements FacegramMessageHandler {
       },
       origin: {
         id: thread.threadID,
+        name: threadName,
         service: this.name,
       },
     } as IChatPlugMessage
