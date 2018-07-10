@@ -5,6 +5,9 @@ import IFieldOptions, {
 
 export default (options: IFieldOptions) => {
   return (target: Object, propertyKey: string) => {
+    if (!options.name) {
+      options.name = propertyKey
+    }
     if (!Reflect.hasMetadata(fieldListMetadataKey, target)) {
       Reflect.defineMetadata(fieldListMetadataKey, [], target)
     }

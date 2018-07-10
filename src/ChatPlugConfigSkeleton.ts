@@ -18,4 +18,16 @@ export default class ChatPlugConfigSkeleton {
     name: 'My CuStOm NAME',
   })
   testFieldWithCustomName: string
+
+  @ConfigWizardField({
+    type: FieldType.STRING,
+    hint: 'This is a hint for this field.',
+  })
+  testFieldWithHint: string
+
+  @ConfigWizardField({
+    type: FieldType.STRING,
+    required: true,
+  })
+  requiredField: string
 }

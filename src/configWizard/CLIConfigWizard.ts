@@ -25,10 +25,7 @@ export default class CLIConfigWizard implements IConfigWizard {
         cfg,
         key,
       ) as IFieldOptions
-      let val = await this.cliUtils.askUser(
-        options.name || key,
-        options.defaultValue,
-      )
+      let val = await this.cliUtils.askUser(options)
       if (val === '') {
         val = options.defaultValue
       }

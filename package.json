@@ -33,6 +33,7 @@
   },
   "homepage": "https://github.com/feelfreelinux/ChatPlug#readme",
   "dependencies": {
+    "chalk": "^2.4.1",
     "discord.js": "^11.3.2",
     "facebook-chat-api": "^1.6.0",
     "google-protobuf": "^3.6.0",
