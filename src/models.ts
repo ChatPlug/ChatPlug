@@ -10,8 +10,17 @@ export interface IChatPlugMessage {
 }
 
 export interface IChatPlugAttachement {
+  type: IChatPlugAttachementType,
   url: string
   name: string
+}
+
+export enum IChatPlugAttachementType {
+  VIDEO,
+  GIF,
+  IMAGE,
+  AUDIO,
+  FILE,
 }
 
 export interface IChatPlugService {
