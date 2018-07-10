@@ -3,6 +3,7 @@ import IConfigWizard from './IConfigWizard'
 import IFieldOptions, {
   fieldListMetadataKey,
   fieldOptionsMetadataKey,
+  FieldType,
 } from './IFieldOptions'
 import CLIUtils from './CLIUtils'
 
@@ -24,11 +25,13 @@ export default class CLIConfigWizard implements IConfigWizard {
         cfg,
         key,
       ) as IFieldOptions
-      let val = await this.cliUtils.askUser((options.name || key) + ': ')
+      let val = await this.cliUtils.askUser(
+        options.name || key,
+        options.defaultValue,
+      )
       if (val === '') {
         val = options.defaultValue
       }
-      // TODO: validate and convert
       cfg[key] = val
     }
     return cfg
