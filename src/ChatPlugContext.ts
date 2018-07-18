@@ -6,6 +6,7 @@ import Message from './entity/Message'
 import CoreSettings from './entity/CoreSettings'
 import Thread from './entity/Thread'
 import ThreadConnection from './entity/ThreadConnection'
+import Service from './entity/Service'
 
 export default class ChatPlugContext {
   exchangeManger = new ExchangeManager(this)
@@ -22,6 +23,7 @@ export default class ChatPlugContext {
         CoreSettings,
         Thread,
         ThreadConnection,
+        Service,
       ],
       synchronize: true,
       logging: false,
