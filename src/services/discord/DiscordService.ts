@@ -12,24 +12,15 @@ import {
 import { ExchangeManager } from '../../ExchangeManager'
 import { ThreadConnectionsManager } from '../../ThreadConnectionsManager'
 import { DiscordMessageHandler } from './DiscordMessageHandler'
+import ChatPlugContext from '../../ChatPlugContext'
+import Service from '../../entity/Service'
 
-export default class DiscordService implements ChatPlugService {
-  isEnabled: boolean
-  name = 'discord'
-  exchangeManager: ExchangeManager
-  receiveMessageSubject: Subject<IChatPlugMessage> = new Subject()
-  config: DiscordConfig
+export default class DiscordService extends ChatPlugService {
   messageHandler: DiscordMessageHandler
   discord = new DiscordClient()
 
-  constructor(config: DiscordConfig, exchangeManager: ExchangeManager, threadConnectionsManager: ThreadConnectionsManager) {
-    this.exchangeManager = exchangeManager
-    this.config = config
-    this.isEnabled = config.enabled
-  }
-
   async initialize() {
-    this.messageHandler = new DiscordMessageHandler(this.discord, this.exchangeManager.messageSubject)
+    this.messageHandler = new DiscordMessageHandler(this.discord, this.context.exchangeManager.messageSubject)
 
     this.receiveMessageSubject.subscribe(this.messageHandler.onIncomingMessage)
 

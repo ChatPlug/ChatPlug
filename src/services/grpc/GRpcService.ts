@@ -14,7 +14,7 @@ const CONNECTIONS_PROTO_PATH = __dirname + '/../../protos/connections.proto'
 
 const connectionsProto = grpc.load(CONNECTIONS_PROTO_PATH).chatplug
 
-export default class GRpcService implements ChatPlugService {
+export default class GRpcService extends ChatPlugService {
   isEnabled: boolean
   server: grpc.Server
   name = 'grpc'
@@ -24,14 +24,6 @@ export default class GRpcService implements ChatPlugService {
   messageSubject: Subject<IChatPlugMessage>
   receiveMessageSubject: Subject<IChatPlugMessage> = new Subject()
   config: GRpcConfig
-
-  constructor(config: GRpcConfig, exchangeManager: ExchangeManager, threadConnectionsManager: ThreadConnectionsManager, facegramConfig: ChatPlugConfig) {
-    this.messageSubject = exchangeManager.messageSubject
-    this.config = config
-    this.messagesService = new MessagesService(exchangeManager, threadConnectionsManager, facegramConfig, this.receiveMessageSubject)
-    this.connectionsService = new ConnectionsService(exchangeManager, threadConnectionsManager, facegramConfig)
-    this.isEnabled = config.enabled
-  }
 
   async initialize () {
     this.server = new grpc.Server
@@ -44,7 +36,7 @@ export default class GRpcService implements ChatPlugService {
     log.info('grpc', 'GRpc api running under port ' + this.config.port)
   }
 
-  terminate() {
-    this.server.forceShutdown()
+  async terminate() {
+    await this.server.forceShutdown()
   }
 }

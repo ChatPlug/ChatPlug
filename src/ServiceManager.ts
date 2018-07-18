@@ -1,18 +1,19 @@
 import log from 'npmlog'
 import { ChatPlugService } from './services/Service'
+import ChatPlugContext from './ChatPlugContext'
+import Service from './entity/Service'
+import path from 'path'
 
 export interface ServiceMap {
-  [name: string]: ChatPlugService
+  [id: number]: ChatPlugService
 }
 
 export class ServiceManager {
   services: ServiceMap
-  constructor() {
+  context: ChatPlugContext
+  constructor(context: ChatPlugContext) {
+    this.context = context
     this.services = {}
-  }
-
-  registerService(service: ChatPlugService) {
-    this.services[service.name] = service
   }
 
   getRegisteredServices(): ChatPlugService[] {
@@ -25,22 +26,25 @@ export class ServiceManager {
     return registeredServices
   }
 
+  async loadServices() {
+    const repo = this.context.connection.getRepository(Service)
+    const services = await repo.find({ enabled: true })
+    for (const service of services) {
+      this.services[service.id] = new (require(path.join(__dirname, 'services', service.moduleName) as any)).Service(service, this.context)
+    }
+  }
+
   async initiateServices() {
     this.getRegisteredServices().forEach(service => {
-      if (service.isEnabled) {
-        log.info('services', `Service ${service.name} enabled, initializing...`)
-        service.initialize()
-      } else {
-        log.info('services', `Service ${service.name} disabled`)
-      }
+      log.info('services', `Service instance ${service.dbService.instanceName} (${service.dbService.moduleName}) enabled, initializing...`)
+      service.initialize()
     })
   }
 
   async terminateServices() {
     return Promise.all(
       this.getRegisteredServices()
-        .filter(service => service.isEnabled)
-        .map(service => service.terminate()),
+        .map(async service => await service.terminate()),
     )
   }
 }

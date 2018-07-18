@@ -3,6 +3,7 @@ import log from 'npmlog'
 import path from 'path'
 import TOML from '@iarna/toml'
 import { IChatPlugConnection } from './models'
+import Service from './entity/Service'
 
 const CONFIG_FOLDER_PATH = path.join(__dirname, '../config')
 
@@ -10,54 +11,12 @@ export class ChatPlugConfig {
   tomlConfig: any
   constructor () {
     // If config folder doesn't exist, create one
-    /*if (!fs.existsSync(CONFIG_FOLDER_PATH)) {
+    if (!fs.existsSync(CONFIG_FOLDER_PATH)) {
       fs.mkdirSync(CONFIG_FOLDER_PATH)
     }
-    // Check for every config file if exists, write default if doesn't
-    Object.keys(DEFAULTS).forEach(configName => {
-      const configPath = path.join(CONFIG_FOLDER_PATH, configName + '.toml')
-      if (!fs.existsSync(configPath)) {
-        log.info('config', `Writing default ${configName} config to ${configPath}`)
-        fs.writeFileSync(configPath, TOML.stringify(DEFAULTS[configName]))
-      }
-    })
-
-    // Read config
-    this.tomlConfig = {}
-    Object.keys(DEFAULTS).forEach(service => {
-      this.tomlConfig[service] = this.readConfig(service)
-    })
-    log.level = process.env.LOG_LEVEL || this.tomlConfig.core.logLevel || 'info'
-  */}
-
-  addThreadConnection(threadConnection: IChatPlugConnection) {
-    this.tomlConfig.core.serviceConnections.push(threadConnection)
-    this.writeConfig(this.tomlConfig)
   }
 
-  getConfigForServiceName (name: string) {
-    return this.tomlConfig[name]
-  }
-
-  getLoadedServices(): string[] {
-    return this.tomlConfig.core.loadedServices
-  }
-
-  getThreadConnections (): IChatPlugConnection[] {
-    return this.tomlConfig.core.serviceConnections
-  }
-
-  getCoreConfig(): any {
-    return this.tomlConfig.core
-  }
-
-  writeConfig (config: any) {
-    Object.entries(config).forEach(([serviceName, serviceConfig]) => {
-      fs.writeFileSync(path.join(CONFIG_FOLDER_PATH, serviceName + '.toml'), TOML.stringify(serviceConfig))
-    })
-  }
-
-  readConfig (name: string) {
-    return TOML.parse(fs.readFileSync(path.join(CONFIG_FOLDER_PATH, name + '.toml')))
+  readConfigForService (service: Service) {
+    return TOML.parse(fs.readFileSync(path.join(CONFIG_FOLDER_PATH, service.moduleName + '.' + service.instanceName + '.toml')))
   }
 }

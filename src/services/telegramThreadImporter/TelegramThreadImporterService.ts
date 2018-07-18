@@ -8,30 +8,22 @@ import { ThreadConnectionsManager } from '../../ThreadConnectionsManager'
 import { ChatPlugConfig } from '../../ChatPlugConfig'
 import { Client } from 'tdl'
 
-export default class TelegramThreadImporterService implements ChatPlugService {
-  isEnabled: boolean
-  name = 'telegramThreadImporter'
+export default class TelegramThreadImporterService extends ChatPlugService {
   messageSubject: Subject<IChatPlugMessage>
   receiveMessageSubject: Subject<IChatPlugMessage> = new Subject()
   config: TelegramThreadImporterConfig
   client: Client
   coreConfig: ChatPlugConfig
 
-  constructor(config: TelegramThreadImporterConfig, exchangeManager: ExchangeManager,  threadConnectionsManager: ThreadConnectionsManager, coreConfig: ChatPlugConfig) {
-    this.messageSubject = exchangeManager.messageSubject
-    this.config = config
-    this.coreConfig = coreConfig
-    this.isEnabled = config.enabled
+  async initialize() {
     this.client = new Client({
-      apiId: Number(config.apiId),
-      apiHash: config.apiHash,
+      apiId: Number(this.config.apiId),
+      apiHash: this.config.apiHash,
       loginDetails: {
-        phoneNumber: config.phoneNumber,
+        phoneNumber: this.config.phoneNumber,
       },
     })
-  }
 
-  async initialize() {
     await this.client.connect()
 
     this.receiveMessageSubject.subscribe(
@@ -54,9 +46,9 @@ export default class TelegramThreadImporterService implements ChatPlugService {
             id: result.id.toString(),
           }
 
-          this.coreConfig.addThreadConnection({
-            services: [newThread, msg.origin],
-          })
+          /*this.coreConfig.addThreadConnection({
+           services: [newThread, msg.origin],
+          })*/
 
           msg.target = newThread
           this.messageSubject.next(msg)
@@ -65,7 +57,7 @@ export default class TelegramThreadImporterService implements ChatPlugService {
     log.info('telegram', 'Registered bot handlers')
   }
 
-  terminate() {
-    this.client.destroy()
+  async terminate() {
+    await this.client.destroy()
   }
 }

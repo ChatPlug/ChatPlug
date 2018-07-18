@@ -9,7 +9,7 @@ import { ThreadConnectionsManager } from '../../ThreadConnectionsManager'
 import { TelegramMessageHandler } from './TelegramMessageHandler'
 import { ChatPlugConfig } from '../../ChatPlugConfig'
 
-export default class TelegramService implements ChatPlugService {
+export default class TelegramService extends ChatPlugService {
   isEnabled: boolean
   name = 'telegram'
   messageHandler: TelegramMessageHandler
@@ -18,14 +18,9 @@ export default class TelegramService implements ChatPlugService {
   config: TelegramConfig
   botClient: TelegramBot
 
-  constructor(config: TelegramConfig, exchangeManager: ExchangeManager,  threadConnectionsManager: ThreadConnectionsManager, facegramConfig: ChatPlugConfig) {
-    this.messageSubject = exchangeManager.messageSubject
-    this.config = config
-    this.isEnabled = config.enabled
-    this.botClient = new TelegramBot(this.config.botToken, { polling: true })
-  }
-
   async initialize() {
+    this.botClient = new TelegramBot(this.config.botToken, { polling: true })
+
     this.messageHandler = new TelegramMessageHandler(this.botClient, this.messageSubject)
 
     this.receiveMessageSubject.subscribe(this.messageHandler.onIncomingMessage)
@@ -38,7 +33,7 @@ export default class TelegramService implements ChatPlugService {
     console.log(user)*/
   }
 
-  terminate() {
-    this.botClient.stopPolling()
+  async terminate() {
+    await this.botClient.stopPolling()
   }
 }

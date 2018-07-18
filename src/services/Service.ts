@@ -1,12 +1,21 @@
 import { IChatPlugMessage } from '../models'
 import { Subject } from 'rxjs'
+import Service from '../entity/Service'
+import ChatPlugContext from '../ChatPlugContext'
 
-export interface ChatPlugService {
-  isEnabled: boolean
-  name: string
-  receiveMessageSubject: Subject<IChatPlugMessage>
+export class ChatPlugService {
+  config: any
+  receiveMessageSubject = new Subject<IChatPlugMessage>()
+  dbService: Service
+  context: ChatPlugContext
 
-  initialize ()
+  constructor(dbService: Service, context: ChatPlugContext) {
+    this.dbService = dbService
+    this.context = context
+    this.config = context.config.readConfigForService(dbService)
+  }
 
-  terminate ()
+  async initialize () {}
+
+  async terminate () {}
 }

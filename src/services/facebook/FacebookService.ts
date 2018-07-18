@@ -15,7 +15,7 @@ const rl = createInterface({
   output: process.stdout,
 })
 
-export default class FacebookService implements ChatPlugService {
+export default class FacebookService extends ChatPlugService {
   isEnabled: boolean
   name = 'facebook'
   messageSubject: Subject<IChatPlugMessage>
@@ -24,12 +24,6 @@ export default class FacebookService implements ChatPlugService {
   messageHandler: FacebookMessageHandler
   facebook: any
   stopListening: any
-
-  constructor(config: any, exchangeManager: ExchangeManager, threadConnectionsManager: ThreadConnectionsManager, facegramConfig: ChatPlugConfig) {
-    this.messageSubject = exchangeManager.messageSubject
-    this.config = config
-    this.isEnabled = config.enabled
-  }
 
   async initialize () {
     await this.login()
@@ -84,10 +78,8 @@ export default class FacebookService implements ChatPlugService {
     })
   }
 
-  terminate() {
+  async terminate() {
     if (!this.facebook) return log.info('facebook', 'Not logged in')
-    return new Promise((resolve, reject) =>
-      this.facebook.logout(err => (err ? reject(err) : resolve())),
-    )
+    await this.facebook.logout
   }
 }

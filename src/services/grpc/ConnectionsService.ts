@@ -18,12 +18,12 @@ export class ConnectionsService {
   }
 
   getConnections = (call: any, callback: any) => {
-    callback(null, { connections: this.config.getThreadConnections() })
+    // callback(null, { connections: this.config.getThreadConnections() })
   }
 
   createConnection = (call: any, callback: any) => {
     const connection = call.request as IChatPlugConnection
-    this.config.addThreadConnection(connection)
+    // this.config.addThreadConnection(connection)
     callback(null, connection)
   }
 

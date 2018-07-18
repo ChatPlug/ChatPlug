@@ -15,7 +15,6 @@ export interface IChatPlugAttachement {
 }
 
 export interface IChatPlugService {
-  name: string
   messageSubject: Subject<IChatPlugMessage>
 }
 

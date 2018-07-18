@@ -7,10 +7,13 @@ import CoreSettings from './entity/CoreSettings'
 import Thread from './entity/Thread'
 import ThreadConnection from './entity/ThreadConnection'
 import Service from './entity/Service'
+import { ChatPlugConfig } from './ChatPlugConfig'
 
 export default class ChatPlugContext {
-  exchangeManger = new ExchangeManager(this)
-  serviceManager = new ServiceManager()
+  exchangeManager = new ExchangeManager(this)
+  serviceManager = new ServiceManager(this)
+  config = new ChatPlugConfig()
+
   connection: Connection
 
   async initializeConnection() {

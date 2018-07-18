@@ -19,42 +19,31 @@ const CONFIG_FOLDER_PATH = path.join(__dirname, '../config')
 export class ChatPlug {
   config: ChatPlugConfig
   context: ChatPlugContext
-  exchangeManager: ExchangeManager
-  serviceManager = new ServiceManager()
   threadConnectionsManager: ThreadConnectionsManager
   incomingMessagePublisher: Subject<IChatPlugMessage>
 
   constructor() {
     this.config = new ChatPlugConfig()
     this.context = new ChatPlugContext()
-    /*const threadConnections = this.config.getThreadConnections()
-    this.threadConnectionsManager = new ThreadConnectionsManager(
-      threadConnections,
-    )*/
   }
 
   async startBridge() {
     await this.context.initializeConnection()
-    /*const wizard = new CLIConfigWizard()
-    for (const moduleName of this.getDirectories(__dirname + '/services')) {
-      const module = require('./services/' + moduleName).Config
-      console.log(await wizard.promptForConfig(module))
-    }*/
     await this.configureServices()
-    // this.registerServices()
-    // await this.serviceManager.initiateServices()
+    await this.context.serviceManager.loadServices()
+    await this.context.serviceManager.initiateServices()
   }
 
   async configureServices() {
     const wizard = new CLIConfigWizard()
     const utils = new CLIUtils()
     const moduleNames = this.getDirectories(path.join(__dirname, 'services'))
-    const configuredServices = this.getDirectories(CONFIG_FOLDER_PATH)
+    const configuredServices = this.getFiles(CONFIG_FOLDER_PATH)
     const serviceRepository = this.context.connection.manager.getRepository(Service)
     for (const serviceModuleName of moduleNames) {
       const possibleService = await serviceRepository.findOne({ moduleName: serviceModuleName })
 
-      if (!possibleService || (possibleService.configured && !configuredServices.includes(possibleService.moduleName + '.toml'))) {
+      if (!possibleService || (possibleService.configured && !configuredServices.includes(possibleService.moduleName + '.' + possibleService.instanceName + '.toml'))) {
         if (possibleService) {
           await serviceRepository.remove(possibleService)
         }
@@ -70,7 +59,7 @@ export class ChatPlug {
           const confSchema = require('./services/' + serviceModuleName).Config
           console.log('Configuring service ' + serviceModuleName)
           const configuration = await wizard.promptForConfig(confSchema)
-          fs.writeFileSync(path.join(CONFIG_FOLDER_PATH, serviceModuleName + '.toml'), TOML.stringify(configuration))
+          fs.writeFileSync(path.join(CONFIG_FOLDER_PATH, serviceModuleName + '.' + serviceModuleName + '.toml'), TOML.stringify(configuration))
         }
 
         const service = new Service()
@@ -87,7 +76,7 @@ export class ChatPlug {
 
   }
   async stopBridge() {
-    // await this.serviceManager.terminateServices()
+    await this.context.serviceManager.terminateServices()
   }
 
   getDirectories(path) {
@@ -96,17 +85,9 @@ export class ChatPlug {
     })
   }
 
-  registerServices() {
-    // Get services from config/loadedServices and register then in service manager
-    this.config.getLoadedServices().forEach((moduleName) => {
-      const service = new (require('./services/' + moduleName) as any).default(
-        this.config.getConfigForServiceName(moduleName.substr(0, moduleName.indexOf('/'))), this.exchangeManager, this.threadConnectionsManager, this.config)
-      this.serviceManager.registerService(service)
+  getFiles(path) {
+    return fs.readdirSync(path).filter((file) => {
+      return fs.statSync(path + '/' + file).isFile()
     })
-  }
-
-  configureService(config: any): any {
-    const wizard = new CLIConfigWizard()
-    return wizard.promptForConfig(config)
   }
 }
