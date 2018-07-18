@@ -6,7 +6,10 @@ export default class Service {
   id: number
 
   @Column()
-  name: string
+  instanceName: string
+
+  @Column()
+  moduleName: string
 
   @Column()
   enabled: boolean

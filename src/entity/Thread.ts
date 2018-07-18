@@ -7,7 +7,7 @@ export default class Thread {
   id: number
 
   @Column()
-  serviceName: string
+  serviceId: number
 
   @Column()
   threadName: string

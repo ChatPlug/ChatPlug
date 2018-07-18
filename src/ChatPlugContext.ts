@@ -1,6 +1,6 @@
 import { ExchangeManager } from './ExchangeManager'
 import { ServiceManager } from './ServiceManager'
-import { createConnection, Connection, Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm'
+import { createConnection, Connection } from 'typeorm'
 import Attachment from './entity/Attachment'
 import Message from './entity/Message'
 import CoreSettings from './entity/CoreSettings'
