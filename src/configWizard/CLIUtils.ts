@@ -11,9 +11,9 @@ export default class CLIUtils {
     process.stdout.write(chalk.blueBright(opts.name as string))
     if (opts.required) {
       process.stdout.write(chalk.gray(' [') + chalk.red('*') + chalk.gray(']'))
-    } else if (opts.defaultValue) {
+    } else if (opts.defaultValue !== null) {
       process.stdout.write(
-        chalk.gray(' [') + chalk.dim(opts.defaultValue) + chalk.gray(']'),
+        chalk.gray(' [') + chalk.dim('' + opts.defaultValue) + chalk.gray(']'),
       )
     }
     process.stdout.write(chalk.gray(': '))
@@ -51,7 +51,7 @@ export default class CLIUtils {
   readLine() {
     const rl = readline.createInterface({
       input: process.stdin,
-      output: process.stdout,
+      // output: process.stdout,
     })
     return new Promise<string>(res =>
       rl.on('line', answer => {

@@ -10,6 +10,7 @@
         "sourceMap": true,
         "resolveJsonModule": true,
         "outDir": "dist",
+        "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "lib": [
             "es2017"

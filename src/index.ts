@@ -2,11 +2,12 @@ import 'reflect-metadata'
 import log from 'npmlog'
 import { ChatPlug } from './ChatPlug'
 import CLIConfigWizard from './configWizard/CLIConfigWizard'
+import { Config } from './services/facebook'
 import ChatPlugConfigSkeleton from './ChatPlugConfigSkeleton'
 
 // TODO: move to a better place
 const wizard = new CLIConfigWizard()
-wizard.promptForConfig(ChatPlugConfigSkeleton).then(v => {
+wizard.promptForConfig(Config).then(v => {
   console.log(v)
 
   const chatplug = new ChatPlug()

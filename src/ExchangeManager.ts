@@ -3,16 +3,15 @@ import { Subject } from 'rxjs'
 import { IChatPlugMessage } from './models'
 import { ChatPlugConfig } from './ChatPlugConfig'
 import { ServiceManager } from './ServiceManager'
+import ChatPlugContext from './ChatPlugContext'
 
 export class ExchangeManager {
-  threadConnectionsManager: ThreadConnectionsManager
-  serviceManager: ServiceManager
-  config: ChatPlugConfig
+  context: ChatPlugContext
   messageSubject: Subject<IChatPlugMessage>
   notificationSubject: Subject<IChatPlugMessage>
 
-  constructor (threadConnectionsManager: ThreadConnectionsManager, serviceManager: ServiceManager, config: ChatPlugConfig) {
-    this.threadConnectionsManager = threadConnectionsManager
+  constructor (context: ChatPlugContext) {
+    /*this.threadConnectionsManager = threadConnectionsManager
     this.serviceManager = serviceManager
     this.messageSubject = new Subject()
     this.notificationSubject = new Subject()
@@ -32,6 +31,6 @@ export class ExchangeManager {
           serviceManager.services[config.getCoreConfig().fallbackService].receiveMessageSubject.next(message)
         }
       },
-    })
+    })*/
   }
 }

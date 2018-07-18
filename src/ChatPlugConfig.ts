@@ -6,44 +6,11 @@ import { IChatPlugConnection } from './models'
 
 const CONFIG_FOLDER_PATH = path.join(__dirname, '../config')
 
-const DEFAULTS = {
-  core: {
-    loadedServices: [],
-    useFallbackService: false,
-    fallbackService: 'grpc',
-    serviceConnections: [],
-    logLevel: 'info',
-  },
-  telegram: {
-    enabled: false,
-    botToken: 'bot token from BotFather',
-  },
-  telegramThreadImporter: {
-    apiId: 'account API ID',
-    apiHash: 'account API hash',
-    phoneNumber: 'account phone number',
-  },
-  facebook: {
-    enabled: false,
-    email: 'account email',
-    password: 'account password',
-    forceLogin: false,
-  },
-  discord: {
-    enabled: false,
-    token: 'discord bot token',
-  },
-  grpc: {
-    enabled: false,
-    port: 5319,
-  },
-}
-
 export class ChatPlugConfig {
   tomlConfig: any
   constructor () {
     // If config folder doesn't exist, create one
-    if (!fs.existsSync(CONFIG_FOLDER_PATH)) {
+    /*if (!fs.existsSync(CONFIG_FOLDER_PATH)) {
       fs.mkdirSync(CONFIG_FOLDER_PATH)
     }
     // Check for every config file if exists, write default if doesn't
@@ -61,7 +28,7 @@ export class ChatPlugConfig {
       this.tomlConfig[service] = this.readConfig(service)
     })
     log.level = process.env.LOG_LEVEL || this.tomlConfig.core.logLevel || 'info'
-  }
+  */}
 
   addThreadConnection(threadConnection: IChatPlugConnection) {
     this.tomlConfig.core.serviceConnections.push(threadConnection)

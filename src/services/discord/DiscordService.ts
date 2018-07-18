@@ -2,7 +2,7 @@ import log from 'npmlog'
 import { IChatPlugMessage } from '../../models'
 import { ChatPlugService } from '../Service'
 import { Subject } from 'rxjs'
-import { DiscordConfig } from './DiscordConfig'
+import DiscordConfig from './DiscordConfig'
 import {
   Client as DiscordClient,
   TextChannel,
@@ -12,7 +12,6 @@ import {
 import { ExchangeManager } from '../../ExchangeManager'
 import { ThreadConnectionsManager } from '../../ThreadConnectionsManager'
 import { DiscordMessageHandler } from './DiscordMessageHandler'
-import { FacebookConfig } from '../facebook/FacebookConfig'
 
 export default class DiscordService implements ChatPlugService {
   isEnabled: boolean
@@ -23,7 +22,7 @@ export default class DiscordService implements ChatPlugService {
   messageHandler: DiscordMessageHandler
   discord = new DiscordClient()
 
-  constructor(config: DiscordConfig, exchangeManager: ExchangeManager, threadConnectionsManager: ThreadConnectionsManager, facegramConfig: FacebookConfig) {
+  constructor(config: DiscordConfig, exchangeManager: ExchangeManager, threadConnectionsManager: ThreadConnectionsManager) {
     this.exchangeManager = exchangeManager
     this.config = config
     this.isEnabled = config.enabled
