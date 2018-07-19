@@ -1,4 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm'
+import User from './User'
+import Thread from './Thread'
 
 @Entity()
 export default class Service {
@@ -16,4 +18,10 @@ export default class Service {
 
   @Column()
   configured: boolean
+
+  @OneToMany(type => Thread, thread => thread.service, { eager: true })
+  threads: Thread[]
+
+  @OneToMany(type => User, user => user.service, { eager: true })
+  users: User[]
 }

@@ -9,6 +9,7 @@ import { ExchangeManager } from '../../ExchangeManager'
 import { ThreadConnectionsManager } from '../../ThreadConnectionsManager'
 import { FacebookMessageHandler } from './FacebookMessageHandler'
 import { ChatPlugConfig } from '../../ChatPlugConfig'
+import Message from '../../entity/Message'
 
 const rl = createInterface({
   input: process.stdin,
@@ -19,7 +20,7 @@ export default class FacebookService extends ChatPlugService {
   isEnabled: boolean
   name = 'facebook'
   messageSubject: Subject<IChatPlugMessage>
-  receiveMessageSubject: Subject<IChatPlugMessage> = new Subject()
+  receiveMessageSubject: Subject<Message> = new Subject()
   config: any
   messageHandler: FacebookMessageHandler
   facebook: any
@@ -30,7 +31,7 @@ export default class FacebookService extends ChatPlugService {
 
     this.messageHandler = new FacebookMessageHandler(this.facebook, this.messageSubject)
 
-    this.receiveMessageSubject.subscribe(this.messageHandler.onIncomingMessage)
+    // this.receiveMessageSubject.subscribe(this.messageHandler.onIncomingMessage)
 
     this.stopListening = this.facebook.listen(this.listener)
   }

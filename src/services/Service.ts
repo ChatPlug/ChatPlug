@@ -2,10 +2,11 @@ import { IChatPlugMessage } from '../models'
 import { Subject } from 'rxjs'
 import Service from '../entity/Service'
 import ChatPlugContext from '../ChatPlugContext'
+import Message from '../entity/Message'
 
 export class ChatPlugService {
   config: any
-  receiveMessageSubject = new Subject<IChatPlugMessage>()
+  receiveMessageSubject = new Subject<Message>()
   dbService: Service
   context: ChatPlugContext
 

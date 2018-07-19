@@ -8,13 +8,14 @@ import { ExchangeManager } from '../../ExchangeManager'
 import { ThreadConnectionsManager } from '../../ThreadConnectionsManager'
 import { TelegramMessageHandler } from './TelegramMessageHandler'
 import { ChatPlugConfig } from '../../ChatPlugConfig'
+import Message from '../../entity/Message'
 
 export default class TelegramService extends ChatPlugService {
   isEnabled: boolean
   name = 'telegram'
   messageHandler: TelegramMessageHandler
   messageSubject: Subject<IChatPlugMessage>
-  receiveMessageSubject: Subject<IChatPlugMessage> = new Subject()
+  receiveMessageSubject: Subject<Message> = new Subject()
   config: TelegramConfig
   botClient: TelegramBot
 
@@ -23,7 +24,7 @@ export default class TelegramService extends ChatPlugService {
 
     this.messageHandler = new TelegramMessageHandler(this.botClient, this.messageSubject)
 
-    this.receiveMessageSubject.subscribe(this.messageHandler.onIncomingMessage)
+    // this.receiveMessageSubject.subscribe(this.messageHandler.onIncomingMessage)
 
     this.botClient.on('message', async (msg: TelegramBot.Message) => {
       this.messageHandler.onOutgoingMessage(msg)

@@ -20,9 +20,9 @@ export default class DiscordService extends ChatPlugService {
   discord = new DiscordClient()
 
   async initialize() {
-    this.messageHandler = new DiscordMessageHandler(this.discord, this.context.exchangeManager.messageSubject)
+    // this.messageHandler = new DiscordMessageHandler(this.discord, this.context.exchangeManager.messageSubject)
 
-    this.receiveMessageSubject.subscribe(this.messageHandler.onIncomingMessage)
+    // this.receiveMessageSubject.subscribe(this.messageHandler.onIncomingMessage)
 
     this.discord.on('message', this.messageHandler.onOutgoingMessage)
 

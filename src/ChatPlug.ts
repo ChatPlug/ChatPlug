@@ -22,13 +22,12 @@ export class ChatPlug {
   threadConnectionsManager: ThreadConnectionsManager
   incomingMessagePublisher: Subject<IChatPlugMessage>
 
-  constructor() {
+  constructor(context: ChatPlugContext) {
     this.config = new ChatPlugConfig()
-    this.context = new ChatPlugContext()
+    this.context = context
   }
 
   async startBridge() {
-    await this.context.initializeConnection()
     await this.configureServices()
     await this.context.serviceManager.loadServices()
     await this.context.serviceManager.initiateServices()
