@@ -19,7 +19,7 @@ export default class Service {
   @Column()
   configured: boolean
 
-  @OneToMany(type => Thread, thread => thread.service, { eager: true })
+  @OneToMany(type => Thread, thread => thread.service, { cascade: ['insert'] })
   threads: Thread[]
 
   @OneToMany(type => User, user => user.service, { eager: true })

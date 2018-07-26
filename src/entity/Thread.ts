@@ -7,16 +7,12 @@ export default class Thread {
   @PrimaryGeneratedColumn()
   id: number
 
-  @ManyToOne(type => Service, service => service.users)
+  @ManyToOne(type => Service, service => service.threads, { eager: true, cascade: ['insert'] })
   service: Service
-
-  @Column()
-  threadName: string
 
   @Column()
   externalServiceId: string
 
   @ManyToOne(type => ThreadConnection, threadConnection => threadConnection.threads, { cascade: ['insert'] })
-  @JoinColumn()
   threadConnection: ThreadConnection
 }

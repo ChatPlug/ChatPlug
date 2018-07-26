@@ -5,11 +5,13 @@ import ChatPlugContext from './ChatPlugContext'
 import ThreadConnection from './entity/ThreadConnection'
 import Thread from './entity/Thread'
 import Service from './entity/Service'
+import chalk from 'chalk'
 
 const argv = require('minimist')(process.argv.slice(2), {
   string: ['addConnection', 'a', 'addThread', 't', 'id', 'i', 'c', 'connection'],
   alias: {
     c: 'connection',
+    l: 'listConnection',
     r: 'run',
     a: 'addConnection',
     t: 'addThread',
@@ -40,26 +42,49 @@ context.initializeConnection().then(async () => {
     const repository = context.connection.getRepository(ThreadConnection)
     const connection = new ThreadConnection()
     connection.connectionName = argv.a
+    connection.threads = []
     const result = await repository.save(connection)
     log.info('core', 'Added connection ' + result.connectionName)
   }
 
   if (argv.c && argv.t && argv.i) {
     const serviceRepository = context.connection.getRepository(Service)
-    const repository = context.connection.getRepository(ThreadConnection)
-    const threadRepository = context.connection.getRepository(ThreadConnection)
-    const connection = await repository.findOne({ connectionName: argv.c })
+    const connectionRepository = context.connection.getRepository(ThreadConnection)
+    const connection = await connectionRepository.findOne({ connectionName: argv.c })
     const service = await serviceRepository.findOne({ moduleName: argv.t })
+
     if (service && connection) {
       const thread = new Thread()
-      thread.service = service!!
+      thread.externalServiceId = argv.id
+      thread.service = service
       thread.threadConnection = connection
-      thread.threadName = argv.t
-      thread.externalServiceId = argv.i
-      // await threadRepository.save(thread)
       connection.threads.push(thread)
-      await repository.save(connection)
-      log.info('core', 'Added new thread')
+      service.threads.push(thread)
+      connectionRepository.save(connection)
+      serviceRepository.save(service)
+      log.info('core', 'Added thread #' + argv.i + ' to connection ' + argv.c)
+    }
+  }
+
+  if (argv.l) {
+    const connectionsRepository = context.connection.getRepository(ThreadConnection)
+    const connections = await connectionsRepository.find(
+      {
+        join: {
+          alias: 'connection',
+          leftJoinAndSelect: {
+            threads: 'connection.threads',
+            service: 'threads.service',
+          },
+        },
+      })
+    for (const connection of connections) {
+      const indexText = chalk.gray(connection.id + '')
+      log.info(indexText, chalk.greenBright(connection.connectionName))
+      log.info(indexText, 'Threads:')
+      for (const thread of connection.threads) {
+        log.info(indexText, chalk.blueBright(thread.service.moduleName + '.' + thread.service.instanceName) + chalk.greenBright('#' + thread.externalServiceId))
+      }
     }
   }
 })
