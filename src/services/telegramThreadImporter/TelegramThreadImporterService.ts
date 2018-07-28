@@ -28,7 +28,7 @@ export default class TelegramThreadImporterService extends ChatPlugService {
 
     this.receiveMessageSubject.subscribe(
       async (msg: IChatPlugMessage) => {
-        if (msg.origin.service !== 'telegram') {
+        /*if (msg.origin.service !== 'telegram') {
           const user = await this.client.invoke({
             _: 'getUser',
             user_id: '612705604',
@@ -50,9 +50,8 @@ export default class TelegramThreadImporterService extends ChatPlugService {
            services: [newThread, msg.origin],
           })*/
 
-          msg.target = newThread
-          this.messageSubject.next(msg)
-        }
+          // msg.target = newThread
+          // this.messageSubject.next(msg)
       })
     log.info('telegram', 'Registered bot handlers')
   }

@@ -22,6 +22,6 @@ export default class Service {
   @OneToMany(type => Thread, thread => thread.service, { cascade: ['insert'] })
   threads: Thread[]
 
-  @OneToMany(type => User, user => user.service, { eager: true })
+  @OneToMany(type => User, user => user.service, { cascade: ['insert'] })
   users: User[]
 }

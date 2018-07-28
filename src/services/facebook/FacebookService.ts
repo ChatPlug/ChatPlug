@@ -20,7 +20,7 @@ export default class FacebookService extends ChatPlugService {
   isEnabled: boolean
   name = 'facebook'
   messageSubject: Subject<IChatPlugMessage>
-  receiveMessageSubject: Subject<Message> = new Subject()
+  receiveMessageSubject: Subject<IChatPlugMessage> = new Subject()
   config: any
   messageHandler: FacebookMessageHandler
   facebook: any
@@ -31,7 +31,7 @@ export default class FacebookService extends ChatPlugService {
 
     this.messageHandler = new FacebookMessageHandler(this.facebook, this.messageSubject)
 
-    // this.receiveMessageSubject.subscribe(this.messageHandler.onIncomingMessage)
+    this.receiveMessageSubject.subscribe(this.messageHandler.onIncomingMessage)
 
     this.stopListening = this.facebook.listen(this.listener)
   }

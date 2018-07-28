@@ -15,7 +15,7 @@ export default class TelegramService extends ChatPlugService {
   name = 'telegram'
   messageHandler: TelegramMessageHandler
   messageSubject: Subject<IChatPlugMessage>
-  receiveMessageSubject: Subject<Message> = new Subject()
+  receiveMessageSubject: Subject<IChatPlugMessage> = new Subject()
   config: TelegramConfig
   botClient: TelegramBot
 
@@ -24,7 +24,7 @@ export default class TelegramService extends ChatPlugService {
 
     this.messageHandler = new TelegramMessageHandler(this.botClient, this.messageSubject)
 
-    // this.receiveMessageSubject.subscribe(this.messageHandler.onIncomingMessage)
+    this.receiveMessageSubject.subscribe(this.messageHandler.onIncomingMessage)
 
     this.botClient.on('message', async (msg: TelegramBot.Message) => {
       this.messageHandler.onOutgoingMessage(msg)

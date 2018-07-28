@@ -6,7 +6,7 @@ import Message from '../entity/Message'
 
 export class ChatPlugService {
   config: any
-  receiveMessageSubject = new Subject<Message>()
+  receiveMessageSubject = new Subject<IChatPlugMessage>()
   dbService: Service
   context: ChatPlugContext
 

@@ -11,8 +11,8 @@ import { ChatPlugConfig } from './ChatPlugConfig'
 import User from './entity/User'
 
 export default class ChatPlugContext {
-  exchangeManager = new ExchangeManager(this)
-  serviceManager = new ServiceManager(this)
+  exchangeManager: ExchangeManager
+  serviceManager: ServiceManager
   config = new ChatPlugConfig()
 
   connection: Connection
@@ -33,5 +33,7 @@ export default class ChatPlugContext {
       synchronize: true,
       logging: false,
     })
+    this.exchangeManager = new ExchangeManager(this)
+    this.serviceManager = new ServiceManager(this)
   }
 }

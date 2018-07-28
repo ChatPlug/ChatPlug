@@ -16,6 +16,10 @@ export class ServiceManager {
     this.services = {}
   }
 
+  getServiceForId(id: string): ChatPlugService {
+    return this.services[id]
+  }
+
   getRegisteredServices(): ChatPlugService[] {
     const registeredServices: ChatPlugService[] = []
 

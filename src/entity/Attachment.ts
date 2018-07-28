@@ -12,6 +12,6 @@ export default class Attachment {
   @Column()
   name: string
 
-  @ManyToOne(type => Message, message => message.attachements)
+  @ManyToOne(type => Message, message => message.attachements, { cascade: ['insert'] })
   message: Message
 }

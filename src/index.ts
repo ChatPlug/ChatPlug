@@ -51,7 +51,7 @@ context.initializeConnection().then(async () => {
     const serviceRepository = context.connection.getRepository(Service)
     const connectionRepository = context.connection.getRepository(ThreadConnection)
     const connection = await connectionRepository.findOne({ connectionName: argv.c })
-    const service = await serviceRepository.findOne({ moduleName: argv.t })
+    const service = await serviceRepository.findOne({ where: { moduleName: argv.t }, relations: ['threads'] })
 
     if (service && connection) {
       const thread = new Thread()
@@ -59,7 +59,6 @@ context.initializeConnection().then(async () => {
       thread.service = service
       thread.threadConnection = connection
       connection.threads.push(thread)
-      service.threads.push(thread)
       connectionRepository.save(connection)
       serviceRepository.save(service)
       log.info('core', 'Added thread #' + argv.i + ' to connection ' + argv.c)

@@ -13,6 +13,6 @@ export default class ThreadConnection {
   @OneToMany(type => Thread, thread => thread.threadConnection, { eager: true, cascade: ['insert'] })
   threads: Thread[]
 
-  @OneToMany(type => Message, message => message.threadConnection)
-  messages: Promise<Message[]>
+  @OneToMany(type => Message, message => message.threadConnection, { cascade: ['insert'] })
+  messages: Message[]
 }
