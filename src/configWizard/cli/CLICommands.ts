@@ -11,6 +11,7 @@ import Thread from '../../entity/Thread'
 import Service from '../../entity/Service'
 import chalk from 'chalk'
 import { ChatPlug } from '../../ChatPlug'
+import printHelpMessage from './Help'
 
 export default class CLICommands {
   context: ChatPlugContext
@@ -56,6 +57,9 @@ export default class CLICommands {
     })
   }
 
+  public async help(@CLIArgument({ name: CLIArguments.HELP }) _: boolean) {
+    printHelpMessage()
+  }
   public async addConnection(@CLIArgument({ name: CLIArguments.ADD_CONNECTION }) connectionName: string) {
     const repository = this.connection.getRepository(ThreadConnection)
     const connection = new ThreadConnection()
@@ -74,16 +78,24 @@ export default class CLICommands {
     const connection = await connectionRepository.findOne({ connectionName: connName })
     const service = await serviceRepository.findOne({ where: { moduleName: serviceName }, relations: ['threads'] })
 
-    if (service && connection) {
-      const thread = new Thread()
-      thread.externalServiceId = threadId
-      thread.service = service
-      thread.threadConnection = connection
-      connection.threads.push(thread)
-      connectionRepository.save(connection)
-      serviceRepository.save(service)
-      log.info('core', 'Added thread #' + threadId + ' to connection ' + connName)
+    if (!service) {
+      log.error('core', 'Cannot find service with given name.')
+      return
     }
+
+    if (!connection) {
+      log.error('core', 'Cannot find connection with given name')
+      return
+    }
+
+    const thread = new Thread()
+    thread.externalServiceId = threadId
+    thread.service = service
+    thread.threadConnection = connection
+    connection.threads.push(thread)
+    connectionRepository.save(connection)
+    serviceRepository.save(service)
+    log.info('core', 'Added thread #' + threadId + ' to connection ' + connName)
   }
 
   public async listConnections(@CLIArgument({ name: CLIArguments.LIST_CONNECTIONS }) _: boolean) {

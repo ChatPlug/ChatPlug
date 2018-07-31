@@ -8,6 +8,7 @@ export enum CLIArguments {
   RUN = 'r',
   LIST_CONNECTIONS = 'l',
   THREAD_ID = 'i',
+  HELP = 'h',
 }
 
 export default interface CLIArgumentOptions {

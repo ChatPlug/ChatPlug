@@ -17,6 +17,7 @@ const argv = require('yargs-parser')(process.argv.slice(2), {
     a: 'addConnection',
     t: 'addThread',
     i: 'id',
+    h: 'help',
   },
 })
 
