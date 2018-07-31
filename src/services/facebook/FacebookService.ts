@@ -17,11 +17,6 @@ const rl = createInterface({
 })
 
 export default class FacebookService extends ChatPlugService {
-  isEnabled: boolean
-  name = 'facebook'
-  messageSubject: Subject<IChatPlugMessage>
-  receiveMessageSubject: Subject<IChatPlugMessage> = new Subject()
-  config: any
   messageHandler: FacebookMessageHandler
   facebook: any
   stopListening: any
@@ -29,7 +24,7 @@ export default class FacebookService extends ChatPlugService {
   async initialize () {
     await this.login()
 
-    this.messageHandler = new FacebookMessageHandler(this.facebook, this.messageSubject)
+    this.messageHandler = new FacebookMessageHandler(this.facebook, this.context.exchangeManager.messageSubject)
 
     this.receiveMessageSubject.subscribe(this.messageHandler.onIncomingMessage)
 

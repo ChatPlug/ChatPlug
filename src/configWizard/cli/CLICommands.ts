@@ -88,6 +88,11 @@ export default class CLICommands {
       return
     }
 
+    if (connection.threads.some((el) => { return el.externalServiceId === threadId })) {
+      log.error('core', 'Thread with given id already exists in this connection')
+      return
+    }
+
     const thread = new Thread()
     thread.externalServiceId = threadId
     thread.service = service

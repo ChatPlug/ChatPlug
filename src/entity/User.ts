@@ -9,7 +9,7 @@ export default class User {
   @ManyToOne(type => Service, service => service.users, { cascade: ['insert'] })
   service: Service
 
-  @Column({ unique: true })
+  @Column()
   externalServiceId: string
 
   @Column()

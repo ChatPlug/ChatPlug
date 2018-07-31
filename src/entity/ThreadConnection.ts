@@ -7,7 +7,7 @@ export default class ThreadConnection {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column()
+  @Column({ unique: true })
   connectionName: string
 
   @OneToMany(type => Thread, thread => thread.threadConnection, { eager: true, cascade: ['insert'] })

@@ -34,7 +34,6 @@ export class ExchangeManager {
           },
         })
 
-        console.log(threads)
         for (const thread of threads) {
           for (const actualThread of thread.threadConnection.threads.filter((element) => element.externalServiceId !== message.externalOriginId)) {
             message.externalTargetId = actualThread.externalServiceId

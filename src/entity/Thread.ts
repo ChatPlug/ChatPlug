@@ -10,7 +10,7 @@ export default class Thread {
   @ManyToOne(type => Service, service => service.threads, { eager: true, cascade: ['insert'] })
   service: Service
 
-  @Column({ unique: true })
+  @Column()
   externalServiceId: string
 
   @ManyToOne(type => ThreadConnection, threadConnection => threadConnection.threads, { cascade: ['insert'] })
