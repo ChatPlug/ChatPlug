@@ -8,7 +8,7 @@ import Service from './entity/Service'
 import chalk from 'chalk'
 import CLICommands from './configWizard/cli/CLICommands'
 
-const argv = require('minimist')(process.argv.slice(2), {
+const argv = require('yargs-parser')(process.argv.slice(2), {
   string: ['addConnection', 'a', 'addThread', 't', 'id', 'i', 'c', 'connection'],
   alias: {
     c: 'connection',
