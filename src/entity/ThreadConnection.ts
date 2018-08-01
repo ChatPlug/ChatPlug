@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn } from 'typeorm'
 import Thread from './Thread'
 import Message from './Message'
 
@@ -9,6 +9,9 @@ export default class ThreadConnection {
 
   @Column({ unique: true })
   connectionName: string
+
+  @CreateDateColumn({ type: 'datetime' })
+  createdAt: Date
 
   @OneToMany(type => Thread, thread => thread.threadConnection, { eager: true, cascade: ['insert'] })
   threads: Thread[]

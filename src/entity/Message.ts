@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, CreateDateColumn } from 'typeorm'
 import Attachment from './Attachment'
 import ThreadConnection from './ThreadConnection'
 import User from './User'
@@ -13,6 +13,9 @@ export default class Message {
 
   @ManyToOne(type => User)
   author: User
+
+  @CreateDateColumn({ type: 'datetime' })
+  createdAt: Date
 
   @OneToMany(type => Attachment, attachment => attachment.message, { eager: true, cascade: ['insert'] })
   attachements: Attachment[]

@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn } from 'typeorm'
 import ThreadConnection from './ThreadConnection'
 import Service from './Service'
 
@@ -12,6 +12,9 @@ export default class Thread {
 
   @Column()
   externalServiceId: string
+
+  @CreateDateColumn({ type: 'datetime' })
+  createdAt: Date
 
   @ManyToOne(type => ThreadConnection, threadConnection => threadConnection.threads, { cascade: ['insert'] })
   threadConnection: ThreadConnection
