@@ -1,0 +1,28 @@
+import { ChatPlugService } from '../Service'
+import fastify from 'fastify'
+import log from 'npmlog'
+import 'reflect-metadata'
+import ThreadConnection from '../../entity/ThreadConnection'
+import { createExpressServer, useContainer } from 'routing-controllers'
+import ConnectionsController from './controllers/ConnectionsController'
+import { Application } from 'express'
+import ContextContainer from './ContextContainer'
+
+export default class ApiService extends ChatPlugService {
+  app: any
+
+  async initialize() {
+    useContainer(new ContextContainer(this.context))
+    this.app = createExpressServer({
+      routePrefix: '/api/v1',
+      controllers: [ConnectionsController],
+    })
+
+    await this.app.listen(this.config.port)
+    log.info('api', 'Api listening on port ' + this.config.port)
+  }
+
+  async terminate() {
+    await this.app.close(() => {})
+  }
+}

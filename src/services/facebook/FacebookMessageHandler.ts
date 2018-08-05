@@ -56,26 +56,22 @@ export class FacebookMessageHandler implements FacegramMessageHandler {
       author: {
         username: thread.nicknames[message.senderID] || sender.name,
         avatar: `https://graph.facebook.com/${message.senderID}/picture?width=128`,
-        id: message.senderID,
+        externalServiceId: message.senderID,
       },
-      origin: {
-        id: thread.threadID,
-        name: threadName,
-        service: this.name,
-      },
+      externalOriginId: thread.threadID,
     } as IChatPlugMessage
 
     this.messageSubject.next(facegramMessage)
   }
 
   onIncomingMessage = async (message: IChatPlugMessage) => {
-    if (!message.target) return
+    if (!message.externalTargetId) return
     this.client.sendMessage(
       {
         body: `*${message.author.username}*: ${message.message}`,
         attachment: await Promise.all(message.attachments.map(attach => attach.url).map(getStreamFromURL)),
       },
-      message.target.id,
+      message.externalTargetId,
       err => { if (err) log.error('facebook', err) },
     )
   }

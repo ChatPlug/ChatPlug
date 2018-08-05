@@ -31,27 +31,23 @@ export class DiscordMessageHandler implements FacegramMessageHandler {
       author: {
         username: message.author.username,
         avatar: message.author.avatarURL,
-        id: message.author.id,
+        externalServiceId: message.author.id,
       },
-      origin: {
-        id: message.channel.id,
-        service: this.name,
-        name: message.guild.name + ' #' + message.channel.name,
-      },
+      externalOriginId:  message.channel.id,
     } as IChatPlugMessage
 
     this.messageSubject.next(facegramMessage)
   }
 
   onIncomingMessage = async (message: IChatPlugMessage) => {
-    if (!message.target) return
+    if (!message.externalTargetId) return
 
-    const channel = this.client.channels.get(message.target.id)
+    const channel = this.client.channels.get(message.externalTargetId)
     if (!channel || channel.type !== 'text') {
-      return log.warn('discord', `Channel ${message.target} not found!`)
+      return log.warn('discord', `Channel ${message.externalTargetId} not found!`)
     }
 
-    let webhook = this.webhooks.find('channelID', message.target.id)
+    let webhook = this.webhooks.find('channelID', message.externalTargetId)
     if (!webhook) {
       webhook = await (channel as TextChannel).createWebhook(
         `Facegram ${(channel as TextChannel).name}`.substr(0, 32),

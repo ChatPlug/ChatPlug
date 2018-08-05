@@ -2,39 +2,29 @@ import log from 'npmlog'
 import { IChatPlugMessage, IChatPlugThread } from '../../models'
 import { ChatPlugService } from '../Service'
 import { Subject } from 'rxjs'
-import { FacebookConfig } from './FacebookConfig'
+// import { FacebookConfig } from './FacebookConfig'
 import facebook from 'facebook-chat-api'
 import { createInterface } from 'readline'
 import { ExchangeManager } from '../../ExchangeManager'
 import { ThreadConnectionsManager } from '../../ThreadConnectionsManager'
 import { FacebookMessageHandler } from './FacebookMessageHandler'
 import { ChatPlugConfig } from '../../ChatPlugConfig'
+import Message from '../../entity/Message'
 
 const rl = createInterface({
   input: process.stdin,
   output: process.stdout,
 })
 
-export default class FacebookService implements ChatPlugService {
-  isEnabled: boolean
-  name = 'facebook'
-  messageSubject: Subject<IChatPlugMessage>
-  receiveMessageSubject: Subject<IChatPlugMessage> = new Subject()
-  config: FacebookConfig
+export default class FacebookService extends ChatPlugService {
   messageHandler: FacebookMessageHandler
   facebook: any
   stopListening: any
 
-  constructor(config: FacebookConfig, exchangeManager: ExchangeManager, threadConnectionsManager: ThreadConnectionsManager, facegramConfig: ChatPlugConfig) {
-    this.messageSubject = exchangeManager.messageSubject
-    this.config = config
-    this.isEnabled = config.enabled
-  }
-
   async initialize () {
-    await this.login()
+    /*await this.login()
 
-    this.messageHandler = new FacebookMessageHandler(this.facebook, this.messageSubject)
+    this.messageHandler = new FacebookMessageHandler(this.facebook, this.context.exchangeManager.messageSubject)
 
     this.receiveMessageSubject.subscribe(this.messageHandler.onIncomingMessage)
 
@@ -54,7 +44,7 @@ export default class FacebookService implements ChatPlugService {
       this.messageHandler.setClient(this.facebook)
       this.stopListening = this.facebook.listen(this.listener)
     }
-    this.messageHandler.onOutgoingMessage(message)
+    this.messageHandler.onOutgoingMessage(message)*/
   }
 
   login () {
@@ -84,10 +74,8 @@ export default class FacebookService implements ChatPlugService {
     })
   }
 
-  terminate() {
+  async terminate() {
     if (!this.facebook) return log.info('facebook', 'Not logged in')
-    return new Promise((resolve, reject) =>
-      this.facebook.logout(err => (err ? reject(err) : resolve())),
-    )
+    await this.facebook.logout
   }
 }

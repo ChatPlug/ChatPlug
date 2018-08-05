@@ -5,8 +5,8 @@ export interface IChatPlugMessage {
   message: string
   attachments: IChatPlugAttachement[]
   author: IChatPlugUser
-  origin: IChatPlugThread
-  target?: IChatPlugThread
+  externalOriginId: string
+  externalTargetId: string
 }
 
 export interface IChatPlugAttachement {
@@ -24,7 +24,6 @@ export enum IChatPlugAttachementType {
 }
 
 export interface IChatPlugService {
-  name: string
   messageSubject: Subject<IChatPlugMessage>
 }
 
@@ -37,7 +36,7 @@ export interface IChatPlugThread {
 export interface IChatPlugUser {
   username: string
   avatar?: string
-  id?: string
+  externalServiceId: string
 }
 
 export interface IChatPlugConnection {

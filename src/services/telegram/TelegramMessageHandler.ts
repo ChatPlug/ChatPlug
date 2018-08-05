@@ -75,13 +75,9 @@ export class TelegramMessageHandler implements FacegramMessageHandler {
       author: {
         avatar,
         username: message.from!!.username,
-        id: message.from!!.id.toString(),
+        externalServiceId: message.from!!.id.toString(),
       },
-      origin: {
-        id: message.chat!!.id.toString(),
-        name: message.chat!!.first_name,
-        service: this.name,
-      },
+      externalOriginId: message.chat!!.id.toString(),
     } as IChatPlugMessage
 
     // send a message to the chat acknowledging receipt of their message
@@ -89,15 +85,15 @@ export class TelegramMessageHandler implements FacegramMessageHandler {
   }
 
   onIncomingMessage = async (message: IChatPlugMessage) => {
-    if (!message.target) return
+    if (!message.externalTargetId) return
     const formattedMsg = '*' + message.author.username + '*' + ': ' + message.message
     this.client.sendMessage(
-      Number(message.target!!.id),
+      Number(message.externalTargetId),
       formattedMsg,
       { parse_mode: 'Markdown' },
     )
     message.attachments.forEach((attachment) => {
-      this.client.sendPhoto(message.target!!.id, attachment.url)
+      this.client.sendPhoto(message.externalTargetId, attachment.url)
     })
   }
 

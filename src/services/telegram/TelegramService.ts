@@ -3,30 +3,22 @@ import TelegramBot from 'node-telegram-bot-api'
 import { IChatPlugMessage, IChatPlugAttachement } from '../../models'
 import { ChatPlugService } from '../Service'
 import { Subject } from 'rxjs'
-import { TelegramConfig } from './TelegramConfig'
+import TelegramConfig from './TelegramConfig'
 import { ExchangeManager } from '../../ExchangeManager'
 import { ThreadConnectionsManager } from '../../ThreadConnectionsManager'
 import { TelegramMessageHandler } from './TelegramMessageHandler'
 import { ChatPlugConfig } from '../../ChatPlugConfig'
+import Message from '../../entity/Message'
 
-export default class TelegramService implements ChatPlugService {
-  isEnabled: boolean
-  name = 'telegram'
+export default class TelegramService extends ChatPlugService {
   messageHandler: TelegramMessageHandler
-  messageSubject: Subject<IChatPlugMessage>
-  receiveMessageSubject: Subject<IChatPlugMessage> = new Subject()
   config: TelegramConfig
   botClient: TelegramBot
 
-  constructor(config: TelegramConfig, exchangeManager: ExchangeManager,  threadConnectionsManager: ThreadConnectionsManager, facegramConfig: ChatPlugConfig) {
-    this.messageSubject = exchangeManager.messageSubject
-    this.config = config
-    this.isEnabled = config.enabled
-    this.botClient = new TelegramBot(this.config.botToken, { polling: true })
-  }
-
   async initialize() {
-    this.messageHandler = new TelegramMessageHandler(this.botClient, this.messageSubject)
+    /*this.botClient = new TelegramBot(this.config.botToken, { polling: true })
+
+    this.messageHandler = new TelegramMessageHandler(this.botClient, this.context.exchangeManager.messageSubject)
 
     this.receiveMessageSubject.subscribe(this.messageHandler.onIncomingMessage)
 
@@ -38,7 +30,7 @@ export default class TelegramService implements ChatPlugService {
     console.log(user)*/
   }
 
-  terminate() {
-    this.botClient.stopPolling()
+  async terminate() {
+    await this.botClient.stopPolling()
   }
 }
