@@ -9,25 +9,30 @@ import { Application } from 'express'
 import ContextContainer from './ContextContainer'
 import ErrorMiddleware from './ErrorMiddleware'
 import ResponseMiddleware from './ResponseMiddleware'
+import ServicesController from './controllers/ServicesController'
+import { Server } from 'http'
 
 export default class ApiService extends ChatPlugService {
-  app: any
-
+  app: Application
+  httpServer: Server
   async initialize() {
     useContainer(new ContextContainer(this.context))
     this.app = createExpressServer({
       routePrefix: '/api/v1',
-      controllers: [ConnectionsController],
+      controllers: [ConnectionsController, ServicesController],
       middlewares: [ErrorMiddleware],
       interceptors: [ResponseMiddleware],
       defaultErrorHandler: false,
-    })
+    }) as Application
 
-    await this.app.listen(this.config.port)
-    log.info('api', 'Api listening on port ' + this.config.port)
+    await new Promise(
+      res => (this.httpServer = this.app.listen(this.config.port, _ => res)),
+    )
+    log.info('api', 'API listening on port ' + this.config.port)
   }
 
   async terminate() {
-    await this.app.close(() => {})
+    log.info('api', 'Closing API server')
+    await this.httpServer.close()
   }
 }
