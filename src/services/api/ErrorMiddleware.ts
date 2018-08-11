@@ -5,7 +5,7 @@ import { createErrorResponse } from './ApiResponse'
 @Middleware({ type: 'after' })
 export default class ErrorMiddleware implements ExpressErrorMiddlewareInterface {
   error(error: any, request: any, response: any, next: (err: any) => any) {
-    console.log(request)
+    console.error(error)
     next(JSON.stringify(createErrorResponse(error)))
   }
 }

@@ -12,6 +12,10 @@ export default class ServicesController {
   getServices() {
     return this.context.serviceManager
       .getRegisteredServices()
-      .map(s => classToPlain(s))
+      .map(s => classToPlain(s.dbService))
+  }
+  @Get('/available')
+  async getAvailableServiceModules() {
+    return await this.context.serviceManager.getAvailableServices()
   }
 }
