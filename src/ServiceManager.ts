@@ -21,13 +21,7 @@ export class ServiceManager {
   }
 
   getRegisteredServices(): ChatPlugService[] {
-    const registeredServices: ChatPlugService[] = []
-
-    for (const key in this.services) {
-      registeredServices.push(this.services[key])
-    }
-
-    return registeredServices
+    return Object.keys(this.services).map(k => this.services[k])
   }
 
   async loadServices() {
