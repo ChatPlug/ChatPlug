@@ -8,7 +8,6 @@
         "noImplicitAny": false,
         "moduleResolution": "node",
         "sourceMap": true,
-        "resolveJsonModule": true,
         "outDir": "dist",
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,

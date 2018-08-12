@@ -7,19 +7,10 @@ import Thread from './entity/Thread'
 import Service from './entity/Service'
 import chalk from 'chalk'
 import CLICommands from './configWizard/cli/CLICommands'
+import { getAliasMap } from './configWizard/cli/CLIArguments'
 
 const argv = require('yargs-parser')(process.argv.slice(2), {
-  string: ['addConnection', 'a', 'addThread', 't', 'id', 'i', 'c', 'connection'],
-  alias: {
-    c: 'connection',
-    l: 'listConnections',
-    s: 'start',
-    a: 'addConnection',
-    t: 'addThread',
-    i: 'id',
-    h: 'help',
-    r: 'removeThread',
-  },
+  alias: getAliasMap(),
 })
 
 const context = new ChatPlugContext()
