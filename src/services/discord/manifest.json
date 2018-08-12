@@ -1,0 +1,6 @@
+{
+    "displayName": "Discord",
+    "version": "0.0.1",
+    "description": "Enables ChatPlug to relay messages from/to discord.",
+    "systemService": false
+}

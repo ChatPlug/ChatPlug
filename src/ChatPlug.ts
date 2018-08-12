@@ -38,9 +38,17 @@ export class ChatPlug {
     const serviceRepository = this.context.connection.manager.getRepository(
       Service,
     )
-    for (const serviceModuleName of availableServices) {
+    for (const serviceModule of availableServices) {
+      if (!serviceModule.valid) {
+        console.log(
+          `Error while loading ${serviceModule.displayName} service: ${
+            serviceModule.error
+          }`,
+        )
+        continue
+      }
       const possibleService = await serviceRepository.findOne({
-        moduleName: serviceModuleName,
+        moduleName: serviceModule.moduleName,
       })
       // possibleService && (possibleService.configured && );
       let shouldConfigureService = false
@@ -69,18 +77,18 @@ export class ChatPlug {
         const shouldEnable = await utils.askUser({
           type: FieldType.BOOLEAN,
           name: 'enable',
-          hint: `Do you want to enable the ${serviceModuleName} service?`,
+          hint: `Do you want to enable the ${serviceModule.displayName} service (${serviceModule.description})?`,
           defaultValue: false,
         })
 
         if (shouldEnable) {
-          const confSchema = require('./services/' + serviceModuleName).Config
-          console.log('Configuring service ' + serviceModuleName)
+          const confSchema = require(serviceModule.modulePath).Config
+          console.log('Configuring service ' + serviceModule.displayName)
           const configuration = await wizard.promptForConfig(confSchema)
           fs.writeFileSync(
             path.join(
               CONFIG_FOLDER_PATH,
-              serviceModuleName + '.' + serviceModuleName + '.toml',
+              serviceModule.moduleName + '.' + serviceModule.moduleName + '.toml',
             ),
             TOML.stringify(configuration),
           )
@@ -89,12 +97,12 @@ export class ChatPlug {
         const service = new Service()
         service.configured = shouldEnable
         service.enabled = shouldEnable
-        service.instanceName = serviceModuleName
-        service.moduleName = serviceModuleName
+        service.instanceName = serviceModule.moduleName
+        service.moduleName = serviceModule.moduleName
 
         await serviceRepository.save(service)
       } else {
-        console.log('Service already initialized ' + serviceModuleName)
+        console.log('Service already initialized ' + serviceModule)
       }
     }
   }

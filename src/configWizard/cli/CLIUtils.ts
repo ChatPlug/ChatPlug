@@ -48,7 +48,7 @@ export default class CLIUtils {
         no: false,
       }
       const normalizedVal = val.trim().toLowerCase()
-      if (boolMap[normalizedVal] == null) {
+      if (normalizedVal === '' || boolMap[normalizedVal] == null) {
         throw new Error(
           `"${opts.name}" should be a boolean (${Object.keys(boolMap).join(
             ', ',

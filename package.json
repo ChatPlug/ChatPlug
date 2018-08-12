@@ -37,6 +37,7 @@
     "body-parser": "^1.18.3",
     "chalk": "^2.4.1",
     "class-transformer": "^0.1.9",
+    "class-validator": "^0.9.1",
     "discord.js": "^11.3.2",
     "express": "^4.16.3",
     "facebook-chat-api": "^1.6.0",

@@ -1,0 +1,6 @@
+{
+    "displayName": "gRPC",
+    "version": "0.0.1",
+    "description": "Enables other applications to control ChatPlug via a gRPC.",
+    "systemService": false
+}
