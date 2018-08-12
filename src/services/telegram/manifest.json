@@ -1,0 +1,6 @@
+{
+    "displayName": "Telegram",
+    "version": "0.0.1",
+    "description": "Enables ChatPlug to relay messages from/to telegram.",
+    "systemService": false
+}

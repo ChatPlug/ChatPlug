@@ -48,7 +48,7 @@ export default class CLICommands {
       }
     }
 
-    log.error('core', 'Invalid command')
+    log.error('core', 'Invalid command. Use --help to see available commands for ChatPlug.')
   }
 
   @HelpMessage('Starts ChatPlug')

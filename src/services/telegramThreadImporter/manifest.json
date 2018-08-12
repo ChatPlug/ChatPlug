@@ -1,0 +1,6 @@
+{
+    "displayName": "Telegram (Thread importer)",
+    "version": "0.0.1",
+    "description": "Enables ChatPlug to create new threads on Telegram (requires a separate account).",
+    "systemService": false
+}

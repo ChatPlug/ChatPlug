@@ -1,11 +1,8 @@
 import { ChatPlugConfig } from './ChatPlugConfig'
 import { IChatPlugMessage } from './models'
 import { Subject } from 'rxjs'
-import IFieldOptions, { FieldType } from './configWizard/IFieldOptions'
-import { ChatPlugService } from './services/Service'
+import { FieldType } from './configWizard/IFieldOptions'
 import { ThreadConnectionsManager } from './ThreadConnectionsManager'
-import { ServiceManager } from './ServiceManager'
-import { ExchangeManager } from './ExchangeManager'
 import ChatPlugContext from './ChatPlugContext'
 import fs = require('fs')
 import CLIConfigWizard from './configWizard/cli/CLIConfigWizard'
@@ -36,56 +33,91 @@ export class ChatPlug {
   async configureServices() {
     const wizard = new CLIConfigWizard()
     const utils = new CLIUtils()
-    const moduleNames = this.getDirectories(path.join(__dirname, 'services'))
+    const availableServices = await this.context.serviceManager.getAvailableServices()
     const configuredServices = this.getFiles(CONFIG_FOLDER_PATH)
-    const serviceRepository = this.context.connection.manager.getRepository(Service)
-    for (const serviceModuleName of moduleNames) {
-      const possibleService = await serviceRepository.findOne({ moduleName: serviceModuleName })
-
-      if (!possibleService || (possibleService.configured && !configuredServices.includes(possibleService.moduleName + '.' + possibleService.instanceName + '.toml'))) {
+    const serviceRepository = this.context.connection.manager.getRepository(
+      Service,
+    )
+    for (const serviceModule of availableServices) {
+      if (!serviceModule.valid) {
+        console.log(
+          `Error while loading ${serviceModule.displayName} service: ${
+            serviceModule.error
+          }`,
+        )
+        continue
+      }
+      const possibleService = await serviceRepository.findOne({
+        moduleName: serviceModule.moduleName,
+      })
+      // possibleService && (possibleService.configured && );
+      let shouldConfigureService = false
+      if (!possibleService) {
+        shouldConfigureService = true
+      } else {
+        if (possibleService.configured) {
+          const serviceConfigPath =
+            possibleService.moduleName +
+            '.' +
+            possibleService.instanceName +
+            '.toml'
+          if (!configuredServices.includes(serviceConfigPath)) {
+            // missing configuration for a service that is has been reported as configured
+            shouldConfigureService = true
+          }
+        } else {
+          shouldConfigureService = true
+        }
+      }
+      if (shouldConfigureService) {
         if (possibleService) {
           await serviceRepository.remove(possibleService)
         }
 
         const shouldEnable = await utils.askUser({
           type: FieldType.BOOLEAN,
-          name: serviceModuleName,
-          hint: 'Do you want to enable service?',
+          name: 'enable',
+          hint: `Do you want to enable the ${serviceModule.displayName} service (${serviceModule.description})?`,
           defaultValue: false,
         })
 
         if (shouldEnable) {
-          const confSchema = require('./services/' + serviceModuleName).Config
-          console.log('Configuring service ' + serviceModuleName)
+          const confSchema = require(serviceModule.modulePath).Config
+          console.log('Configuring service ' + serviceModule.displayName)
           const configuration = await wizard.promptForConfig(confSchema)
-          fs.writeFileSync(path.join(CONFIG_FOLDER_PATH, serviceModuleName + '.' + serviceModuleName + '.toml'), TOML.stringify(configuration))
+          fs.writeFileSync(
+            path.join(
+              CONFIG_FOLDER_PATH,
+              serviceModule.moduleName + '.' + serviceModule.moduleName + '.toml',
+            ),
+            TOML.stringify(configuration),
+          )
         }
 
         const service = new Service()
         service.configured = shouldEnable
         service.enabled = shouldEnable
-        service.instanceName = serviceModuleName
-        service.moduleName = serviceModuleName
+        service.instanceName = serviceModule.moduleName
+        service.moduleName = serviceModule.moduleName
 
         await serviceRepository.save(service)
       } else {
-        console.log('Service already initialized ' + serviceModuleName)
+        console.log('Service already initialized ' + serviceModule)
       }
     }
-
   }
   async stopBridge() {
     await this.context.serviceManager.terminateServices()
   }
 
   getDirectories(path) {
-    return fs.readdirSync(path).filter((file) => {
+    return fs.readdirSync(path).filter(file => {
       return fs.statSync(path + '/' + file).isDirectory()
     })
   }
 
   getFiles(path) {
-    return fs.readdirSync(path).filter((file) => {
+    return fs.readdirSync(path).filter(file => {
       return fs.statSync(path + '/' + file).isFile()
     })
   }
