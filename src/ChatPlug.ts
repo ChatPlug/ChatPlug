@@ -54,7 +54,7 @@ export class ChatPlug {
       let shouldConfigureService = false
       if (!possibleService) {
         shouldConfigureService = true
-      } else {
+      } else if (possibleService.enabled) {
         if (possibleService.configured) {
           const serviceConfigPath =
             possibleService.moduleName +
@@ -73,11 +73,12 @@ export class ChatPlug {
         if (possibleService) {
           await serviceRepository.remove(possibleService)
         }
-
         const shouldEnable = await utils.askUser({
           type: FieldType.BOOLEAN,
           name: 'enable',
-          hint: `Do you want to enable the ${serviceModule.displayName} service (${serviceModule.description})?`,
+          hint: `Do you want to enable the ${
+            serviceModule.displayName
+          } service (${serviceModule.description})?`,
           defaultValue: false,
         })
 
@@ -88,7 +89,10 @@ export class ChatPlug {
           fs.writeFileSync(
             path.join(
               CONFIG_FOLDER_PATH,
-              serviceModule.moduleName + '.' + serviceModule.moduleName + '.toml',
+              serviceModule.moduleName +
+                '.' +
+                serviceModule.moduleName +
+                '.toml',
             ),
             TOML.stringify(configuration),
           )
@@ -102,7 +106,7 @@ export class ChatPlug {
 
         await serviceRepository.save(service)
       } else {
-        console.log('Service already initialized ' + serviceModule)
+        console.log('Service ' + serviceModule.displayName + ' does not need to be configured right now.')
       }
     }
   }
