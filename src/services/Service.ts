@@ -4,8 +4,8 @@ import Service from '../entity/Service'
 import ChatPlugContext from '../ChatPlugContext'
 import Message from '../entity/Message'
 
-export class ChatPlugService {
-  config: any
+export class ChatPlugService<TConfig = any> {
+  config: TConfig
   receiveMessageSubject = new Subject<IChatPlugMessage>()
   dbService: Service
   context: ChatPlugContext

@@ -8,7 +8,7 @@ import { ThreadConnectionsManager } from '../../ThreadConnectionsManager'
 import { ChatPlugConfig } from '../../ChatPlugConfig'
 import { Client } from 'tdl'
 
-export default class TelegramThreadImporterService extends ChatPlugService {
+export default class TelegramThreadImporterService extends ChatPlugService<TelegramThreadImporterConfig> {
   messageSubject: Subject<IChatPlugMessage>
   receiveMessageSubject: Subject<IChatPlugMessage> = new Subject()
   config: TelegramThreadImporterConfig

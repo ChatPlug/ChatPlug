@@ -10,7 +10,7 @@ import { TelegramMessageHandler } from './TelegramMessageHandler'
 import { ChatPlugConfig } from '../../ChatPlugConfig'
 import Message from '../../entity/Message'
 
-export default class TelegramService extends ChatPlugService {
+export default class TelegramService extends ChatPlugService<TelegramConfig> {
   messageHandler: TelegramMessageHandler
   config: TelegramConfig
   botClient: TelegramBot

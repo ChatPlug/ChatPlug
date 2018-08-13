@@ -10,13 +10,14 @@ import { ThreadConnectionsManager } from '../../ThreadConnectionsManager'
 import { FacebookMessageHandler } from './FacebookMessageHandler'
 import { ChatPlugConfig } from '../../ChatPlugConfig'
 import Message from '../../entity/Message'
+import FacebookConfig from './FacebookConfig';
 
 const rl = createInterface({
   input: process.stdin,
   output: process.stdout,
 })
 
-export default class FacebookService extends ChatPlugService {
+export default class FacebookService extends ChatPlugService<FacebookConfig> {
   messageHandler: FacebookMessageHandler
   facebook: any
   stopListening: any

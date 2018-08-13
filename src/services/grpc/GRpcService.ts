@@ -14,7 +14,7 @@ const CONNECTIONS_PROTO_PATH = __dirname + '/../../protos/connections.proto'
 
 const connectionsProto = grpc.load(CONNECTIONS_PROTO_PATH).chatplug
 
-export default class GRpcService extends ChatPlugService {
+export default class GRpcService extends ChatPlugService<GRpcConfig> {
   isEnabled: boolean
   server: grpc.Server
   name = 'grpc'

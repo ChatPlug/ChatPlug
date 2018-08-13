@@ -15,7 +15,7 @@ import { DiscordMessageHandler } from './DiscordMessageHandler'
 import ChatPlugContext from '../../ChatPlugContext'
 import Service from '../../entity/Service'
 
-export default class DiscordService extends ChatPlugService {
+export default class DiscordService extends ChatPlugService<DiscordConfig> {
   messageHandler: DiscordMessageHandler
   discord = new DiscordClient()
 
