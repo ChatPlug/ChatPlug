@@ -13,6 +13,7 @@ export const cliAlias = {
   e: 'enable',
   d: 'disable',
   k: 'configure',
+  i: 'instance',
 }
 
 class CLIParameter {
@@ -31,6 +32,7 @@ export enum CLIArguments {
   DISABLE = 'd',
   ENABLE = 'e',
   CONFIGURE = 'k',
+  INSTANCE = 'i',
 
   CONNECTION = 'c',
   THREAD = 't',
@@ -54,6 +56,7 @@ export const cliParameters = {
   c: new CLIParameter('connection', 'thread connection name or :id'),
   t: new CLIParameter('thread', 'external thread id'),
   s: new CLIParameter('service', 'service name'),
+  i: new CLIParameter('instance', 'service instance name'),
 
   o: new CLIParameter('run'),
   h: new CLIParameter('help'),
