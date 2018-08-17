@@ -1,0 +1,22 @@
+{
+  "name": "chatplug-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@nuxtjs/axios": "^5.0.0",
+    "nuxt": "^1.3.0",
+    "nuxt-property-decorator": "^1.2.0",
+    "vuex-class": "^0.3.0"
+  },
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate"
+  },
+  "devDependencies": {
+    "@types/node": "^10.5.8",
+    "ts-loader": "^4.4.2",
+    "typescript": "^3.0.1"
+  }
+}
