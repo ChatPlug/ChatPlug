@@ -16,7 +16,7 @@ export default class TelegramService extends ChatPlugService<TelegramConfig> {
   botClient: TelegramBot
 
   async initialize() {
-    /*this.botClient = new TelegramBot(this.config.botToken, { polling: true })
+    this.botClient = new TelegramBot(this.config.botToken, { polling: true })
 
     this.messageHandler = new TelegramMessageHandler(this.botClient, this.context.exchangeManager.messageSubject)
 
