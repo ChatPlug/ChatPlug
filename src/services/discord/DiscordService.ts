@@ -20,7 +20,7 @@ export default class DiscordService extends ChatPlugService<DiscordConfig> {
   discord = new DiscordClient()
 
   async initialize() {
-    /*this.messageHandler = new DiscordMessageHandler(this.discord, this.context.exchangeManager.messageSubject)
+    this.messageHandler = new DiscordMessageHandler(this.discord, this.context.exchangeManager.messageSubject)
 
     this.receiveMessageSubject.subscribe(this.messageHandler.onIncomingMessage)
 
@@ -42,7 +42,7 @@ export default class DiscordService extends ChatPlugService<DiscordConfig> {
 
     this.messageHandler.loadWebhooks(webhooks)
 
-    log.info('discord', 'Logged in as', this.discord.user.username)*/
+    log.info('discord', 'Logged in as', this.discord.user.username)
   }
 
   terminate() {

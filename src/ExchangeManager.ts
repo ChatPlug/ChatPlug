@@ -10,6 +10,7 @@ import Thread from './entity/Thread'
 import Attachment from './entity/Attachment'
 import Service from './entity/Service'
 import User from './entity/User'
+import log from 'npmlog'
 
 export class ExchangeManager {
   context: ChatPlugContext
@@ -37,13 +38,17 @@ export class ExchangeManager {
         for (const thread of threads) {
           for (const actualThread of thread.threadConnection.threads.filter((element) => element.externalServiceId !== message.externalOriginId)) {
             message.externalTargetId = actualThread.externalServiceId
-            context.serviceManager.getServiceForId('' + actualThread.service.id).receiveMessageSubject.next(message)
+            const serviceInstance = context.serviceManager.getServiceForId('' + actualThread.service.id)
+            if (serviceInstance.dbService.enabled) {
+              serviceInstance.receiveMessageSubject.next(message)
+            } else {
+              log.verbose('exchange', 'Instance ' + serviceInstance.dbService.instanceName + ' of service ' + serviceInstance.dbService.moduleName + ' disabled, ignoring.')
+            }
           }
 
           const conn = context.connection
           const attachementsRepository = conn.getRepository(Attachment)
           const userRepository = conn.getRepository(User)
-          const serviceRepository = conn.getRepository(Service)
           const threadConnectionRepository = conn.getRepository(ThreadConnection)
 
           const dbMessage = new Message()
