@@ -22,7 +22,13 @@ export default class DashboardService extends ChatPlugService<DashboardConfig> {
       throw new Error('Standalone dashboard server not yet implemented')
     }
     const app = await this.getAPIExpressInstance()
-    app.use('*', dashboardHttpHandler())
+    const handler = dashboardHttpHandler()
+    app.use((req, res, next) => {
+      if (req.url.startsWith('/api')) {
+        return next()
+      }
+      handler(req, res)
+    })
   }
 
   async terminate() {}
