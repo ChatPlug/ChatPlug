@@ -1,0 +1,6 @@
+{
+    "displayName": "API",
+    "version": "0.0.1",
+    "description": "Enables other applications to control ChatPlug via a REST API.",
+    "systemService": true
+}

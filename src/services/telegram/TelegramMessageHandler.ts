@@ -1,5 +1,6 @@
 import { FacegramMessageHandler } from '../MessageHandler'
-import { IChatPlugMessage, IChatPlugAttachement } from '../../models'
+import TelegramBot from 'node-telegram-bot-api'
+import { IChatPlugMessage, IChatPlugAttachement, IChatPlugAttachementType } from '../../models'
 import { promisify } from 'util'
 import { Subject } from 'rxjs'
 import { parse } from 'url'
@@ -49,6 +50,40 @@ export class TelegramMessageHandler implements FacegramMessageHandler {
     } else {
       avatar = dbUser.avatarUrl
     }
+      /*const attachment = await this.fileIdToAttachement(photoId)
+      attachment.type = IChatPlugAttachementType.IMAGE
+      listOfAttachments = [attachment]
+    }
+
+    if (message.sticker) {
+      const photoId = message.sticker.file_id
+      const attachment = await this.fileIdToAttachement(photoId)
+      attachment.type = IChatPlugAttachementType.IMAGE
+      listOfAttachments = [attachment]
+    }
+
+    if (message.sticker) {
+      const photoId = message.sticker.file_id
+      const attachment = await this.fileIdToAttachement(photoId)
+      attachment.type = IChatPlugAttachementType.IMAGE
+      listOfAttachments = [attachment]
+    }
+
+    if (message.document) {
+      // @ts-ignore
+      const photoId = message.document.file_id
+      const attachment = await this.fileIdToAttachement(photoId)
+      attachment.type = IChatPlugAttachementType.FILE
+      listOfAttachments = [attachment]
+    }
+
+    if (message.video) {
+      // @ts-ignore
+      const photoId = message.video.file_id
+      const attachment = await this.fileIdToAttachement(photoId)
+      attachment.type = IChatPlugAttachementType.VIDEO
+      listOfAttachments = [attachment]
+    }*/
 
     const facegramMessage = {
       message: message.text,
@@ -84,5 +119,19 @@ export class TelegramMessageHandler implements FacegramMessageHandler {
 
   setClient(client) {
     this.client = client
+  }
+
+  async fileIdToAttachement(fileId: string): Promise<IChatPlugAttachement> {
+    // @ts-ignore
+    const picUrl = await this.client.getFileLink(fileId)
+
+    if (typeof picUrl === 'string') {
+      console.log(/[^/]*$/.exec(picUrl as string)!![0])
+      return {
+        url: picUrl,
+        name: /[^/]*$/.exec(picUrl as string)!![0],
+      } as IChatPlugAttachement
+    }
+    throw 'Invalid file type'
   }
 }

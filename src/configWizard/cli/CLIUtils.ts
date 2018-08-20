@@ -16,6 +16,17 @@ export default class CLIUtils {
         chalk.gray(' [') + chalk.dim('' + opts.defaultValue) + chalk.gray(']'),
       )
     }
+    if (opts.type === FieldType.BOOLEAN) {
+      process.stdout.write(
+        chalk.gray(' (') +
+          chalk.underline.bold('t') +
+          'rue' +
+          chalk.gray('/') +
+          chalk.underline.bold('f') +
+          'alse' +
+          chalk.gray(')'),
+      )
+    }
     process.stdout.write(chalk.gray(': '))
   }
   private convertValue(opts: IFieldOptions, val: string): any {
@@ -37,7 +48,7 @@ export default class CLIUtils {
         no: false,
       }
       const normalizedVal = val.trim().toLowerCase()
-      if (boolMap[normalizedVal] == null) {
+      if (normalizedVal === '' || boolMap[normalizedVal] == null) {
         throw new Error(
           `"${opts.name}" should be a boolean (${Object.keys(boolMap).join(
             ', ',

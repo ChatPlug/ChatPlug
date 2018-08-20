@@ -7,7 +7,7 @@ export default class ApiConfig implements IChatPlugServiceConfig {
   @ConfigWizardField({
     type: FieldType.NUMBER,
     defaultValue: 2137,
-    hint: 'Port on which api will listen',
+    hint: 'Port on which the API will listen',
   })
   port: number
 }

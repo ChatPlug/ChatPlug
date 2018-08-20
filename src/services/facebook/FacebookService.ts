@@ -10,19 +10,20 @@ import { ThreadConnectionsManager } from '../../ThreadConnectionsManager'
 import { FacebookMessageHandler } from './FacebookMessageHandler'
 import { ChatPlugConfig } from '../../ChatPlugConfig'
 import Message from '../../entity/Message'
+import FacebookConfig from './FacebookConfig'
 
 const rl = createInterface({
   input: process.stdin,
   output: process.stdout,
 })
 
-export default class FacebookService extends ChatPlugService {
+export default class FacebookService extends ChatPlugService<FacebookConfig> {
   messageHandler: FacebookMessageHandler
   facebook: any
   stopListening: any
 
-  async initialize () {
-    await this.login()
+  async initialize() {
+    /*await this.login()
 
     this.messageHandler = new FacebookMessageHandler(this.facebook, this.context.exchangeManager.messageSubject)
 
@@ -44,10 +45,10 @@ export default class FacebookService extends ChatPlugService {
       this.messageHandler.setClient(this.facebook)
       this.stopListening = this.facebook.listen(this.listener)
     }
-    this.messageHandler.onOutgoingMessage(message)
+    this.messageHandler.onOutgoingMessage(message)*/
   }
 
-  login () {
+  login() {
     return new Promise((resolve, reject) => {
       facebook(
         {
@@ -62,8 +63,11 @@ export default class FacebookService extends ChatPlugService {
           if (err) {
             if (err.error !== 'login-approval') return reject(err)
             log.info('facebook', 'Login approval pending...')
-            const message = 'Enter login approval code to your Facebook account (SMS or Google Authenticator app): '
-            const code = await new Promise(result => rl.question(message, result))
+            const message =
+              'Enter login approval code to your Facebook account (SMS or Google Authenticator app): '
+            const code = await new Promise(result =>
+              rl.question(message, result),
+            )
             return err.continue(code)
           }
           this.facebook = api
