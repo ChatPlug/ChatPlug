@@ -12,11 +12,12 @@ const createCLIHelpMessage = (command: string, argument: CLIArguments, helpMessa
 const registeredCommands = [
   createCLIHelpMessage('addConnection', CLIArguments.ADD_CONNECTION, 'Creates new thread connection.', 'connection name'),
   createCLIHelpMessage('connection', CLIArguments.CONNECTION, 'Selects thread connection', 'connection name'),
-  createCLIHelpMessage('run', CLIArguments.RUN, 'Starts ChatPlug'),
+  createCLIHelpMessage('start', CLIArguments.START, 'Starts ChatPlug'),
   createCLIHelpMessage('listConnections', CLIArguments.LIST_CONNECTIONS, 'Outputs all thread connections'),
   createCLIHelpMessage('addThread', CLIArguments.ADD_THREAD, 'Adds new thread to connection from given service', 'service name'),
   createCLIHelpMessage('id', CLIArguments.THREAD_ID, 'Specifies thread\'s id', 'Thread id from given service'),
   createCLIHelpMessage('help', CLIArguments.HELP, 'Prints this message'),
+  createCLIHelpMessage('removeThread', CLIArguments.REMOVE_THREAD, 'Removes thread with specified external id, in specified connection and service', 'thread id'),
 ]
 
 const logo = (`ChatPlug`)

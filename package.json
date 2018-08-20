@@ -36,6 +36,7 @@
     "chalk": "^2.4.1",
     "discord.js": "^11.3.2",
     "facebook-chat-api": "^1.6.0",
+    "fastify": "^1.9.0",
     "google-protobuf": "^3.6.0",
     "grpc": "^1.12.4",
     "leveldown": "^4.0.1",

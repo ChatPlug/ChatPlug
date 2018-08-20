@@ -13,11 +13,12 @@ const argv = require('yargs-parser')(process.argv.slice(2), {
   alias: {
     c: 'connection',
     l: 'listConnections',
-    r: 'run',
+    s: 'start',
     a: 'addConnection',
     t: 'addThread',
     i: 'id',
     h: 'help',
+    r: 'removeThread',
   },
 })
 

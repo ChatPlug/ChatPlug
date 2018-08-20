@@ -5,10 +5,11 @@ export enum CLIArguments {
   ADD_CONNECTION = 'a',
   CONNECTION = 'c',
   ADD_THREAD = 't',
-  RUN = 'r',
+  START = 's',
   LIST_CONNECTIONS = 'l',
   THREAD_ID = 'i',
   HELP = 'h',
+  REMOVE_THREAD = 'r',
 }
 
 export default interface CLIArgumentOptions {

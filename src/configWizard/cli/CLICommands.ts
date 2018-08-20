@@ -42,7 +42,7 @@ export default class CLICommands {
     log.error('core', 'Invalid command')
   }
 
-  public async run(@CLIArgument({ name: CLIArguments.RUN }) _: boolean) {
+  public async start(@CLIArgument({ name: CLIArguments.START }) _: boolean) {
     this.chatplug
       .startBridge()
       .then()
@@ -67,6 +67,28 @@ export default class CLICommands {
     connection.threads = []
     const result = await repository.save(connection)
     log.info('core', 'Added connection ' + result.connectionName)
+  }
+
+  public async removeThread(
+    @CLIArgument({ name: CLIArguments.CONNECTION }) connName: string,
+    @CLIArgument({ name: CLIArguments.ADD_THREAD }) serviceName: string,
+    @CLIArgument({ name: CLIArguments.REMOVE_THREAD }) threadId: string) {
+    const serviceRepository = this.connection.getRepository(Service)
+    const threadRepository = this.connection.getRepository(Thread)
+
+    const connectionRepository = this.connection.getRepository(ThreadConnection)
+    const connection = await connectionRepository.findOne({ connectionName: connName })
+    const foundService = await serviceRepository.findOne({ where: { moduleName: serviceName }, relations: ['threads'] })
+
+    const thread = await threadRepository.findOne({ externalServiceId: threadId, service: foundService, threadConnection: connection })
+
+    if (!thread) {
+      log.error('core', 'Cannot find thread with specified parameters.')
+      return
+    }
+
+    threadRepository.remove(thread)
+    log.info('core', 'Removed thread #' + threadId + ' from connection ' + connName)
   }
 
   public async addThread(
