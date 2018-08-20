@@ -1,11 +1,11 @@
 import log from 'npmlog'
-import TelegramBot from 'node-telegram-bot-api'
 import { IChatPlugMessage, IChatPlugAttachement } from '../../models'
 import { ChatPlugService } from '../Service'
 import { Subject } from 'rxjs'
 import TelegramConfig from './TelegramConfig'
 import { ExchangeManager } from '../../ExchangeManager'
 import { ThreadConnectionsManager } from '../../ThreadConnectionsManager'
+import Telegraf, { ContextMessageUpdate, Telegram } from 'telegraf'
 import { TelegramMessageHandler } from './TelegramMessageHandler'
 import { ChatPlugConfig } from '../../ChatPlugConfig'
 import Message from '../../entity/Message'
@@ -13,24 +13,26 @@ import Message from '../../entity/Message'
 export default class TelegramService extends ChatPlugService {
   messageHandler: TelegramMessageHandler
   config: TelegramConfig
-  botClient: TelegramBot
+  telegraf: Telegraf<ContextMessageUpdate>
 
   async initialize() {
-    this.botClient = new TelegramBot(this.config.botToken, { polling: true })
+    this.telegraf = new Telegraf(this.config.botToken)
 
-    this.messageHandler = new TelegramMessageHandler(this.botClient, this.context.exchangeManager.messageSubject)
+    this.messageHandler = new TelegramMessageHandler(this.telegraf.telegram, this.context.exchangeManager.messageSubject, this.context)
 
     this.receiveMessageSubject.subscribe(this.messageHandler.onIncomingMessage)
 
-    this.botClient.on('message', async (msg: TelegramBot.Message) => {
-      this.messageHandler.onOutgoingMessage(msg)
+    this.telegraf.on('message', async (ctx: ContextMessageUpdate) => {
+      this.messageHandler.onOutgoingMessage(ctx.message!!)
     })
+
     log.info('telegram', 'Registered bot handlers')
+    this.telegraf.startPolling()
     /*const user = await this.botClient.getMe()
     console.log(user)*/
   }
 
   async terminate() {
-    await this.botClient.stopPolling()
+    await this.telegraf.stop()
   }
 }

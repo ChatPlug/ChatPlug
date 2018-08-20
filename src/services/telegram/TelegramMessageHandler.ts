@@ -1,27 +1,34 @@
 import { FacegramMessageHandler } from '../MessageHandler'
-import TelegramBot from 'node-telegram-bot-api'
 import { IChatPlugMessage, IChatPlugAttachement } from '../../models'
 import { promisify } from 'util'
 import { Subject } from 'rxjs'
 import { parse } from 'url'
 import log from 'npmlog'
+import { ContextMessageUpdate, Telegram } from 'telegraf'
+import { Message } from 'telegram-typings'
+import ChatPlugContext from '../../ChatPlugContext'
+import User from '../../entity/User'
 
 export class TelegramMessageHandler implements FacegramMessageHandler {
-  client: TelegramBot
+  client: Telegram
   messageSubject: Subject<IChatPlugMessage>
-  name = 'telegram'
   handledMessages: any[] = []
+  context: ChatPlugContext
 
-  constructor(client: TelegramBot, subject: Subject<IChatPlugMessage>) {
+  constructor(client: Telegram, subject: Subject<IChatPlugMessage>, context: ChatPlugContext) {
     this.client = client
     this.messageSubject = subject
+    this.context = context
   }
 
-  async onOutgoingMessage(message: TelegramBot.Message) {
+  async onOutgoingMessage(message: Message) {
+
+    console.time('telegramPrepare' + message.message_id)
     // Duplicates handling
     let listOfAttachments: IChatPlugAttachement[] = []
     if (message.photo) {
       const photoId = message.photo[message.photo.length - 1].file_id
+      // @ts-ignore
       const picUrl = await this.client.getFileLink(photoId)
       if (typeof picUrl === 'string') {
         listOfAttachments = [{
@@ -30,8 +37,18 @@ export class TelegramMessageHandler implements FacegramMessageHandler {
         } as IChatPlugAttachement]
       }
     }
-    const profilePics = await this.client.getUserProfilePhotos(message.from!!.id)
-    const avatar = (profilePics instanceof Error || profilePics.photos.length < 1) ? '' : await this.client.getFileLink(profilePics.photos[0][0].file_id)
+
+    let avatar: string
+    const dbUser = await this.context.connection.getRepository(User).findOne({ externalServiceId: '' + message.from!!.id })
+
+    if (!dbUser) {
+      // @ts-ignore
+      const profilePics = await this.client.getUserProfilePhotos(message.from!!.id)
+      // @ts-ignore
+      avatar = (profilePics instanceof Error || profilePics.photos.length < 1) ? '' : await this.client.getFileLink(profilePics.photos[0][0].file_id)
+    } else {
+      avatar = dbUser.avatarUrl
+    }
 
     const facegramMessage = {
       message: message.text,
@@ -46,19 +63,23 @@ export class TelegramMessageHandler implements FacegramMessageHandler {
 
     // send a message to the chat acknowledging receipt of their message
     this.messageSubject.next(facegramMessage)
+    console.timeEnd('telegramPrepare' + message.message_id)
   }
 
   onIncomingMessage = async (message: IChatPlugMessage) => {
+    console.time('telegramSend' + message.externalOriginId)
     if (!message.externalTargetId) return
     const formattedMsg = '*' + message.author.username + '*' + ': ' + message.message
-    this.client.sendMessage(
-      Number(message.externalTargetId),
+    // @ts-ignore
+    await this.client.sendMessage(
+      message.externalTargetId,
       formattedMsg,
-      { parse_mode: 'Markdown' },
+      { parse_mode: 'Markdown' } as any,
     )
-    message.attachments.forEach((attachment) => {
-      this.client.sendPhoto(message.externalTargetId, attachment.url)
-    })
+    for (const attachment of message.attachments) {
+      await this.client.sendPhoto(message.externalTargetId, attachment.url)
+    }
+    console.timeEnd('telegramSend' + message.externalOriginId)
   }
 
   setClient(client) {

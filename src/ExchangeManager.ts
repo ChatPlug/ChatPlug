@@ -48,6 +48,9 @@ export class ExchangeManager {
 
           const dbMessage = new Message()
           dbMessage.content = message.message
+          if (!dbMessage.content) {
+            dbMessage.content = ''
+          }
           dbMessage.originExternalThreadId = message.externalOriginId
 
           let user = await userRepository.findOne({ externalServiceId: message.author.externalServiceId })

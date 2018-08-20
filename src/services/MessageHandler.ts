@@ -3,7 +3,6 @@ import { Subject } from 'rxjs'
 
 export interface FacegramMessageHandler {
   messageSubject: Subject<IChatPlugMessage>
-  name: string
 
   onOutgoingMessage(message: any)
 
