@@ -8,8 +8,7 @@
 </template>
 
 <script lang="ts">
-// PLEASE NOTE
-// All "Nuxt Class Components" require at minimum a script tag that exports a default object
+
 import Vue from 'vue'
 import { Component, Prop } from 'nuxt-property-decorator'
 import { Action, namespace } from 'vuex-class'

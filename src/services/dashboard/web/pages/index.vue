@@ -17,6 +17,7 @@ import {
 import axios from 'axios'
 @Component({
   components: {
+    ServiceInstanceCard,
   },
 })
 export default class extends Vue {
