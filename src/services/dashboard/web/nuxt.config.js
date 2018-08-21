@@ -1,3 +1,4 @@
+const path = require("path")
 const parseArgs = require("minimist")
 const argv = parseArgs(process.argv.slice(2), {
   alias: {
@@ -56,11 +57,21 @@ module.exports = {
   /*
   ** Build configuration
   */
-  css: [],
-  build: {},
+  plugins: ['~/plugins/vuetify.js'],
+  css: [
+    {
+        src: path.join(__dirname, 'assets/css/app.styl'),
+        lang: 'styl'
+    }
+  ],
+  build: {
+    vendor: ['~/plugins/vuetify.js'],
+    extractCSS: true,
+  },
   modules: [
     "@nuxtjs/axios",
-    "~/modules/typescript.js"
+    "~/modules/typescript.js",
+    "nuxt-material-design-icons"
   ],
   axios: {}
 }

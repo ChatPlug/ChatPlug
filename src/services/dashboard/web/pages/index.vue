@@ -1,10 +1,9 @@
 <template>
   <section>
-    <div class="flex flex-wrap ph2 justify-between bg-white-80">
-      <div v-for="instance in instances" :key="instance.id">
-        <ServiceInstanceCard :instance="instance"/>
-      </div>
-</div>
+    <v-row>
+      <ServiceInstanceCard :instances="instances"/>
+      <ServiceInstanceCard :instances="instances"/>
+    </v-row>
 </section>
 </template>
 
