@@ -1,6 +1,6 @@
 import ServiceInstance from './ServiceInstance'
 
 export default {
-  serviceInstances: [],
+  instances: [],
   loading: true,
 }

@@ -1,6 +1,5 @@
 import { ExchangeManager } from '../../ExchangeManager'
 import { ThreadConnectionsManager } from '../../ThreadConnectionsManager'
-import * as grpc from 'grpc'
 import { ChatPlugConfig } from '../../ChatPlugConfig'
 import { Subject } from 'rxjs'
 import { IChatPlugMessage } from '../../models'

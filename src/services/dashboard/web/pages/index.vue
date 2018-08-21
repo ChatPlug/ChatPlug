@@ -14,21 +14,22 @@ import {
   Component,
   Vue,
 } from 'nuxt-property-decorator'
+import { State, namespace, Action } from 'vuex-class'
 import axios from 'axios'
+import * as actions from '../store/modules/services/actions.types'
+
+const servicesModule = namespace('services')
+
 @Component({
   components: {
     ServiceInstanceCard: ServiceInstanceCard as any,
   },
 })
 export default class extends Vue {
-  data() {
-    return {
-      dupa: 'helloworld',
-    }
-  }
-  async asyncData() {
-    const dupa = await axios.get('api/v1/services')
-    return { dupa: dupa.data }
+  @servicesModule.Getter('instances') instances
+  @servicesModule.Action(actions.LOAD_INSTANCES) loadInstances
+  async created() {
+    await this.loadInstances()
   }
 }
 </script>

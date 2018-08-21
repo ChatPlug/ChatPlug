@@ -1,7 +1,6 @@
 import { IChatPlugConnection } from '../../models'
 import { ExchangeManager } from '../../ExchangeManager'
 import { ThreadConnectionsManager } from '../../ThreadConnectionsManager'
-import * as grpc from 'grpc'
 import { ChatPlugConfig } from '../../ChatPlugConfig'
 const PROTO_PATH = __dirname + '/../../protos/connections.proto'
 import log from 'npmlog'
