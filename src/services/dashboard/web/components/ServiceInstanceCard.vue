@@ -14,7 +14,7 @@ import { Component, Prop } from 'nuxt-property-decorator'
 import { Action, namespace } from 'vuex-class'
 
 @Component({})
-class ServiceInstanceCard extends Vue {
+export default class ServiceInstanceCard extends Vue {
   @Prop() instance
 }
 </script>
