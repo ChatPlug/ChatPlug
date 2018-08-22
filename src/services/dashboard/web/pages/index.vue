@@ -11,7 +11,7 @@ import { State, namespace, Action } from 'vuex-class'
 @Component({})
 export default class extends Vue {
   created() {
-    this.$router.push('/instances') // temporary redirect until we make a proper front page
+    // this.$router.push('/instances') // temporary redirect until we make a proper front page
   }
 }
 </script>

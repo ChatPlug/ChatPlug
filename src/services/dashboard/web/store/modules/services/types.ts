@@ -1,4 +1,4 @@
-export default interface ServiceInstance {
+export interface ServiceInstance {
   id: number
   moduleName: string
   instanceName: string

@@ -2,7 +2,14 @@
 </style>
 <template>
   <div>
-    <h1>Service {{id}}</h1>
+    <v-toolbar color="white" flat>
+        <v-toolbar-title class="grey--text text--darken-4">Service {{id}}</v-toolbar-title>
+        <v-spacer></v-spacer>
+
+        <v-btn flat color="red">
+          Delete
+        </v-btn>
+  </v-toolbar>
     <v-tabs slider-color="primary">
       <v-tab ripple>
         Status
@@ -12,6 +19,12 @@
       </v-tab>
       <v-tab ripple>
         Logs
+      </v-tab>
+            <v-tab ripple>
+        Threads
+      </v-tab>
+      <v-tab ripple>
+        Users
       </v-tab>
     </v-tabs>
   </div>
