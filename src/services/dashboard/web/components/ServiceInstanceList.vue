@@ -20,11 +20,10 @@
             <span class="headline">{{ instance.serviceModule.displayName[0].toUpperCase() }}</span>
           </v-list-tile-avatar>
           <v-list-tile-content>
-            <v-list-tile-title>
-              <p>{{ instance.instanceName }}</p>
+            <v-list-tile-title>{{ instance.serviceModule.displayName }}
             </v-list-tile-title>
-            <v-list-tile-sub-title>instance of
-              <a>{{ instance.serviceModule.displayName }}</a>
+            <v-list-tile-sub-title>
+              ({{ instance.instanceName }})
             </v-list-tile-sub-title>
           </v-list-tile-content>
           <v-list-tile-action>
