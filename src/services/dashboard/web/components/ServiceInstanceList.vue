@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-card>
     <v-toolbar color="white" flat>
       <v-btn icon light>
         <v-icon color="grey darken-2">arrow_back</v-icon>
@@ -42,7 +42,7 @@
       </template>
 
     </v-list>
-  </div>
+  </v-card>
 </template>
 
 <script lang="ts">
