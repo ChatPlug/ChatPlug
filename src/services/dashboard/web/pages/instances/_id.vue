@@ -1,8 +1,8 @@
 <style scoped>
 </style>
 <template>
-  <div>
-    <v-toolbar color="white" flat>
+  <v-card>
+    <v-toolbar flat>
       <v-toolbar-title class="grey--text text--darken-4">Service {{id}}</v-toolbar-title>
       <v-spacer></v-spacer>
 
@@ -27,9 +27,10 @@
         Users
       </v-tab>
     </v-tabs>
-
-    <nuxt-child />
-  </div>
+    <v-container>
+      <nuxt-child />
+    </v-container>
+  </v-card>
 </template>
 <script lang="ts">
 import Vue from 'vue'
