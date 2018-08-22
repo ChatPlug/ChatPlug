@@ -1,6 +1,7 @@
 {
     "displayName": "Discord",
     "version": "0.0.1",
+    "brandColor": "#7289DA",
     "description": "Enables ChatPlug to relay messages from/to discord.",
     "systemService": false
 }

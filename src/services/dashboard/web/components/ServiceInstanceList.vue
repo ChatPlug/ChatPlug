@@ -16,7 +16,7 @@
 
         <v-divider :key="index + '-divider'"></v-divider>
         <v-list-tile :key="instance.id + '-real-elem'" nuxt :to="`/instances/${instance.id}`">
-          <v-list-tile-avatar color="blue">
+          <v-list-tile-avatar v-bind:style="{ color: instance.brandColor || 'red' }">
             <span class="white--text headline">{{ instance.moduleName[0].toUpperCase() }}</span>
           </v-list-tile-avatar>
           <v-list-tile-content>

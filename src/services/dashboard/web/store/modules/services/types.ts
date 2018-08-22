@@ -3,4 +3,5 @@ export interface ServiceInstance {
   moduleName: string
   instanceName: string
   enabled: boolean
+  brandColor: string
 }

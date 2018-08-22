@@ -1,6 +1,7 @@
 {
     "displayName": "Facebook",
     "version": "0.0.1",
+    "brandColor": "#3b5998",
     "description": "Relays messages from/to Facebook Messenger.",
     "systemService": false
 }

@@ -36,6 +36,9 @@ export default class ServiceModule {
   version: string
 
   @IsNotEmpty()
+  brandColor: string
+
+  @IsNotEmpty()
   description: string
 
   /**

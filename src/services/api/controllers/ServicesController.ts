@@ -25,8 +25,10 @@ export default class ServicesController {
   }
 
   @Get('/instances')
-  getServiceInstances() {
-    return this.servicesRepository.find()
+  async getServiceInstances() {
+    const instances = await this.servicesRepository.find()
+    const serviceModules = (await this.context.serviceManager.getAvailableServices())
+    return instances.map((el) => el['brandColor'] = serviceModules.find(((mod) => mod.moduleName === el.moduleName)))
   }
 
   @Post('/instances')
