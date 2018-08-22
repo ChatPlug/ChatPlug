@@ -5,7 +5,7 @@
         <nuxt />
       </v-container>
     </v-content>
-    <v-footer :fixed="fixed" app>
+    <v-footer app>
       <span>ChatPlug (MIT)</span>
     </v-footer>
   </v-app>

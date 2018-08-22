@@ -1,31 +1,17 @@
 <template>
-  <section>
-    <v-row>
-      <ServiceInstanceList :instances="instances" />
-      <ServiceInstanceList :instances="instances" />
-    </v-row>
-  </section>
+    <section>
+        <v-btn nuxt to="instances/">See instances</v-btn>
+    </section>
 </template>
 
 <script lang="ts">
-import ServiceInstanceList from '~/components/ServiceInstanceList.vue'
 import { Component, Vue } from 'nuxt-property-decorator'
 import { State, namespace, Action } from 'vuex-class'
-import axios from 'axios'
-import * as actions from '../store/modules/services/actions.types'
 
-const servicesModule = namespace('services')
-
-@Component({
-  components: {
-    ServiceInstanceList: ServiceInstanceList as any,
-  },
-})
+@Component({})
 export default class extends Vue {
-  @servicesModule.Getter('instances') instances
-  @servicesModule.Action(actions.LOAD_INSTANCES) loadInstances
-  async created() {
-    await this.loadInstances()
+  created() {
+    this.$router.push('/instances') // temporary redirect until we make a proper front page
   }
 }
 </script>
