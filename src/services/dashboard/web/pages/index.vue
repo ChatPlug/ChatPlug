@@ -1,14 +1,14 @@
 <template>
   <section>
     <v-row>
-      <ServiceInstanceCard :instances="instances"/>
-      <ServiceInstanceCard :instances="instances"/>
+      <ServiceInstanceList :instances="instances"/>
+      <ServiceInstanceList :instances="instances"/>
     </v-row>
 </section>
 </template>
 
 <script lang="ts">
-import ServiceInstanceCard from '~/components/ServiceInstanceCard.vue'
+import ServiceInstanceList from '~/components/ServiceInstanceList.vue'
 import {
   Component,
   Vue,
@@ -21,7 +21,7 @@ const servicesModule = namespace('services')
 
 @Component({
   components: {
-    ServiceInstanceCard: ServiceInstanceCard as any,
+    ServiceInstanceList: ServiceInstanceList as any,
   },
 })
 export default class extends Vue {
