@@ -4,6 +4,9 @@ node_js:
 cache:
   directories:
     - "node_modules"
+install:
+    - npm i
+    - (cd src/services/dashboard/web; npm i)
 deploy:
   provider: releases
   api_key:
