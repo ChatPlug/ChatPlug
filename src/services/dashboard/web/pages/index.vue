@@ -1,18 +1,15 @@
 <template>
   <section>
     <v-row>
-      <ServiceInstanceList :instances="instances"/>
-      <ServiceInstanceList :instances="instances"/>
+      <ServiceInstanceList :instances="instances" />
+      <ServiceInstanceList :instances="instances" />
     </v-row>
-</section>
+  </section>
 </template>
 
 <script lang="ts">
 import ServiceInstanceList from '~/components/ServiceInstanceList.vue'
-import {
-  Component,
-  Vue,
-} from 'nuxt-property-decorator'
+import { Component, Vue } from 'nuxt-property-decorator'
 import { State, namespace, Action } from 'vuex-class'
 import axios from 'axios'
 import * as actions from '../store/modules/services/actions.types'

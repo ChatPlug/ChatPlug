@@ -33,7 +33,6 @@
 </template>
 
 <script lang="ts">
-
 import Vue from 'vue'
 import { Component, Prop } from 'nuxt-property-decorator'
 import { Action, namespace } from 'vuex-class'
