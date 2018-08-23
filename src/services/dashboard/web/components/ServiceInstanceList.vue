@@ -15,7 +15,7 @@
       <template v-for="(instance, index) in instances">
 
         <v-divider :key="index + '-divider'"></v-divider>
-        <v-list-tile :key="instance.id + '-real-elem'" nuxt :to="`/instances/${instance.id}`">
+        <v-list-tile :key="instance.id + '-real-elem'" nuxt :to="`/instances/${instance.id}/status`">
           <div class="v-list__tile__avatar">
             <v-avatar v-bind:style="{ backgroundColor: instance.serviceModule.brandColor}">
               <span class="white--text headline">{{ instance.moduleName[0].toUpperCase() }}</span>
@@ -32,10 +32,6 @@
             <v-list-tile-action-text v-bind:style="{ color: instance.enabled ? 'green' : 'red' }">
               <p class="enabled">{{ instance.enabled ? 'enabled' : 'disabled' }}</p>
             </v-list-tile-action-text>
-
-            <v-btn icon ripple>
-              <v-icon color="grey lighten-1">info</v-icon>
-            </v-btn>
           </v-list-tile-action>
         </v-list-tile>
 

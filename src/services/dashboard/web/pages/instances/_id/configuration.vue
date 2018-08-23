@@ -6,11 +6,16 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'nuxt-property-decorator'
+import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import { State, namespace, Action } from 'vuex-class'
 
-@Component({})
-export default class extends Vue {}
+@Component({
+  name: 'dupa-123389',
+})
+export default class extends Vue {
+  @Prop() currentInstance
+  created() {}
+}
 </script>
 <style scoped>
 </style>

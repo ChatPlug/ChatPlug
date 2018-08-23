@@ -1,9 +1,9 @@
 <style scoped>
 </style>
 <template>
-  <v-card>
+  <v-card v-if="currentInstance">
     <v-toolbar flat>
-      <v-toolbar-title class="grey--text text--darken-4">Service {{id}}</v-toolbar-title>
+      <v-toolbar-title class="grey--text text--darken-4">{{currentInstance.serviceModule.displayName}}</v-toolbar-title>
       <v-spacer></v-spacer>
 
       <v-btn flat color="red">
@@ -27,23 +27,30 @@
         Users
       </v-tab>
     </v-tabs>
-    <v-container>
-      <nuxt-child />
-    </v-container>
+    <nuxt-child :currentInstance="currentInstance" />
   </v-card>
 </template>
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Prop } from 'nuxt-property-decorator'
-import { Action, namespace } from 'vuex-class'
+import { namespace } from 'vuex-class'
+import axios from 'axios'
+import ServiceInstance from '../../types/ServiceInstance'
+
+const servicesModule = namespace('services')
 
 @Component({})
 export default class InstanceByID extends Vue {
+  @servicesModule.Getter('instances') instances: ServiceInstance[]
+  id: string
   async asyncData({ params }) {
     return {
       ...params,
       baseURL: `/instances/${params.id}`,
     }
+  }
+  get currentInstance(): ServiceInstance | undefined {
+    return this.instances.find(i => i.id === parseInt(this.id))
   }
 }
 </script>
