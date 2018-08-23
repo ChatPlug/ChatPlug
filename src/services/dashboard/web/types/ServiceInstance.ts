@@ -1,4 +1,4 @@
-import ServiceModule from "./ServiceModule";
+import ServiceModule from './ServiceModule'
 
 /**
  * See the Service entity this is just a frontend version.
