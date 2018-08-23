@@ -29,9 +29,18 @@
             </v-list-tile-sub-title>
           </v-list-tile-content>
           <v-list-tile-action>
-            <v-list-tile-action-text v-bind:style="{ color: instance.enabled ? 'green' : 'red' }">
-              <p class="enabled">{{ instance.enabled ? 'enabled' : 'disabled' }}</p>
-            </v-list-tile-action-text>
+            <v-chip color="primary lighten-1" text-color="white" v-if="instance.enabled">
+              <v-avatar>
+                <v-icon>check_circle</v-icon>
+              </v-avatar>
+              Enabled
+            </v-chip>
+             <v-chip text-color="black" v-else>
+              <v-avatar>
+                <v-icon>remove_circle</v-icon>
+              </v-avatar>
+              Disabled
+            </v-chip>
           </v-list-tile-action>
         </v-list-tile>
 
