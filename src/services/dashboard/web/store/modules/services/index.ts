@@ -1,11 +1,17 @@
 /* tslint:disable:object-shorthand-properties-first*/
 
-import state from './state'
 import actions from './actions'
 import mutations from './mutations'
 import getters from './getters'
+import ServicesState from './ServicesState'
+import { Module } from 'vuex'
 
-export default {
+export const state: ServicesState = {
+  instances: [],
+  loading: false,
+}
+
+export default <Module<ServicesState, {}>>{
   namespaced: true,
   state,
   actions,

@@ -1,7 +1,21 @@
 /* tslint:disable:function-name */
+import ServiceInstance from 'types/ServiceInstance'
+import { MutationTree } from 'vuex'
 import * as actions from './actions.types'
-export default {
-  [actions.SET_INSTANCES] (state, payload) {
+import ServicesState from './ServicesState'
+
+export default <MutationTree<ServicesState>>{
+  [actions.SET_INSTANCES](state, payload: ServiceInstance[]) {
     state.instances = payload
+  },
+  [actions.SET_INSTANCE_CONFIG_SCHEMA](
+    state: ServicesState,
+    { id, configSchema }: { id: number; configSchema },
+  ) {
+    const instance = state.instances.find(instance => instance.id === id)
+    if (!instance) {
+      throw new Error(`Failed to find instance with id ${id}`)
+    }
+    instance.serviceModule.configSchema = configSchema
   },
 }
