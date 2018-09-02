@@ -7,9 +7,7 @@
       <v-toolbar-title class="grey--text text--darken-4">Service instances</v-toolbar-title>
       <v-spacer></v-spacer>
 
-      <v-btn icon light>
-        <v-icon color="grey darken-2">add</v-icon>
-      </v-btn>
+      <ServiceModulesDialog/>
     </v-toolbar>
     <v-list two-line avatar>
       <template v-for="(instance, index) in instances">
@@ -53,9 +51,14 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Prop } from 'nuxt-property-decorator'
+import ServiceModulesDialog from './ServiceModulesDialog.vue'
 import { Action, namespace } from 'vuex-class'
 
-@Component({})
+@Component({
+  components: {
+    ServiceModulesDialog: ServiceModulesDialog as any,
+  },
+})
 export default class ServiceInstanceCard extends Vue {
   @Prop() instances
 }

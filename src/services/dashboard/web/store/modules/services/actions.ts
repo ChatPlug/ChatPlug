@@ -16,6 +16,20 @@ export default <ActionTree<ServicesState, {}>>{
     store.commit(action.SET_MODULES, data.data)
   },
 
+  async [action.CREATE_INSTANCE_DRAFT](store, params: { moduleName: string }) {
+    const { data } = await axios.post('services/instances/draft', params)
+
+    if (data.data.id) {
+      store.commit(action.SET_NEW_INSTANCE_ID, data.data.id)
+    }
+    store.dispatch(action.LOAD_INSTANCES)
+  },
+
+  async [action.REMOVE_INSTANCE](store, { id }: { id: number }) {
+    await axios.get(`services/instances/${id}/remove`)
+    store.dispatch(action.LOAD_INSTANCES)
+  },
+
   async [action.LOAD_INSTANCE_CONFIG_SCHEMA](store, { id }: { id: number }) {
     const instance = store.state.instances.find(i => i.id === id)
     if (!instance) {

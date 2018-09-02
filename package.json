@@ -54,7 +54,7 @@
     "sqlite3": "^4.0.2",
     "tdl": "^3.8.1",
     "telegraf": "^3.22.1",
-    "typeorm": "^0.2.7",
+    "typeorm": "^0.3.0-alpha.12",
     "yargs-parser": "^10.1.0"
   },
   "devDependencies": {

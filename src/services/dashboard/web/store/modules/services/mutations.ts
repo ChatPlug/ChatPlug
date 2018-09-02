@@ -9,9 +9,15 @@ export default <MutationTree<ServicesState>>{
   [actions.SET_INSTANCES](state, payload: ServiceInstance[]) {
     state.instances = payload
   },
+
   [actions.SET_MODULES](state, payload: ServiceModule[]) {
     state.modules = payload
   },
+
+  [actions.SET_NEW_INSTANCE_ID](state, payload: number) {
+    state.newInstanceId = payload
+  },
+
   [actions.SET_INSTANCE_CONFIG_SCHEMA](
     state: ServicesState,
     { id, configSchema }: { id: number; configSchema },

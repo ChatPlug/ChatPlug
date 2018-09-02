@@ -4,6 +4,7 @@ import ServiceModule from '../../../types/ServiceModule'
 interface ServicesState {
   instances: ServiceInstance[]
   modules: ServiceModule[]
-  loading: boolean
+  loading: boolean,
+  newInstanceId: number,
 }
 export default ServicesState

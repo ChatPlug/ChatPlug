@@ -69,14 +69,6 @@ export default class ServicesController {
       throw new NotFoundError('Service with given name does not exist')
     }
 
-    const instance = await this.servicesRepository.findOne({
-      moduleName: serviceModuleName,
-      instanceName: serviceInstanceName,
-    })
-    if (instance) {
-      throw new InternalServerError('Instance with given name already exists')
-    }
-
     fs.writeFileSync(
       path.join(
         CONFIG_FOLDER_PATH,
@@ -95,6 +87,27 @@ export default class ServicesController {
     return service
   }
 
+  @Post('/instances/draft')
+  async createNewInstanceDraft(
+    @BodyParam('moduleName', { required: true }) serviceModuleName: string,
+  ) {
+    const serviceModule = (await this.context.serviceManager.getAvailableServices()).find(
+      el => el.moduleName === serviceModuleName,
+    )
+    if (!serviceModule) {
+      throw new NotFoundError()
+    }
+
+    const service = new Service()
+    service.configured = true
+    service.enabled = true
+    service.instanceName = 'Instance name'
+    service.moduleName = serviceModule.moduleName
+
+    await this.servicesRepository.save(service)
+    return service
+  }
+
   @Get('/')
   async getAvailableServices() {
     return await this.context.serviceManager.getAvailableServices()
@@ -102,6 +115,13 @@ export default class ServicesController {
 
   @Get('/instances/:id/disable')
   async disableService() {}
+
+  @Get('/instances/:id/remove')
+  async removeService(@Param('id') id: number) {
+    const foundService = await this.servicesRepository.findOne({ id })
+
+    return this.servicesRepository.remove(foundService!!)
+  }
 
   @Get('/:module/schema')
   async getConfigSchema(@Param('module') moduleName: string) {

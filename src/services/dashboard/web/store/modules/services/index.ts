@@ -10,6 +10,7 @@ export const state: ServicesState = {
   instances: [],
   modules: [],
   loading: false,
+  newInstanceId: 0,
 }
 
 export default <Module<ServicesState, {}>>{

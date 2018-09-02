@@ -6,7 +6,7 @@
       <v-toolbar-title class="grey--text text--darken-4">{{currentInstance.serviceModule.displayName}}</v-toolbar-title>
       <v-spacer></v-spacer>
 
-      <v-btn flat color="red">
+      <v-btn flat color="red" @click="removeInstance({ id })" nuxt :to="'/instances/'">
         Delete
       </v-btn>
     </v-toolbar>
@@ -36,12 +36,13 @@ import { Component, Prop } from 'nuxt-property-decorator'
 import { namespace } from 'vuex-class'
 import axios from 'axios'
 import ServiceInstance from '../../types/ServiceInstance'
-
+import * as actions from '../../store/modules/services/actions.types'
 const servicesModule = namespace('services')
 
 @Component({})
 export default class InstanceByID extends Vue {
   @servicesModule.Getter('instances') instances: ServiceInstance[]
+  @servicesModule.Action(actions.REMOVE_INSTANCE) removeInstance
   id: string
   async asyncData({ params }) {
     return {
@@ -50,7 +51,10 @@ export default class InstanceByID extends Vue {
     }
   }
   get currentInstance(): ServiceInstance | undefined {
-    return this.instances.find(i => i.id === parseInt(this.id))
+    if (isNaN(this.id as any)) {
+      return undefined
+    }
+    return this.instances.find(i => i.id === parseInt(this.id, undefined))
   }
 }
 </script>
