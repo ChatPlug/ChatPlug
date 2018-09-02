@@ -8,6 +8,7 @@ import { Module } from 'vuex'
 
 export const state: ServicesState = {
   instances: [],
+  modules: [],
   loading: false,
 }
 

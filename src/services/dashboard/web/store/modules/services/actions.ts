@@ -10,6 +10,12 @@ export default <ActionTree<ServicesState, {}>>{
     const { data } = await axios.get('services/instances')
     store.commit(action.SET_INSTANCES, data.data)
   },
+
+  async [action.LOAD_MODULES](store) {
+    const { data } = await axios.get('services/')
+    store.commit(action.SET_MODULES, data.data)
+  },
+
   async [action.LOAD_INSTANCE_CONFIG_SCHEMA](store, { id }: { id: number }) {
     const instance = store.state.instances.find(i => i.id === id)
     if (!instance) {
