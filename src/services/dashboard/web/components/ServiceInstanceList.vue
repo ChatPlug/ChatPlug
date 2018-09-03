@@ -2,7 +2,9 @@
   <v-card>
     <v-toolbar color="white" flat>
       <v-btn icon light>
+        <nuxt-link to="/">
         <v-icon color="grey darken-2">arrow_back</v-icon>
+        </nuxt-link>
       </v-btn>
       <v-toolbar-title class="grey--text text--darken-4">Service instances</v-toolbar-title>
       <v-spacer></v-spacer>
