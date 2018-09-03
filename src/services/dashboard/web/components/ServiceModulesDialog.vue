@@ -53,6 +53,11 @@ import ServiceInstanceList from 'ServiceInstanceList.vue'
 import { State, namespace, Action } from 'vuex-class'
 import axios from 'axios'
 import * as actions from '../store/modules/services/actions.types'
+import {Route} from 'vue-router'
+
+class VueWithRoute extends Vue {
+	$route: Route
+}
 
 const servicesModule = namespace('services')
 
