@@ -17,6 +17,6 @@ export class ChatPlugConfig {
   }
 
   readConfigForService (service: Service) {
-    return TOML.parse(fs.readFileSync(path.join(CONFIG_FOLDER_PATH, service.moduleName + '.' + service.instanceName + '.toml')))
+    return TOML.parse(fs.readFileSync(path.join(CONFIG_FOLDER_PATH, service.moduleName + '.' + service.id + '.toml')))
   }
 }

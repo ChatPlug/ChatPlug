@@ -12,6 +12,8 @@ export interface ServiceMap {
   [id: number]: ChatPlugService
 }
 
+const CONFIG_FOLDER_PATH = path.join(__dirname, '../config')
+
 export class ServiceManager {
   services: ServiceMap
   context: ChatPlugContext
@@ -82,11 +84,16 @@ export class ServiceManager {
     const repo = this.context.connection.getRepository(Service)
     const services = await repo.find({ enabled: true })
     for (const service of services) {
-      this.services[service.id] = new (require(path.join(
-        __dirname,
-        'services',
-        service.moduleName,
-      ) as any)).Service(service, this.context)
+      if (fs.existsSync(path.join(CONFIG_FOLDER_PATH, service.moduleName + '.' + service.id + '.toml'))) {
+        this.services[service.id] = new (require(path.join(
+          __dirname,
+          'services',
+          service.moduleName,
+        ) as any)).Service(service, this.context)
+      } else {
+        service.configured = false
+        await this.context.connection.getRepository(Service).save(service)
+      }
     }
   }
 

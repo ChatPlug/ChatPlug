@@ -69,14 +69,6 @@ export default class ServicesController {
       throw new NotFoundError('Service with given name does not exist')
     }
 
-    fs.writeFileSync(
-      path.join(
-        CONFIG_FOLDER_PATH,
-        serviceModule.moduleName + '.' + serviceInstanceName + '.toml',
-      ),
-      TOML.stringify(configuration),
-    )
-
     const service = new Service()
     service.configured = true
     service.enabled = true
@@ -84,6 +76,15 @@ export default class ServicesController {
     service.moduleName = serviceModule.moduleName
 
     await this.servicesRepository.save(service)
+
+    fs.writeFileSync(
+      path.join(
+        CONFIG_FOLDER_PATH,
+        service.moduleName + '.' + service.id + '.toml',
+      ),
+      TOML.stringify(configuration),
+    )
+
     return service
   }
 
@@ -99,7 +100,7 @@ export default class ServicesController {
     }
 
     const service = new Service()
-    service.configured = true
+    service.configured = false
     service.enabled = true
     service.instanceName = 'Instance name'
     service.moduleName = serviceModule.moduleName

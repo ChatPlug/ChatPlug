@@ -240,16 +240,6 @@ export default class CLICommands {
     const confSchema = require(serviceModule.modulePath).Config
     log.info('services', 'Configuring instance ' + newInstanceName + ' of service ' + serviceName)
     const configuration = await wizard.promptForConfig(confSchema)
-    fs.writeFileSync(
-      path.join(
-        CONFIG_FOLDER_PATH,
-        serviceModule.moduleName +
-          '.' +
-          newInstanceName +
-          '.toml',
-      ),
-      TOML.stringify(configuration),
-    )
 
     const service = new Service()
     service.configured = true
@@ -258,6 +248,17 @@ export default class CLICommands {
     service.moduleName = serviceModule.moduleName
 
     await serviceRepository.save(service)
+
+    fs.writeFileSync(
+      path.join(
+        CONFIG_FOLDER_PATH,
+        service.moduleName +
+          '.' +
+          service.id +
+          '.toml',
+      ),
+      TOML.stringify(configuration),
+    )
 
     log.info('services', 'Created and configured instance ' + newInstanceName + ' of service ' + serviceName)
   }
