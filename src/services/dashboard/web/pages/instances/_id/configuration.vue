@@ -1,7 +1,5 @@
-
 <template>
   <v-container>
-
     <template v-for="configField in configSchema">
       <v-layout :key="configField.name">
         <v-text-field v-if="configField.type === 'STRING'" :label="configField.name" :hint="configField.hint"></v-text-field>
@@ -32,7 +30,7 @@ export default class extends Vue {
   @Prop() currentInstance: ServiceInstance
   @servicesModule.Action(actions.LOAD_INSTANCE_CONFIG_SCHEMA)
   loadInstanceConfigSchema
-  created() {
+  async created() {
     this.loadInstanceConfigSchema({ id: this.currentInstance.id })
   }
   get configSchema() {

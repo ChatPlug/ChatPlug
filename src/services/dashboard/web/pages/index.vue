@@ -1,7 +1,68 @@
 <template>
-    <section>
-        <v-btn nuxt to="instances/">See instances</v-btn>
-    </section>
+  <v-layout row>
+    <v-flex xs12 sm6 offset-sm3>
+      <v-card>
+        <v-toolbar color="green" dark>
+
+          <v-toolbar-title>Status</v-toolbar-title>
+
+          <v-spacer></v-spacer>
+
+          <v-btn nuxt to="instances/" center color="green lighten-1">
+          See instances
+          </v-btn>
+        </v-toolbar>
+
+        <v-list two-line subheader>
+          <v-subheader>General</v-subheader>
+
+          <v-list-tile color="green">
+            <v-list-tile-content>
+              <v-list-tile-title>API Status</v-list-tile-title>
+              <v-list-tile-sub-title>Online</v-list-tile-sub-title>
+            </v-list-tile-content>
+          </v-list-tile>
+
+          <v-list-tile color="green">
+            <v-list-tile-content>
+              <v-list-tile-title>DashBoard Status</v-list-tile-title>
+              <v-list-tile-sub-title>Online</v-list-tile-sub-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
+
+        <v-divider></v-divider>
+
+        <v-list
+          subheader
+          two-line
+        >
+          <v-subheader>Services</v-subheader>
+
+          <v-list-tile color="error">
+            <v-list-tile-content>
+              <v-list-tile-title>Discord</v-list-tile-title>
+              <v-list-tile-sub-title>Error</v-list-tile-sub-title>
+            </v-list-tile-content>
+          </v-list-tile>
+
+          <v-list-tile color="secondary">
+            <v-list-tile-content>
+              <v-list-tile-title>Telegram</v-list-tile-title>
+              <v-list-tile-sub-title>Offline</v-list-tile-sub-title>
+            </v-list-tile-content>
+          </v-list-tile>
+
+          <v-list-tile color="secondary">
+            <v-list-tile-content>
+              <v-list-tile-title>Facebook</v-list-tile-title>
+              <v-list-tile-sub-title>Not Configured</v-list-tile-sub-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </v-list>
+      </v-card>
+    </v-flex>
+  </v-layout>
 </template>
 
 <script lang="ts">
