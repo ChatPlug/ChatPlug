@@ -4,7 +4,15 @@
 
 
 [![Discord](https://discordapp.com/api/guilds/456875835954298890/embed.png)](https://discord.gg/eWAgMUG)
-# :bridge_at_night: facegram
+# :bridge_at_night: facegram [Refactor to TS]
+
+## App will get new fresh style near future! Follow updates on discord or branch [ts-refactor](https://github.com/feelfreelinux/ChatPlug/tree/ts-refactor)
+
+### Join discord to see current work
+ [discordapp.com/invite](https://discord.gg/xdWemhA)
+
+ *Comming soon*
+
 FacegramBridge is a simple and extensible Facebook (Messenger) - Telegram bridge. Reclaim your privacy now, don't let Zuckbot spy on you  and drain your battery. :battery: :moneybag:
 <p align="center">
   <img src="https://media.giphy.com/media/dSdvPrKU0w8WGo4c9L/giphy.gif">
