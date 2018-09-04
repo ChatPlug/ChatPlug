@@ -1,6 +1,6 @@
 <template>
   <v-layout row>
-    <v-flex xs12 sm6 offset-sm3>
+    <v-flex xs12 sm6 offset-sm3 mr-3 ml-0>
       <v-card>
         <v-toolbar color="green" dark>
 
@@ -54,12 +54,49 @@
           </v-list-tile>
 
           <v-list-tile color="secondary">
-            <v-list-tile-content>
+            <v-list-tile-content >
               <v-list-tile-title>Facebook</v-list-tile-title>
               <v-list-tile-sub-title>Not Configured</v-list-tile-sub-title>
             </v-list-tile-content>
           </v-list-tile>
         </v-list>
+      </v-card>
+    </v-flex>
+    <v-flex xs12 sm6 ml-3>
+      <v-toolbar color="indigo" dark>
+
+        <v-toolbar-title>Weekly Stats</v-toolbar-title>
+
+      </v-toolbar>
+
+      <v-card>
+        <v-container
+          fluid
+          g-rid-list-md
+        >
+          <v-layout row wrap>
+          <v-flex xs3>
+            <v-card color="indigo" class="white--text">
+             <v-list three-line>
+              <v-list-tile color="secondary">
+                  <v-list-tile-content >
+                    <v-list-tile-title>Messages Today</v-list-tile-title>
+                    <v-list-tile-sub-title class="px-0 title" ><v-icon color="blue darken-2">chat</v-icon> 14 </v-list-tile-sub-title>
+                  </v-list-tile-content>
+               </v-list-tile>
+
+                <v-list-tile color="secondary">
+                  <v-list-tile-content >
+                    <v-list-tile-title>Messages Weelky</v-list-tile-title>
+                    <v-list-tile-sub-title class="px-0 title" ><v-icon color="blue darken-2">chat</v-icon> 47 </v-list-tile-sub-title>
+                  </v-list-tile-content>
+               </v-list-tile>
+
+             </v-list>
+            </v-card>
+          </v-flex>
+          </v-layout>
+        </v-container>
       </v-card>
     </v-flex>
   </v-layout>
