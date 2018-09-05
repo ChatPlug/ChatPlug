@@ -65,7 +65,7 @@
     <v-flex xs12 sm6 ml-3>
       <v-toolbar color="indigo" dark>
 
-        <v-toolbar-title>Weekly Stats</v-toolbar-title>
+        <v-toolbar-title>Summary</v-toolbar-title>
 
       </v-toolbar>
 

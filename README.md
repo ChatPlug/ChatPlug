@@ -35,7 +35,7 @@ On first run the program will create a file called `config.json` where you have 
 *TODO: update*
 
 # :clap: Contributing
-If you want to help with the project, you can have a look at [some issues](https://github.com/feelfreelinux/ChatPlug/issues). All help is much appreciated :smile:
+If you want to help with the project, you can have a look at [some issues](https://github.com/feelfreelinux/ChatPlug/issues) or join our discord server [discordapp.com/invite](https://discord.gg/xdWemhA). All help is much appreciated :smile:
 
 # :warning: Disclamer
 
