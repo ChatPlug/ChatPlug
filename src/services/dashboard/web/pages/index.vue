@@ -37,7 +37,7 @@
           subheader
           two-line
         >
-          <v-subheader>Services  d</v-subheader>
+          <v-subheader>Services </v-subheader>
 
           <v-list-tile color="error">
             <v-list-tile-content>
