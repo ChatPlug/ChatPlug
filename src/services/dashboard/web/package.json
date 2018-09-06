@@ -4,11 +4,13 @@
   "private": true,
   "dependencies": {
     "@nuxtjs/axios": "^5.0.0",
+    "chart.js": "^2.7.2",
     "nuxt": "^1.4.2",
     "nuxt-material-design-icons": "^1.0.4",
     "nuxt-property-decorator": "^1.2.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
+    "vue-chartjs": "^3.4.0",
     "vuetify": "^1.1.13",
     "vuex-class": "^0.3.1"
   },

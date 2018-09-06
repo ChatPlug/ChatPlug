@@ -91,12 +91,19 @@
                     <v-list-tile-sub-title class="px-0 title" ><v-icon color="blue darken-2">chat</v-icon> 47 </v-list-tile-sub-title>
                   </v-list-tile-content>
                </v-list-tile>
-
+ 
              </v-list>
             </v-card>
           </v-flex>
           </v-layout>
+
         </v-container>
+      </v-card>
+      <v-card>
+        <div class="Chart">
+             <h2>Piechart</h2>
+             <pie-chart></pie-chart>
+        </div>
       </v-card>
     </v-flex>
   </v-layout>
@@ -105,6 +112,8 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
 import { State, namespace, Action } from 'vuex-class'
+import VueCharts from 'vue-chartjs'
+import PieChart from '../components/PieChart'
 
 @Component({})
 export default class extends Vue {
@@ -113,5 +122,29 @@ export default class extends Vue {
   }
 }
 </script>
-<style scoped>
+
+<style>
+body {
+  animation: colorchange 50s infinite;
+}
+@keyframes colorchange
+{
+  0%   {background: #9b59b6;}
+  25%  {background: #f1c40f;}
+  50%  {background: #3498db;}
+  75%  {background: #1abc9c;}
+  100% {background: #9b59b6;}
+}
+.Chart {
+  background: #212733;
+  border-radius: 15px;
+  box-shadow: 0px 2px 15px rgba(25, 25, 25, 0.27);
+  margin:  25px 0;
+}
+.Chart h2 {
+  margin-top: 0;
+  padding: 15px 0;
+  color:  rgba(255, 0,0, 0.5);
+  border-bottom: 1px solid #323d54;
+}
 </style>
