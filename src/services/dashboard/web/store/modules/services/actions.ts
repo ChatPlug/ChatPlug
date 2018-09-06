@@ -36,7 +36,7 @@ export default <ActionTree<ServicesState, {}>>{
       throw new Error(`Failed to find instance with id ${id}`)
     }
     const { data } = await axios.get(
-      encodeParams`services/${instance.serviceModule.moduleName}/schema`,
+      encodeParams`services/instances/${id}/schema`,
     )
     store.commit(action.SET_INSTANCE_CONFIG_SCHEMA, {
       id,

@@ -136,6 +136,7 @@ export default class ServicesController {
     const schema = require(serviceModule.modulePath).Config
     const cfg = new schema()
     const fieldList = Reflect.getMetadata(fieldListMetadataKey, cfg) as string[]
+
     return fieldList.map(key => {
       const options = classToPlain(Reflect.getMetadata(
         fieldOptionsMetadataKey,
@@ -146,6 +147,40 @@ export default class ServicesController {
       options.type = FieldType[options.type]
       if (options['required'] === undefined) {
         options['required'] = true
+      }
+      return options
+    })
+  }
+
+  @Get('/instances/:id/schema')
+  async getConfigurationWithSchema(@Param('id') id: number) {
+    const service = await this.servicesRepository.findOneOrFail({ id })
+
+    const serviceModule = (await this.context.serviceManager.getAvailableServices()).find(
+      el => el.moduleName === service.moduleName,
+    )
+
+    if (!serviceModule) {
+      throw new NotFoundError()
+    }
+
+    const schema = require(serviceModule.modulePath).Config
+    const cfg = new schema()
+    const fieldList = Reflect.getMetadata(fieldListMetadataKey, cfg) as string[]
+    const config = service.configured ? this.context.config.readConfigForService(service) : null
+    return fieldList.map(key => {
+      const options = classToPlain(Reflect.getMetadata(
+        fieldOptionsMetadataKey,
+        cfg,
+        key,
+      ) as IFieldOptions)
+      // @ts-ignore
+      options.type = FieldType[options.type]
+      if (options['required'] === undefined) {
+        options['required'] = true
+      }
+      if (config) {
+        options['value'] = config[options['name']]
       }
       return options
     })
