@@ -4,7 +4,7 @@
 
 
 [![Discord](https://discordapp.com/api/guilds/456875835954298890/embed.png)](https://discord.gg/eWAgMUG)
-# :bridge_at_night: facegram [Refactor to TS]
+# :bridge_at_night: facegram [Refactor to TS] :french_bread: :french_bread: :french_bread:
 
 ## App will get new fresh style near future! Follow updates on discord or branch [ts-refactor](https://github.com/feelfreelinux/ChatPlug/tree/ts-refactor)
 
