@@ -4,6 +4,7 @@ import ServiceModule from 'types/ServiceModule'
 import { MutationTree } from 'vuex'
 import * as actions from './actions.types'
 import ServicesState from './ServicesState'
+import Vue from 'vue'
 
 export default <MutationTree<ServicesState>>{
   [actions.SET_INSTANCES](state, payload: ServiceInstance[]) {
@@ -26,6 +27,6 @@ export default <MutationTree<ServicesState>>{
     if (!instance) {
       throw new Error(`Failed to find instance with id ${id}`)
     }
-    instance.serviceModule.configSchema = configSchema
+    Vue.set(instance.serviceModule, 'configSchema', configSchema)
   },
 }
