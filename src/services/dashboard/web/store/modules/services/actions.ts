@@ -50,4 +50,12 @@ export default <ActionTree<ServicesState, {}>>{
       configSchema: data.data,
     })
   },
+
+  async [action.LOAD_USERS](store, { id }: { id: number}) {
+    const { data } = axios.get(`services/instances/${id}/users`)
+
+    if (data.data) {
+      store.commit(action.SET_INSTANCE_USER, data.data)
+    }
+  }
 }

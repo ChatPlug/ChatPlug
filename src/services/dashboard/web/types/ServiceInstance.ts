@@ -1,4 +1,5 @@
 import ServiceModule from './ServiceModule'
+import ServiceUser from './ServiceUser'
 
 /**
  * See the Service entity this is just a frontend version.
@@ -10,6 +11,7 @@ interface ServiceInstance {
   enabled: boolean
   configured: boolean
   serviceModule: ServiceModule
+  users: ServiceUser[]
 }
 
 export default ServiceInstance
