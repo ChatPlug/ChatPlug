@@ -8,6 +8,12 @@ import Vue from 'vue'
 
 export default <MutationTree<ServicesState>>{
   [actions.SET_INSTANCES](state, payload: ServiceInstance[]) {
+    for (const instance of payload) {
+      const found = state.instances.find((el) => el.id === instance.id)
+      if (found) {
+        instance.serviceModule.configSchema = found.serviceModule.configSchema
+      }
+    }
     state.instances = payload
   },
 

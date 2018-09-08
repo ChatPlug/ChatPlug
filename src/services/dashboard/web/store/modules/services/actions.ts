@@ -32,8 +32,15 @@ export default <ActionTree<ServicesState, {}>>{
     }
   },
 
+  async [action.UPDATE_DB_INSTANCE](store, params: { id: number, instance: any }) {
+    const { data } = await axios.put(`services/instances/${params.id}`, params.instance)
+    if (data.data) {
+      store.dispatch(action.LOAD_INSTANCES)
+    }
+  },
+
   async [action.REMOVE_INSTANCE](store, { id }: { id: number }) {
-    await axios.get(`services/instances/${id}/remove`)
+    await axios.delete(`services/instances/${id}`)
     store.dispatch(action.LOAD_INSTANCES)
   },
 
