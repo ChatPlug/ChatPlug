@@ -118,7 +118,7 @@ export default class ServicesController {
   @Get('/instances/:id/disable')
   async disableService() {}
 
-  @Get('/:id/users')
+  @Get('/instances/:id/users')
   async getServiceUsers(@Param('id') id: number) {
     return await this.context.connection.getRepository(User).find({ where: { service: { id } } })
   }
