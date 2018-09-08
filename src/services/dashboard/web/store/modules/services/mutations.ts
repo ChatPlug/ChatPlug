@@ -15,6 +15,11 @@ export default <MutationTree<ServicesState>>{
     state.modules = payload
   },
 
+  [actions.UPDATE_INSTANCE](state, payload: ServiceInstance) {
+    const index = state.instances.findIndex((el) => el.id === payload.id)
+    state.instances[index] = payload
+  },
+
   [actions.SET_NEW_INSTANCE_ID](state, payload: number) {
     state.newInstanceId = payload
   },

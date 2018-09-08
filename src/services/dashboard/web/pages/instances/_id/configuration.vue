@@ -13,7 +13,7 @@
         </v-tooltip>
       </v-layout>
     </template>
-    <v-btn :disabled="!isFormEnabled" color="info" @click="saveConfig()">Save config</v-btn>
+    <v-btn color="info" @click="saveConfig()">Save config</v-btn>
   </v-container>
 </template>
 
@@ -30,6 +30,8 @@ export default class extends Vue {
   @Prop() currentInstance: ServiceInstance
   @servicesModule.Action(actions.LOAD_INSTANCE_CONFIG_SCHEMA)
   loadInstanceConfigSchema
+  @servicesModule.Action(actions.CONFIGURE_INSTANCE)
+    configureInstance
   schemaConfig = {}
   unmodifiedConfig = {}
 
@@ -38,11 +40,7 @@ export default class extends Vue {
   }
 
   async saveConfig() {
-    console.log(this.schemaConfig)
-  }
-
-  get isFormEnabled() {
-    return this.schemaConfig !== null
+    this.configureInstance({ id: this.currentInstance.id, config: this.schemaConfig })
   }
 
   get configSchema() {

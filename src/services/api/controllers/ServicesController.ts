@@ -20,6 +20,7 @@ import IFieldOptions, {
 } from '../../../configWizard/IFieldOptions'
 import Service from '../../../entity/Service'
 import fs from 'fs-extra'
+import User from '../../../entity/User'
 
 const CONFIG_FOLDER_PATH = path.join(__dirname, '../../../../config')
 @JsonController('/services')
@@ -117,6 +118,11 @@ export default class ServicesController {
   @Get('/instances/:id/disable')
   async disableService() {}
 
+  @Get('/:id/users')
+  async getServiceUsers(@Param('id') id: number) {
+    return await this.context.connection.getRepository(User).find({ where: { service: { id } } })
+  }
+
   @Get('/instances/:id/remove')
   async removeService(@Param('id') id: number) {
     const foundService = await this.servicesRepository.findOne({ id })
@@ -184,6 +190,46 @@ export default class ServicesController {
       }
       return options
     })
+  }
+
+  @Post('/instances/:id/configure')
+  async configureInstance(
+    @Param('id') id: number,
+    @BodyParam('config', { required: true, parse: true }) configuration: any,
+  ) {
+    const service = await this.servicesRepository.findOneOrFail({ id })
+    const serviceModule = (await this.context.serviceManager.getAvailableServices()).find(
+      el => el.moduleName === service.moduleName,
+    )
+    if (!serviceModule) {
+      throw new NotFoundError()
+    }
+
+    const schema = require(serviceModule.modulePath).Config
+    const fieldList = Reflect.getMetadata(
+      fieldListMetadataKey,
+      new schema(),
+    ) as string[]
+    if (!fieldList.every(el => configuration[el] !== undefined)) {
+      throw new BadRequestError('Config does not match schema')
+    }
+
+    fs.writeFileSync(
+      path.join(
+        CONFIG_FOLDER_PATH,
+        service.moduleName + '.' + service.id + '.toml',
+      ),
+      TOML.stringify(configuration),
+    )
+
+    if (!serviceModule) {
+      throw new NotFoundError('Service with given name does not exist')
+    }
+
+    service.configured = true
+
+    await this.servicesRepository.save(service)
+    return service
   }
 
   @Get('/instances/:id/enable')

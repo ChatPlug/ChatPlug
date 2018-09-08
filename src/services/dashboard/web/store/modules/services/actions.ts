@@ -25,6 +25,13 @@ export default <ActionTree<ServicesState, {}>>{
     store.dispatch(action.LOAD_INSTANCES)
   },
 
+  async [action.CONFIGURE_INSTANCE](store, params: { id: number, config: any }) {
+    const { data } = await axios.post(`services/instances/${params.id}/configure`, params)
+    if (data.data) {
+      store.commit(action.UPDATE_INSTANCE, data.data)
+    }
+  },
+
   async [action.REMOVE_INSTANCE](store, { id }: { id: number }) {
     await axios.get(`services/instances/${id}/remove`)
     store.dispatch(action.LOAD_INSTANCES)
