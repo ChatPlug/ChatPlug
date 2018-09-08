@@ -37,9 +37,14 @@ import { namespace } from 'vuex-class'
 import axios from 'axios'
 import ServiceInstance from '../../types/ServiceInstance'
 import * as actions from '../../store/modules/services/actions.types'
+import EditableLabel from '../../components/EditableLabel.vue'
 const servicesModule = namespace('services')
 
-@Component({})
+@Component({
+  components: {
+    EditableLabel: EditableLabel as any,
+  },
+})
 export default class InstanceByID extends Vue {
   @servicesModule.Getter('instances') instances: ServiceInstance[]
   @servicesModule.Action(actions.REMOVE_INSTANCE) removeInstance

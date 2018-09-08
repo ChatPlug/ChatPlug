@@ -5,6 +5,9 @@ import {
   BadRequestError,
   BodyParam,
   Get,
+  Delete,
+  Put,
+  Body,
   InternalServerError,
   JsonController,
   NotFoundError,
@@ -21,6 +24,7 @@ import IFieldOptions, {
 import Service from '../../../entity/Service'
 import fs from 'fs-extra'
 import User from '../../../entity/User'
+import ServiceInstance from '../../dashboard/web/types/ServiceInstance'
 
 const CONFIG_FOLDER_PATH = path.join(__dirname, '../../../../config')
 @JsonController('/services')
@@ -123,11 +127,18 @@ export default class ServicesController {
     return await this.context.connection.getRepository(User).find({ where: { service: { id } } })
   }
 
-  @Get('/instances/:id/remove')
-  async removeService(@Param('id') id: number) {
+  @Delete('/instances/:id')
+  async deleteService(@Param('id') id: number) {
     const foundService = await this.servicesRepository.findOne({ id })
 
     return this.servicesRepository.remove(foundService!!)
+  }
+
+  @Put('/instances/:id')
+  async updateService(
+    @Param('id') id: number,
+    @Body() instance: ServiceInstance) {
+    return this.servicesRepository.update({ id }, instance)
   }
 
   @Get('/:module/schema')
