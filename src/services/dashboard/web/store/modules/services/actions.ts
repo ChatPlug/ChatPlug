@@ -59,10 +59,11 @@ export default <ActionTree<ServicesState, {}>>{
   },
 
   async [action.LOAD_USERS](store, { id }: { id: number}) {
-    const { data } = axios.get(`services/instances/${id}/users`)
+    const { data } = await axios.get(`services/instances/${id}/users`)
 
     if (data.data) {
-      store.commit(action.SET_INSTANCE_USER, data.data)
+      console.log(data.data)
+      store.commit(action.SET_INSTANCE_USER, { id, users: data.data })
     }
-  }
+  },
 }

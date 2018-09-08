@@ -49,6 +49,7 @@ export default <MutationTree<ServicesState>>{
     if (!instance) {
       throw new Error(`Failed to find instance with id ${id}`)
     }
+    console.log(users)
     Vue.set(instance, 'users', users)
   },
 }

@@ -2,7 +2,7 @@
 <template>
       <v-list>
            <v-list-tile
-            v-for="user in currentInstance.users"
+            v-for="user in users"
             :key="user.username"
             avatar
           >
@@ -13,7 +13,7 @@
             <v-list-tile-avatar>
               <img :src="user.avatarUrl">
             </v-list-tile-avatar>
-           </v-list-tile>
+          </v-list-tile>
     </v-list>
 </template>
 
@@ -24,15 +24,21 @@ import * as actions from '../../../store/modules/services/actions.types'
 
 const servicesModule = namespace('services')
 
-
 @Component({})
 export default class extends Vue {
   @Prop() currentInstance
   @servicesModule.Action(actions.LOAD_USERS) loadUsers
 
-
   async created() {
-      this.loadUsers()
+    this.loadUsers({ id: this.currentInstance.id })
+  }
+
+  get users() {
+    if (!this.currentInstance) {
+      return null
+    }
+
+    return this.currentInstance.users || null
   }
 }
 </script>

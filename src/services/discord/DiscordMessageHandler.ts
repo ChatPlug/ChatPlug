@@ -16,7 +16,6 @@ export class DiscordMessageHandler implements FacegramMessageHandler {
   }
 
   onOutgoingMessage = message => {
-    console.time('discordPrepare' + message.id)
 
     if (
       this.webhooks.has(message.author.id) ||
@@ -39,11 +38,9 @@ export class DiscordMessageHandler implements FacegramMessageHandler {
     } as IChatPlugMessage
 
     this.messageSubject.next(facegramMessage)
-    console.timeEnd('discordPrepare' + message.id)
   }
 
   onIncomingMessage = async (message: IChatPlugMessage) => {
-    console.time('discordSend' + message.externalOriginId)
     if (!message.externalTargetId) return
 
     const channel = this.client.channels.get(message.externalTargetId)
@@ -71,9 +68,7 @@ export class DiscordMessageHandler implements FacegramMessageHandler {
           name: file.name,
         })),
       })
-      .then(() => {
-        console.timeEnd('discordSend' + message.externalOriginId)
-      })
+      .then(() => {})
       .catch(err => log.error('discord', err))
   }
 

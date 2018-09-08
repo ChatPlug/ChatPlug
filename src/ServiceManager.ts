@@ -105,7 +105,9 @@ export class ServiceManager {
           service.dbService.moduleName
         }) enabled, initializing...`,
       )
-      service.initialize()
+      service.initialize().catch(async (e) => {
+        await service.terminate()
+      })
     })
   }
 

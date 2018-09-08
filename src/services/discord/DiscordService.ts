@@ -41,6 +41,7 @@ export default class DiscordService extends ChatPlugService<DiscordConfig> {
     log.silly('discord: webhooks', '%o', webhooks)
 
     this.messageHandler.loadWebhooks(webhooks)
+    throw (Error('eluwa'))
 
     log.info('discord', 'Logged in as', this.discord.user.username)
   }
