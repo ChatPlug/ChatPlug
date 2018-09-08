@@ -11,6 +11,7 @@ interface ServiceInstance {
   enabled: boolean
   configured: boolean
   serviceModule: ServiceModule
+  status: string,
   users: ServiceUser[]
 }
 

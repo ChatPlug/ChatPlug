@@ -7,6 +7,8 @@ import fs from 'fs-extra'
 import ServiceModule from './ServiceModule'
 import { plainToClass } from 'class-transformer'
 import { validate } from 'class-validator'
+import { IChatplugServiceStatusUpdate, IChatPlugServiceStatus } from './models'
+import { Subject } from 'rxjs'
 
 export interface ServiceMap {
   [id: number]: ChatPlugService
@@ -17,9 +19,12 @@ const CONFIG_FOLDER_PATH = path.join(__dirname, '../config')
 export class ServiceManager {
   services: ServiceMap
   context: ChatPlugContext
+  statusSubject : Subject<IChatplugServiceStatusUpdate>
+
   constructor(context: ChatPlugContext) {
     this.context = context
     this.services = {}
+    this.statusSubject = new Subject()
   }
 
   async getAvailableServices() {
@@ -105,16 +110,29 @@ export class ServiceManager {
           service.dbService.moduleName
         }) enabled, initializing...`,
       )
+      this.setServiceStatus(service, IChatPlugServiceStatus.STARTING)
       service.initialize().catch(async (e) => {
+        this.setServiceStatus(service, IChatPlugServiceStatus.CRASHED)
         await service.terminate()
+      }).then(() => {
+        this.setServiceStatus(service, IChatPlugServiceStatus.RUNNING)
       })
     })
+  }
+
+  async setServiceStatus(service: ChatPlugService, status: IChatPlugServiceStatus) {
+    service.dbService.status = status
+    this.statusSubject.next({ serviceId: service.dbService.id, statusUpdate: status })
+    await this.context.connection.getRepository(Service).save(service.dbService)
   }
 
   async terminateServices() {
     return Promise.all(
       this.getRegisteredServices().map(
-        async service => await service.terminate(),
+        async service => {
+          await this.setServiceStatus(service, IChatPlugServiceStatus.TERMINATING)
+          await service.terminate().then(() => this.setServiceStatus(service, IChatPlugServiceStatus.SHUTDOWN))
+        },
       ),
     )
   }

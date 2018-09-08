@@ -30,18 +30,17 @@ export default class extends Vue {
   @Prop() currentInstance
   @servicesModule.Action(actions.LOAD_USERS) loadUsers
 
-
   async created() {
     this.loadUsers({ id: this.currentInstance.id })
   }
 
-  /*get users() {
+  get users() {
     if (!this.currentInstance) {
       return null
     }
 
     return this.currentInstance.users || null
-  }*/
+  }
 }
 </script>
 <style scoped>

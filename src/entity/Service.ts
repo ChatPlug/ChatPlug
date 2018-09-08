@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm'
 import User from './User'
 import Thread from './Thread'
+import { IChatPlugServiceStatus } from '../models'
 
 @Entity()
 export default class Service {
@@ -12,6 +13,9 @@ export default class Service {
 
   @Column()
   moduleName: string
+
+  @Column({ default: IChatPlugServiceStatus.SHUTDOWN })
+  status: string
 
   @Column()
   enabled: boolean

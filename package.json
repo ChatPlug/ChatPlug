@@ -33,6 +33,7 @@
   },
   "homepage": "https://github.com/feelfreelinux/ChatPlug#readme",
   "dependencies": {
+    "@types/ws": "^6.0.1",
     "async-retry": "^1.2.1",
     "body-parser": "^1.18.3",
     "chalk": "^2.4.1",
@@ -55,6 +56,7 @@
     "tdl": "^3.8.1",
     "telegraf": "^3.22.1",
     "typeorm": "^0.2.7",
+    "ws": "^6.0.0",
     "yargs-parser": "^10.1.0"
   },
   "devDependencies": {

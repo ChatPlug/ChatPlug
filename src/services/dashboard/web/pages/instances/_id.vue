@@ -4,6 +4,8 @@
   <v-card v-if="currentInstance">
     <v-toolbar flat>
       <v-toolbar-title class="grey--text text--darken-4">{{currentInstance.serviceModule.displayName}}</v-toolbar-title>
+      <v-toolbar-title class="grey--text text--darken-4">{{status}}</v-toolbar-title>
+
       <v-spacer></v-spacer>
 
       <v-btn flat color="red" @click="removeInstance({ id })" nuxt :to="'/instances/'">
@@ -54,6 +56,14 @@ export default class InstanceByID extends Vue {
       ...params,
       baseURL: `/instances/${params.id}`,
     }
+  }
+
+  get status() {
+    if (!this.currentInstance) {
+      return null
+    }
+
+    return this.currentInstance.status || null
   }
   get currentInstance(): ServiceInstance | undefined {
     if (isNaN(this.id as any)) {

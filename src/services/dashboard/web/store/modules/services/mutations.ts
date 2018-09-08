@@ -6,6 +6,7 @@ import { MutationTree } from 'vuex'
 import * as actions from './actions.types'
 import ServicesState from './ServicesState'
 import Vue from 'vue'
+import { SOCKET_ONOPEN } from 'vue-native-websocket'
 
 export default <MutationTree<ServicesState>>{
   [actions.SET_INSTANCES](state, payload: ServiceInstance[]) {
@@ -29,6 +30,15 @@ export default <MutationTree<ServicesState>>{
 
   [actions.SET_NEW_INSTANCE_ID](state, payload: number) {
     state.newInstanceId = payload
+  },
+
+  [actions.UPDATE_INSTANCE_STATUS](state, { serviceId, statusUpdate }: { serviceId: number, statusUpdate: string }) {
+    const instance = state.instances.find(instance => instance.id === serviceId)
+    console.log('testt')
+    if (!instance) {
+      throw new Error(`Failed to find instance with id ${serviceId}`)
+    }
+    Vue.set(instance, 'status', statusUpdate)
   },
 
   [actions.SET_INSTANCE_CONFIG_SCHEMA](

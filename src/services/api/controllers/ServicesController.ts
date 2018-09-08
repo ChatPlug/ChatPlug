@@ -25,6 +25,7 @@ import Service from '../../../entity/Service'
 import fs from 'fs-extra'
 import User from '../../../entity/User'
 import ServiceInstance from '../../dashboard/web/types/ServiceInstance'
+import { IChatPlugServiceStatus } from '../../../models'
 
 const CONFIG_FOLDER_PATH = path.join(__dirname, '../../../../config')
 @JsonController('/services')
@@ -201,6 +202,12 @@ export default class ServicesController {
       }
       return options
     })
+  }
+
+  @Get('/debugSocket')
+  async debugSocket() {
+    this.context.serviceManager.statusSubject.next({ serviceId: 2, statusUpdate: IChatPlugServiceStatus.CRASHED })
+    return {}
   }
 
   @Post('/instances/:id/configure')
