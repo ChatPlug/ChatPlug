@@ -26,6 +26,7 @@ import fs from 'fs-extra'
 import User from '../../../entity/User'
 import ServiceInstance from '../../dashboard/web/types/ServiceInstance'
 import { IChatPlugServiceStatus } from '../../../models'
+import Thread from '../../../entity/Thread'
 
 const CONFIG_FOLDER_PATH = path.join(__dirname, '../../../../config')
 @JsonController('/services')
@@ -126,6 +127,11 @@ export default class ServicesController {
   @Get('/instances/:id/users')
   async getServiceUsers(@Param('id') id: number) {
     return await this.context.connection.getRepository(User).find({ where: { service: { id } } })
+  }
+
+  @Get('/instances/:id/threads')
+  async getServiceThreads(@Param('id') id: number) {
+    return await this.context.connection.getRepository(Thread).find({ where: { service: { id } } })
   }
 
   @Delete('/instances/:id')
