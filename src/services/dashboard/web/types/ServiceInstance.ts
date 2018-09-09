@@ -1,5 +1,6 @@
 import ServiceModule from './ServiceModule'
 import ServiceUser from './ServiceUser'
+import ServiceThread from './ServiceThread'
 
 /**
  * See the Service entity this is just a frontend version.
@@ -12,7 +13,8 @@ interface ServiceInstance {
   configured: boolean
   serviceModule: ServiceModule
   status: string,
-  users: ServiceUser[]
+  users: ServiceUser[],
+  threads: ServiceThread[]
 }
 
 export default ServiceInstance

@@ -75,7 +75,14 @@ export default <ActionTree<ServicesState, {}>>{
   async [action.START_INSTANCE](store, { id }) {
     const { data } = await axios.get(`services/instances/${id}/status/startup`)
   },
+  async [action.LOAD_INSTANCE_THREAD](store, { id }: { id: number}) {
+    const { data } = await axios.get(`services/instances/${id}/threads`)
 
+    if (data.data) {
+      console.log(data.data)
+      store.commit(action.SET_INSTANCE_THREAD, { id, threads: data.data })
+    }
+  }
   async [action.DISABLE_INSTANCE](store, { id }: { id: number }) {
     const { data } = await axios.get(`services/instances/${id}/disable`)
     if (data.data) {

@@ -2,6 +2,7 @@
 import ServiceInstance from 'types/ServiceInstance'
 import ServiceModule from 'types/ServiceModule'
 import ServiceUser from 'types/ServiceUser'
+import ServiceThread from 'types/ServiceThread'
 import { MutationTree } from 'vuex'
 import * as actions from './actions.types'
 import ServicesState from './ServicesState'
@@ -68,5 +69,15 @@ export default <MutationTree<ServicesState>>{
     }
     console.log(users)
     Vue.set(instance, 'users', users)
+  },
+  [actions.SET_INSTANCE_THREAD](
+    state: ServicesState,
+    { id, threads }: { id: number; threads: ServiceThread[] },
+  ) {
+    const instance = state.instances.find(instance => instance.id === id)
+    if (!instance) {
+      throw new Error(`Failed to find instance with id ${id}`)
+    }
+    Vue.set(instance, 'threads', threads)
   },
 }
