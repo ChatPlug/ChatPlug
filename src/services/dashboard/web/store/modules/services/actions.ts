@@ -66,4 +66,13 @@ export default <ActionTree<ServicesState, {}>>{
       store.commit(action.SET_INSTANCE_USER, { id, users: data.data })
     }
   },
+  async [action.RESTART_INSTANCE](store, { id }) {
+    const { data } = await axios.get(`services/instances/${id}/status/restart`)
+  },
+  async [action.SHUTDOWN_INSTANCE](store, { id }) {
+    const { data } = await axios.get(`services/instances/${id}/status/terminate`)
+  },
+  async [action.START_INSTANCE](store, { id }) {
+    const { data } = await axios.get(`services/instances/${id}/status/startup`)
+  },
 }
