@@ -28,6 +28,13 @@ export default <MutationTree<ServicesState>>{
     state.instances[index] = payload
   },
 
+  [actions.SET_ENABLED](state, { id, enabled } : { id: number, enabled: boolean }) {
+    const found = state.instances.find((el) => el.id === id)
+    if (found) {
+      found.enabled = enabled
+    }
+  },
+
   [actions.SET_NEW_INSTANCE_ID](state, payload: number) {
     state.newInstanceId = payload
   },

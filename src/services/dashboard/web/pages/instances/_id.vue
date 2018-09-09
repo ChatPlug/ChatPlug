@@ -7,9 +7,16 @@
 
       <v-spacer></v-spacer>
 
+      <v-btn v-if="currentInstance.enabled === true" flat color="red" @click="disable()">
+        Disable
+      </v-btn>
+      <v-btn v-else flat color="green" @click="enable()">
+        Enable
+      </v-btn>
       <v-btn flat color="red" @click="removeInstance({ id })" nuxt :to="'/instances/'">
         Delete
       </v-btn>
+
     </v-toolbar>
     <v-tabs slider-color="primary">
       <v-tab ripple nuxt :to="baseURL + '/status'">
@@ -49,12 +56,23 @@ const servicesModule = namespace('services')
 export default class InstanceByID extends Vue {
   @servicesModule.Getter('instances') instances: ServiceInstance[]
   @servicesModule.Action(actions.REMOVE_INSTANCE) removeInstance
+  @servicesModule.Action(actions.ENABLE_INSTANCE) enableInstance
+  @servicesModule.Action(actions.DISABLE_INSTANCE) disableInstance
+
   id: string
   async asyncData({ params }) {
     return {
       ...params,
       baseURL: `/instances/${params.id}`,
     }
+  }
+
+  enable() {
+    this.enableInstance({ id: Number(this.id) })
+  }
+
+  disable() {
+    this.disableInstance({ id: Number(this.id) })
   }
 
   get currentInstance(): ServiceInstance | undefined {

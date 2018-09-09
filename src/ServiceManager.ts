@@ -104,6 +104,7 @@ export class ServiceManager {
         'services',
         service.moduleName,
       ) as any)).Service(service, this.context)
+      this.services[service.id].dbService = service
       service.status = IChatPlugServiceStatus.SHUTDOWN
       await this.context.connection.getRepository(Service).save(service)
 

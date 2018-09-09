@@ -75,4 +75,18 @@ export default <ActionTree<ServicesState, {}>>{
   async [action.START_INSTANCE](store, { id }) {
     const { data } = await axios.get(`services/instances/${id}/status/startup`)
   },
+
+  async [action.DISABLE_INSTANCE](store, { id }: { id: number }) {
+    const { data } = await axios.get(`services/instances/${id}/disable`)
+    if (data.data) {
+      store.commit(action.SET_ENABLED, { id, enabled: false })
+    }
+  },
+
+  async [action.ENABLE_INSTANCE](store, { id }: { id: number }) {
+    const { data } = await axios.get(`services/instances/${id}/enable`)
+    if (data.data) {
+      store.commit(action.SET_ENABLED, { id, enabled: true })
+    }
+  },
 }

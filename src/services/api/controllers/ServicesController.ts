@@ -122,7 +122,18 @@ export default class ServicesController {
   }
 
   @Get('/instances/:id/disable')
-  async disableService() {}
+  async disableService(@Param('id') id: number) {
+    this.context.serviceManager.terminateService(this.context.serviceManager.getServiceForId(id))
+    return await this.servicesRepository.update({ id }, { enabled: false })
+  }
+
+  @Get('/instances/:id/enable')
+  async enableService(@Param('id') id: number) {
+    await this.servicesRepository.update({ id }, { enabled: true })
+    const service = await this.servicesRepository.findOneOrFail({ id })
+    await this.context.serviceManager.loadService(service)
+    return service
+  }
 
   @Get('/instances/:id/users')
   async getServiceUsers(@Param('id') id: number) {
@@ -270,7 +281,4 @@ export default class ServicesController {
     await this.servicesRepository.save(service)
     return service
   }
-
-  @Get('/instances/:id/enable')
-  async enableService() {}
 }
