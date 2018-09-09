@@ -38,7 +38,7 @@ export class ExchangeManager {
         for (const thread of threads) {
           for (const actualThread of thread.threadConnection.threads.filter((element) => element.externalServiceId !== message.externalOriginId)) {
             message.externalTargetId = actualThread.externalServiceId
-            const serviceInstance = context.serviceManager.getServiceForId('' + actualThread.service.id)
+            const serviceInstance = context.serviceManager.getServiceForId(actualThread.service.id)
             if (serviceInstance.dbService.enabled) {
               serviceInstance.receiveMessageSubject.next(message)
             } else {

@@ -204,10 +204,25 @@ export default class ServicesController {
     })
   }
 
-  @Get('/debugSocket')
-  async debugSocket() {
-    this.context.serviceManager.statusSubject.next({ serviceId: 2, statusUpdate: IChatPlugServiceStatus.CRASHED })
-    return {}
+  @Get('/instances/:id/status/startup')
+  async startService(@Param('id') id : number) {
+    const service = await this.servicesRepository.findOneOrFail({ id })
+    this.context.serviceManager.startupService(this.context.serviceManager.getServiceForId(service.id))
+    return this.servicesRepository.findOneOrFail({ id })
+  }
+
+  @Get('/instances/:id/status/terminate')
+  async terminateService(@Param('id') id : number) {
+    const service = await this.servicesRepository.findOneOrFail({ id })
+    this.context.serviceManager.terminateService(this.context.serviceManager.getServiceForId(service.id))
+    return this.servicesRepository.findOneOrFail({ id })
+  }
+
+  @Get('/instances/:id/status/restart')
+  async restartService(@Param('id') id : number) {
+    const service = await this.servicesRepository.findOneOrFail({ id })
+    this.context.serviceManager.reloadServiceForInstance(service)
+    return this.servicesRepository.findOneOrFail({ id })
   }
 
   @Post('/instances/:id/configure')

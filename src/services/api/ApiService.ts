@@ -39,15 +39,17 @@ export default class ApiService extends ChatPlugService {
       this.broadcastPacket({ namespace: 'services', mutation: SocketEvent.ServiceStatusUpdate, data: el })
     })
 
-    await new Promise(
+    new Promise(
       res => (this.httpServer = this.app.listen(this.config.port, _ => res)),
-    )
+    ).then().catch()
+
     log.info('api', 'API listening on port ' + this.config.port)
   }
 
   async terminate() {
     log.info('api', 'Closing API server')
     this.statusSubscription.unsubscribe()
+    await this.wsServer.close()
     await this.httpServer.close()
   }
 
