@@ -16,7 +16,7 @@
         </v-list-tile>
       </template>
       <template v-if="users == null || users.length === 0">
-        <div>None</div>
+        <div>&nbsp; There is no users</div>
       </template>
     </v-list>
 </template>
