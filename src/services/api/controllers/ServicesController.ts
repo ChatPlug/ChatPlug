@@ -113,6 +113,12 @@ export default class ServicesController {
     service.moduleName = serviceModule.moduleName
 
     await this.servicesRepository.save(service)
+    const serviceModules = await this.context.serviceManager.getAvailableServices()
+
+    service['serviceModule'] = serviceModules.find(
+        sm => sm.moduleName === serviceModuleName,
+      )
+
     return service
   }
 
@@ -279,6 +285,11 @@ export default class ServicesController {
     service.configured = true
 
     await this.servicesRepository.save(service)
+    const serviceModules = await this.context.serviceManager.getAvailableServices()
+
+    service['serviceModule'] = serviceModules.find(
+        sm => sm.moduleName === service.moduleName,
+      )
     return service
   }
 }

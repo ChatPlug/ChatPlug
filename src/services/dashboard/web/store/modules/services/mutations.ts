@@ -16,6 +16,9 @@ export default <MutationTree<ServicesState>>{
       if (found) {
         instance.serviceModule.configSchema = found.serviceModule.configSchema
       }
+      if (!instance.serviceModule.configSchema) {
+        instance.serviceModule.configSchema = []
+      }
     }
     state.instances = payload
   },
@@ -42,7 +45,7 @@ export default <MutationTree<ServicesState>>{
 
   [actions.UPDATE_INSTANCE_STATUS](state, { serviceId, statusUpdate }: { serviceId: number, statusUpdate: string }) {
     const instance = state.instances.find(instance => instance.id === serviceId)
-    console.log('testt')
+
     if (!instance) {
       throw new Error(`Failed to find instance with id ${serviceId}`)
     }

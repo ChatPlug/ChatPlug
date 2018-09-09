@@ -67,23 +67,17 @@
               </v-list-tile-action>
         </v-list-tile>
         <v-subheader>Information</v-subheader>
-          <v-list-tile>
+        <template v-for="(data, index) in instanceInformation">
+          <v-list-tile :key="index">
           <v-list-tile-content>
             <v-list-tile-title color=green>
-              Name
+              {{ data.title }}
             </v-list-tile-title>
-            <v-list-tile-sub-title>{{ currentInstance.serviceModule.displayName }}</v-list-tile-sub-title>
+            <v-list-tile-sub-title>{{ data.value }}</v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-divider/>
-        <v-list-tile>
-          <v-list-tile-content>
-            <v-list-tile-title color=green>
-              Description
-            </v-list-tile-title>
-            <v-list-tile-sub-title>{{ currentInstance.serviceModule.modulePath }}</v-list-tile-sub-title>
-          </v-list-tile-content>
-        </v-list-tile>
+        <v-divider :key="index + 'real-elem'"/>
+        </template>
     </v-list>
 </template>
 <script lang="ts">
@@ -100,6 +94,17 @@ export default class extends Vue {
   @servicesModule.Action(actions.RESTART_INSTANCE) restartInstance
   @servicesModule.Action(actions.ENABLE_INSTANCE) enableInstance
 
+  get instanceInformation() {
+    const information : { title: string, value: string }[] = []
+    const serviceModule = this.currentInstance.serviceModule
+    information.push({ title: 'Display name', value: serviceModule.displayName })
+    information.push({ title: 'Description', value: serviceModule.description })
+    information.push({ title: 'Version', value: serviceModule.version })
+    information.push({ title: 'Module name', value: serviceModule.moduleName })
+    information.push({ title: 'Module path', value: serviceModule.modulePath })
+
+    return information
+  }
   startUp() {
     this.startInstance({ id: this.currentInstance.id })
   }
@@ -118,5 +123,3 @@ export default class extends Vue {
 }
 </script>
 <style scoped></style>
-
-

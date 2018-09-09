@@ -1,16 +1,16 @@
 
 <template>
     <v-list two-list>
-      <template v-for="(thread, index) in threads">
-        <v-divider :key="index+ '-divider'"></v-divider>
-        <v-list-tile :key="thread.id + '-real-elem'">
+      <template v-if="threads !== null && threads.length > 0" v-for="(thread, index) in threads">
+        <v-divider :key="index + '-divider'"></v-divider>
+        <v-list-tile :key="index + '-real-elem'">
           <v-list-tile-content>
             <v-list-tile-title  v-text="thread.id">
             </v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </template>
-      <template>
+      <template v-if="threads == null || threads.length === 0">
         <div>None</div>
       </template>
     </v-list>

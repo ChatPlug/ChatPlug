@@ -62,7 +62,6 @@ export default <ActionTree<ServicesState, {}>>{
     const { data } = await axios.get(`services/instances/${id}/users`)
 
     if (data.data) {
-      console.log(data.data)
       store.commit(action.SET_INSTANCE_USER, { id, users: data.data })
     }
   },
@@ -79,7 +78,6 @@ export default <ActionTree<ServicesState, {}>>{
     const { data } = await axios.get(`services/instances/${id}/threads`)
 
     if (data.data) {
-      console.log(data.data)
       store.commit(action.SET_INSTANCE_THREAD, { id, threads: data.data })
     }
   },
