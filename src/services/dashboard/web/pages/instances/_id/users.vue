@@ -1,6 +1,6 @@
 <template>
   <v-list two-line avatar>
-      <template v-for="(user, index) in users">
+      <template v-if="users !== null && users.length > 0" v-for="(user, index) in users">
 
         <v-divider :key="index+ '-divider'"></v-divider>
         <v-list-tile :key="user.id + '-real-elem'">
@@ -14,6 +14,9 @@
               <img :src="user.avatarUrl">
             </v-list-tile-avatar>
         </v-list-tile>
+      </template>
+      <template v-if="users == null || users.length === 0">
+        <div>&nbsp; There is no users</div>
       </template>
     </v-list>
 </template>
