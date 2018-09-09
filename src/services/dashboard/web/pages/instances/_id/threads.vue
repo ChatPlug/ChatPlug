@@ -23,18 +23,19 @@ import * as actions from '../../../store/modules/services/actions.types'
 
 const servicesModule = namespace('services')
 
- @Component({})
+@Component({})
 export default class extends Vue {
   @Prop() currentInstance
   @servicesModule.Action(actions.LOAD_INSTANCE_THREAD) loadThreads
-   async created() {
-      this.loadThreads({ id: this.currentInstance.id })
+
+  async created() {
+    this.loadThreads({ id: this.currentInstance.id })
   }
-   get threads() {
+  get threads() {
     if (!this.currentInstance) {
       return null
     }
-     return this.currentInstance.threads || null
+    return this.currentInstance.threads || null
   }
 }
 </script>
