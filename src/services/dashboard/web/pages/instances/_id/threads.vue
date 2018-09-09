@@ -10,6 +10,9 @@
           </v-list-tile-content>
         </v-list-tile>
       </template>
+      <template>
+        <div>None</div>
+      </template>
     </v-list>
 </template>
 
@@ -19,12 +22,19 @@ import { State, namespace, Action } from 'vuex-class'
 import * as actions from '../../../store/modules/services/actions.types'
 
 const servicesModule = namespace('services')
+
  @Component({})
 export default class extends Vue {
   @Prop() currentInstance
   @servicesModule.Action(actions.LOAD_INSTANCE_THREAD) loadThreads
    async created() {
-      this.loadThreads()
+      this.loadThreads({ id: this.currentInstance.id })
+  }
+   get threads() {
+    if (!this.currentInstance) {
+      return null
+    }
+     return this.currentInstance.threads || null
   }
 }
 </script>
