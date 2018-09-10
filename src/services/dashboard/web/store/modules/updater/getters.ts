@@ -1,8 +1,6 @@
 import { GetterTree } from 'vuex'
-import ServicesState from './ServicesState'
+import UpdaterState from './UpdaterState'
 
-export default <GetterTree<ServicesState, {}>>{
-  instances: state => state.instances,
-  modules: state => state.modules,
-  newInstanceId: state => state.newInstanceId,
+export default <GetterTree<UpdaterState, {}>>{
+  currentVersion: state => state.currentVersion,
 }

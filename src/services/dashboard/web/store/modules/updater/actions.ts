@@ -2,7 +2,7 @@
 import { ActionTree } from 'vuex'
 import axios from '~/axios'
 import * as action from './actions.types'
-import ServicesState from './ServicesState'
+import ServicesState from './UpdaterState'
 import encodeParams from '../../../encodeParams'
 
 export default <ActionTree<ServicesState, {}>>{

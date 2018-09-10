@@ -3,17 +3,14 @@
 import actions from './actions'
 import mutations from './mutations'
 import getters from './getters'
-import ServicesState from './ServicesState'
 import { Module } from 'vuex'
+import UpdaterState from './UpdaterState'
 
-export const state: ServicesState = {
-  instances: [],
-  modules: [],
-  loading: false,
-  newInstanceId: 0,
+export const state: UpdaterState = {
+  currentVersion: '',
 }
 
-export default <Module<ServicesState, {}>>{
+export default <Module<UpdaterState, {}>>{
   namespaced: true,
   state,
   actions,
