@@ -103,13 +103,12 @@
                     <v-list-tile-title>ChatPlug Updater:</v-list-tile-title>
                     <v-list-tile-sub-title  class="px-0 title"><v-icon>cloud</v-icon> {{ currentVersion }} </v-list-tile-sub-title>
                     <v-list-tile-sub-title  class="px-0 title"><v-icon>computer</v-icon> {{ currentVersion }}</v-list-tile-sub-title>
+                  </v-list-tile-content>
                </v-list-tile>
-
              </v-list>
             </v-card>
           </v-flex>
           </v-layout>
-
         </v-container>
       </v-card>
     </v-flex>
