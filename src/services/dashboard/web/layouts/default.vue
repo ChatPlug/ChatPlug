@@ -6,7 +6,7 @@
       </v-container>
     </v-content>
     <v-footer app>
-      <span>ChatPlug (MIT)</span>
+      <span>&nbsp;ChatPlug (MIT)</span>
     </v-footer>
   </v-app>
 </template>
