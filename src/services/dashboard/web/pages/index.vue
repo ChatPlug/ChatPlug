@@ -101,7 +101,8 @@
               <v-list-tile color="secondary">
                   <v-list-tile-content >
                     <v-list-tile-title>ChatPlug Updater:</v-list-tile-title>
-                    <v-list-tile-sub-title class="px-0 title" ><v-icon color="blue darken-2">update</v-icon>There is no updates</v-list-tile-sub-title>
+                    <!-- v-if="releases !== null && releases.length > 0" v-for="tag_name in releases" -->
+                    <v-list-tile-sub-title  class="px-0 title" v-text="releases.tag_name"><v-icon color="blue darken-2">update</v-icon>There is no updates</v-list-tile-sub-title>
                   </v-list-tile-content>
                </v-list-tile>
 
@@ -119,11 +120,18 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
 import { State, namespace, Action } from 'vuex-class'
+import axios from 'axios'
 
 @Component({})
 export default class extends Vue {
   created() {
     // this.$router.push('/instances') // temporary redirect until we make a proper front page
+  }
+
+   get releases() {
+    const last = axios.get('https://api.github.com/repos/feelfreelinux/chatplug/releases/latest')
+
+    return last
   }
 }
 </script>
