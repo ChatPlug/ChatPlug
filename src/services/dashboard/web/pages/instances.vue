@@ -4,7 +4,7 @@
       <v-flex md4>
         <ServiceInstanceList :instances="instances" />
       </v-flex>
-      <v-flex md8 pl-2>
+      <v-flex md8 pl-2 mt-2 pr-2>
         <nuxt-child />
       </v-flex>
     </v-layout>

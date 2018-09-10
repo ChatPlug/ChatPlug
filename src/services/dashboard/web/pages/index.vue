@@ -1,6 +1,6 @@
 <template>
-  <v-layout row>
-    <v-flex xs12 sm6 offset-sm3 mr-3 ml-0>
+  <v-layout row wrap>
+    <v-flex md4>
       <v-card>
         <v-toolbar color="green" dark>
 
@@ -62,7 +62,7 @@
         </v-list>
       </v-card>
     </v-flex>
-    <v-flex xs12 sm6 ml-3>
+    <v-flex  md8 pl-2 mt-2 pr-2>
       <v-toolbar color="indigo" dark>
 
         <v-toolbar-title>Summary</v-toolbar-title>
