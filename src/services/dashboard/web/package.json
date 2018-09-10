@@ -9,6 +9,7 @@
     "nuxt-property-decorator": "^1.2.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
+    "vue-native-websocket": "^2.0.9",
     "vuetify": "^1.1.13",
     "vuex-class": "^0.3.1"
   },

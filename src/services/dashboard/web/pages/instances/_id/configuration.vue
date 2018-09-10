@@ -1,5 +1,7 @@
 <template>
   <v-container>
+    <EditableLabel label="Instance name" :value="currentInstance.instanceName" @input="updateInsanceName"/>
+    <v-divider/>
     <template v-for="configField in configSchema">
       <v-layout :key="configField.name">
         <v-text-field v-if="configField.type === 'STRING'" :label="configField.name" :hint="configField.hint"  v-model="schemaConfig[configField.name]"></v-text-field>
@@ -13,7 +15,7 @@
         </v-tooltip>
       </v-layout>
     </template>
-    <v-btn :disabled="!isFormEnabled" color="info" @click="saveConfig()">Save config</v-btn>
+    <v-btn color="info" @click="saveConfig()">Save config</v-btn>
   </v-container>
 </template>
 
@@ -22,27 +24,36 @@ import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import { State, namespace, Action } from 'vuex-class'
 import * as actions from '../../../store/modules/services/actions.types'
 import ServiceInstance from '../../../types/ServiceInstance'
+import EditableLabel from '../../../components/EditableLabel.vue'
 
 const servicesModule = namespace('services')
 
-@Component({})
+@Component({
+  components: {
+    EditableLabel: EditableLabel as any,
+  },
+})
 export default class extends Vue {
   @Prop() currentInstance: ServiceInstance
   @servicesModule.Action(actions.LOAD_INSTANCE_CONFIG_SCHEMA)
   loadInstanceConfigSchema
+  @servicesModule.Action(actions.CONFIGURE_INSTANCE)
+    configureInstance
+  @servicesModule.Action(actions.UPDATE_DB_INSTANCE)
+    updateInstance
   schemaConfig = {}
   unmodifiedConfig = {}
+
+  async updateInsanceName(instanceName) {
+    this.updateInstance({ id: this.currentInstance.id, instance: { instanceName } })
+  }
 
   async created() {
     this.loadInstanceConfigSchema({ id: this.currentInstance.id })
   }
 
   async saveConfig() {
-    console.log(this.schemaConfig)
-  }
-
-  get isFormEnabled() {
-    return this.schemaConfig !== null
+    this.configureInstance({ id: this.currentInstance.id, config: this.schemaConfig })
   }
 
   get configSchema() {

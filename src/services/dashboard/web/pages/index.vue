@@ -91,7 +91,7 @@
                     <v-list-tile-sub-title class="px-0 title" ><v-icon color="blue darken-2">chat</v-icon> 47 </v-list-tile-sub-title>
                   </v-list-tile-content>
                </v-list-tile>
- 
+
              </v-list>
             </v-card>
           </v-flex>
@@ -106,7 +106,6 @@
 <script lang="ts">
 import { Component, Vue } from 'nuxt-property-decorator'
 import { State, namespace, Action } from 'vuex-class'
-
 
 @Component({})
 export default class extends Vue {

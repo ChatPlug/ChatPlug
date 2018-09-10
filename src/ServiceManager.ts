@@ -7,6 +7,8 @@ import fs from 'fs-extra'
 import ServiceModule from './ServiceModule'
 import { plainToClass } from 'class-transformer'
 import { validate } from 'class-validator'
+import { IChatplugServiceStatusUpdate, IChatPlugServiceStatus } from './models'
+import { Subject } from 'rxjs'
 
 export interface ServiceMap {
   [id: number]: ChatPlugService
@@ -17,9 +19,12 @@ const CONFIG_FOLDER_PATH = path.join(__dirname, '../config')
 export class ServiceManager {
   services: ServiceMap
   context: ChatPlugContext
+  statusSubject : Subject<IChatplugServiceStatusUpdate>
+
   constructor(context: ChatPlugContext) {
     this.context = context
     this.services = {}
+    this.statusSubject = new Subject()
   }
 
   async getAvailableServices() {
@@ -72,7 +77,8 @@ export class ServiceManager {
     }
     return services
   }
-  getServiceForId(id: string): ChatPlugService {
+
+  getServiceForId(id: number): ChatPlugService {
     return this.services[id]
   }
 
@@ -84,35 +90,90 @@ export class ServiceManager {
     const repo = this.context.connection.getRepository(Service)
     const services = await repo.find({ enabled: true })
     for (const service of services) {
-      if (fs.existsSync(path.join(CONFIG_FOLDER_PATH, service.moduleName + '.' + service.id + '.toml'))) {
-        this.services[service.id] = new (require(path.join(
-          __dirname,
-          'services',
-          service.moduleName,
-        ) as any)).Service(service, this.context)
-      } else {
-        service.configured = false
-        await this.context.connection.getRepository(Service).save(service)
+      await this.loadService(service)
+    }
+  }
+
+  async loadService(service: Service) {
+    if (this.context.config.configurationExists(service)) {
+      if (this.services[service.id]) {
+        return true
       }
+      this.services[service.id] = new (require(path.join(
+        __dirname,
+        'services',
+        service.moduleName,
+      ) as any)).Service(service, this.context)
+      this.services[service.id].dbService = service
+      service.status = IChatPlugServiceStatus.SHUTDOWN
+      await this.context.connection.getRepository(Service).save(service)
+
+      return true
+    }
+
+    service.configured = false
+    await this.context.connection.getRepository(Service).save(service)
+    return false
+  }
+
+  async startupService(service: ChatPlugService) {
+    if (service.dbService.status !== IChatPlugServiceStatus.CRASHED
+      && service.dbService.status !== IChatPlugServiceStatus.SHUTDOWN) {
+      return
+    }
+    log.info(
+      'services',
+      `Service instance ${service.dbService.instanceName} (${
+        service.dbService.moduleName
+      }) enabled, initializing...`,
+    )
+    this.setServiceStatus(service, IChatPlugServiceStatus.STARTING)
+    service.initialize().catch(async (e) => {
+      this.setServiceStatus(service, IChatPlugServiceStatus.CRASHED)
+      await service.terminate()
+    }).then(() => {
+      this.setServiceStatus(service, IChatPlugServiceStatus.RUNNING)
+    })
+  }
+
+  async terminateService(service: ChatPlugService) {
+    if (service.dbService.status === IChatPlugServiceStatus.SHUTDOWN || service.dbService.status === IChatPlugServiceStatus.CRASHED) {
+      return
+    }
+    await this.setServiceStatus(service, IChatPlugServiceStatus.TERMINATING)
+    try {
+      await service.terminate()
+      this.setServiceStatus(service, IChatPlugServiceStatus.SHUTDOWN)
+    } catch (e) {
+      this.setServiceStatus(service, IChatPlugServiceStatus.CRASHED)
     }
   }
 
   async initiateServices() {
     this.getRegisteredServices().forEach(service => {
-      log.info(
-        'services',
-        `Service instance ${service.dbService.instanceName} (${
-          service.dbService.moduleName
-        }) enabled, initializing...`,
-      )
-      service.initialize()
+      this.startupService(service)
     })
+  }
+
+  async reloadServiceForInstance(instance: Service) {
+    await this.terminateService(this.services[instance.id])
+    delete this.services[instance.id]
+    await this.loadService(instance)
+    await this.startupService(this.services[instance.id])
+  }
+
+  async setServiceStatus(service: ChatPlugService, status: IChatPlugServiceStatus) {
+    service.dbService.status = status
+    this.statusSubject.next({ serviceId: service.dbService.id, statusUpdate: status })
+    await this.context.connection.getRepository(Service).save(service.dbService)
   }
 
   async terminateServices() {
     return Promise.all(
       this.getRegisteredServices().map(
-        async service => await service.terminate(),
+        async service => {
+          await this.terminateService(service)
+        },
       ),
     )
   }

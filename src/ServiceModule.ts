@@ -41,6 +41,8 @@ export default class ServiceModule {
   @IsNotEmpty()
   description: string
 
+  configSchema: any = []
+
   /**
    * If set to true the service will be automatically enabled and not shown in the GUI by default.
    */

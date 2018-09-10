@@ -1,59 +1,125 @@
 
 <template>
-    <v-container grid-list-md>
-        <v-layout wrap>
-            <v-flex xs12 sm6>
-                <v-card color="primary darken-2" dark raised>
-                    <v-card-title primary-title>
-                        <div>
-                            <h3 class="headline mb-0">{{currentInstance.serviceModule.displayName}}</h3>
-                            <div>{{currentInstance.serviceModule.description}}</div>
-                        </div>
-                    </v-card-title>
-                    <v-card-actions>
-                        <v-spacer />
-                        <v-btn flat disabled>Homepage</v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-flex>
-            <v-flex xs12 sm6>
-                <v-card raised>
-                    <v-card-title primary-title>
-                        <div>
-                            <h3 class="headline mb-0" v-if="currentInstance.enabled">Service enabled</h3>
-                            <h3 class="headline mb-0" v-else>Service disabled</h3>
-                        </div>
-                    </v-card-title>
-                    <v-card-actions>
-                        <v-spacer />
-                        <v-btn flat v-if="currentInstance.enabled">Disable</v-btn>
-                        <v-btn flat v-else>Enable</v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-flex>
-        </v-layout>
-        <!-- <v-alert :value="true" type="info" color="primary" outline>
-            <div class="caption">Service description</div>
-            {{currentInstance.serviceModule.description}}
-        </v-alert> -->
-        <!-- <v-container>
-            <v-card>
-                <v-card-text>
-                    This service is ENABLED
-                </v-card-text>
-            </v-card>
-        </v-container> -->
-    </v-container>
-</template>
 
+  <v-list>
+      <v-subheader>Status</v-subheader>
+        <v-divider></v-divider>
+        <v-list-tile v-if="currentInstance.configured && currentInstance.enabled">
+          <v-list-tile-content>
+            <v-list-tile-title color=green v-if="currentInstance.status === 'running'">
+              Service is running
+            </v-list-tile-title>
+            <v-list-tile-title color=green v-if="currentInstance.status === 'crashed'">
+              Service has crashed
+            </v-list-tile-title>
+            <v-list-tile-title color=green v-if="currentInstance.status === 'starting'">
+              Service is starting up
+            </v-list-tile-title>
+            <v-list-tile-title color=green v-if="currentInstance.status === 'terminating'">
+              Service is shutting down
+            </v-list-tile-title>
+            <v-list-tile-title color=green v-if="currentInstance.status === 'shutdown'">
+              Service is shutdown
+            </v-list-tile-title>
+          </v-list-tile-content>
+              <v-list-tile-action v-if="currentInstance.status === 'running'">
+                <v-btn icon ripple @click="restart()">
+                  <v-icon color=blue>refresh</v-icon>
+                </v-btn>
+              </v-list-tile-action>
+              <v-list-tile-action v-if="currentInstance.status === 'shutdown'">
+                <v-btn icon @click="startUp()">
+                  <v-icon color=green>flash_on</v-icon>
+                </v-btn>
+              </v-list-tile-action>
+              <v-list-tile-action  v-if="currentInstance.status === 'running'">
+                <v-btn icon @click="terminate()">
+                  <v-icon color=red>flash_off</v-icon>
+                </v-btn>
+              </v-list-tile-action>
+
+              <v-list-tile-action v-if="currentInstance.status === 'starting'">
+                <v-progress-circular indeterminate color="green"/>
+              </v-list-tile-action>
+
+              <v-list-tile-action v-if="currentInstance.status === 'terminating'">
+                <v-progress-circular indeterminate color="red"/>
+              </v-list-tile-action>
+        </v-list-tile>
+          <v-list-tile v-else>
+          <v-list-tile-content>
+            <v-list-tile-title color=green v-if="currentInstance.configured === false">
+              Service is not configured
+            </v-list-tile-title>
+            <v-list-tile-title color=green v-else-if="currentInstance.enabled === false">
+              Service is not enabled
+            </v-list-tile-title>
+          </v-list-tile-content>
+              <v-list-tile-action v-if="currentInstance.configured === false">
+                <v-btn icon ripple>
+                  <v-icon color=red>error</v-icon>
+                </v-btn>
+              </v-list-tile-action>
+              <v-list-tile-action v-else-if="currentInstance.enabled === false">
+                <v-btn icon ripple @click="enable()">
+                  <v-icon color=green>play_circle_filled</v-icon>
+                </v-btn>
+              </v-list-tile-action>
+        </v-list-tile>
+        <v-subheader>Information</v-subheader>
+        <template v-for="(data, index) in instanceInformation">
+          <v-list-tile :key="index">
+          <v-list-tile-content>
+            <v-list-tile-title color=green>
+              {{ data.title }}
+            </v-list-tile-title>
+            <v-list-tile-sub-title>{{ data.value }}</v-list-tile-sub-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-divider :key="index + 'real-elem'"/>
+        </template>
+    </v-list>
+</template>
 <script lang="ts">
 import { Component, Vue, Prop } from 'nuxt-property-decorator'
 import { State, namespace, Action } from 'vuex-class'
+import * as actions from '../../../store/modules/services/actions.types'
 
+const servicesModule = namespace('services')
 @Component({})
 export default class extends Vue {
   @Prop() currentInstance
+  @servicesModule.Action(actions.START_INSTANCE) startInstance
+  @servicesModule.Action(actions.SHUTDOWN_INSTANCE) shutdownInstance
+  @servicesModule.Action(actions.RESTART_INSTANCE) restartInstance
+  @servicesModule.Action(actions.ENABLE_INSTANCE) enableInstance
+
+  get instanceInformation() {
+    const information : { title: string, value: string }[] = []
+    const serviceModule = this.currentInstance.serviceModule
+    information.push({ title: 'Display name', value: serviceModule.displayName })
+    information.push({ title: 'Description', value: serviceModule.description })
+    information.push({ title: 'Version', value: serviceModule.version })
+    information.push({ title: 'Module name', value: serviceModule.moduleName })
+    information.push({ title: 'Module path', value: serviceModule.modulePath })
+
+    return information
+  }
+  startUp() {
+    this.startInstance({ id: this.currentInstance.id })
+  }
+
+  terminate() {
+    this.shutdownInstance({ id: this.currentInstance.id })
+  }
+
+  restart() {
+    this.restartInstance({ id: this.currentInstance.id })
+  }
+
+  enable() {
+    this.enableInstance({ id: this.currentInstance.id })
+  }
 }
 </script>
-<style scoped>
-</style>
+<style scoped></style>

@@ -16,11 +16,24 @@ export interface IChatPlugAttachement {
 }
 
 export enum IChatPlugAttachementType {
-  VIDEO,
-  GIF,
-  IMAGE,
-  AUDIO,
-  FILE,
+  VIDEO = 'video',
+  GIF = 'gif',
+  IMAGE = 'image',
+  AUDIO = 'audio',
+  FILE = 'file',
+}
+
+export enum IChatPlugServiceStatus {
+  STARTING = 'starting',
+  RUNNING = 'running',
+  CRASHED = 'crashed',
+  TERMINATING = 'terminating',
+  SHUTDOWN = 'shutdown',
+}
+
+export interface IChatplugServiceStatusUpdate {
+  serviceId: number,
+  statusUpdate: IChatPlugServiceStatus,
 }
 
 export interface IChatPlugService {

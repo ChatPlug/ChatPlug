@@ -5,6 +5,9 @@ import {
   BadRequestError,
   BodyParam,
   Get,
+  Delete,
+  Put,
+  Body,
   InternalServerError,
   JsonController,
   NotFoundError,
@@ -20,6 +23,10 @@ import IFieldOptions, {
 } from '../../../configWizard/IFieldOptions'
 import Service from '../../../entity/Service'
 import fs from 'fs-extra'
+import User from '../../../entity/User'
+import ServiceInstance from '../../dashboard/web/types/ServiceInstance'
+import { IChatPlugServiceStatus } from '../../../models'
+import Thread from '../../../entity/Thread'
 
 const CONFIG_FOLDER_PATH = path.join(__dirname, '../../../../config')
 @JsonController('/services')
@@ -106,6 +113,12 @@ export default class ServicesController {
     service.moduleName = serviceModule.moduleName
 
     await this.servicesRepository.save(service)
+    const serviceModules = await this.context.serviceManager.getAvailableServices()
+
+    service['serviceModule'] = serviceModules.find(
+        sm => sm.moduleName === serviceModuleName,
+      )
+
     return service
   }
 
@@ -115,13 +128,41 @@ export default class ServicesController {
   }
 
   @Get('/instances/:id/disable')
-  async disableService() {}
+  async disableService(@Param('id') id: number) {
+    this.context.serviceManager.terminateService(this.context.serviceManager.getServiceForId(id))
+    return await this.servicesRepository.update({ id }, { enabled: false })
+  }
 
-  @Get('/instances/:id/remove')
-  async removeService(@Param('id') id: number) {
+  @Get('/instances/:id/enable')
+  async enableService(@Param('id') id: number) {
+    await this.servicesRepository.update({ id }, { enabled: true })
+    const service = await this.servicesRepository.findOneOrFail({ id })
+    await this.context.serviceManager.loadService(service)
+    return service
+  }
+
+  @Get('/instances/:id/users')
+  async getServiceUsers(@Param('id') id: number) {
+    return await this.context.connection.getRepository(User).find({ where: { service: { id } } })
+  }
+
+  @Get('/instances/:id/threads')
+  async getServiceThreads(@Param('id') id: number) {
+    return await this.context.connection.getRepository(Thread).find({ where: { service: { id } } })
+  }
+
+  @Delete('/instances/:id')
+  async deleteService(@Param('id') id: number) {
     const foundService = await this.servicesRepository.findOne({ id })
 
     return this.servicesRepository.remove(foundService!!)
+  }
+
+  @Put('/instances/:id')
+  async updateService(
+    @Param('id') id: number,
+    @Body() instance: ServiceInstance) {
+    return this.servicesRepository.update({ id }, instance)
   }
 
   @Get('/:module/schema')
@@ -186,6 +227,69 @@ export default class ServicesController {
     })
   }
 
-  @Get('/instances/:id/enable')
-  async enableService() {}
+  @Get('/instances/:id/status/startup')
+  async startService(@Param('id') id : number) {
+    const service = await this.servicesRepository.findOneOrFail({ id })
+    this.context.serviceManager.startupService(this.context.serviceManager.getServiceForId(service.id))
+    return this.servicesRepository.findOneOrFail({ id })
+  }
+
+  @Get('/instances/:id/status/terminate')
+  async terminateService(@Param('id') id : number) {
+    const service = await this.servicesRepository.findOneOrFail({ id })
+    this.context.serviceManager.terminateService(this.context.serviceManager.getServiceForId(service.id))
+    return this.servicesRepository.findOneOrFail({ id })
+  }
+
+  @Get('/instances/:id/status/restart')
+  async restartService(@Param('id') id : number) {
+    const service = await this.servicesRepository.findOneOrFail({ id })
+    this.context.serviceManager.reloadServiceForInstance(service)
+    return this.servicesRepository.findOneOrFail({ id })
+  }
+
+  @Post('/instances/:id/configure')
+  async configureInstance(
+    @Param('id') id: number,
+    @BodyParam('config', { required: true, parse: true }) configuration: any,
+  ) {
+    const service = await this.servicesRepository.findOneOrFail({ id })
+    const serviceModule = (await this.context.serviceManager.getAvailableServices()).find(
+      el => el.moduleName === service.moduleName,
+    )
+    if (!serviceModule) {
+      throw new NotFoundError()
+    }
+
+    const schema = require(serviceModule.modulePath).Config
+    const fieldList = Reflect.getMetadata(
+      fieldListMetadataKey,
+      new schema(),
+    ) as string[]
+    if (!fieldList.every(el => configuration[el] !== undefined)) {
+      throw new BadRequestError('Config does not match schema')
+    }
+
+    fs.writeFileSync(
+      path.join(
+        CONFIG_FOLDER_PATH,
+        service.moduleName + '.' + service.id + '.toml',
+      ),
+      TOML.stringify(configuration),
+    )
+
+    if (!serviceModule) {
+      throw new NotFoundError('Service with given name does not exist')
+    }
+
+    service.configured = true
+
+    await this.servicesRepository.save(service)
+    const serviceModules = await this.context.serviceManager.getAvailableServices()
+
+    service['serviceModule'] = serviceModules.find(
+        sm => sm.moduleName === service.moduleName,
+      )
+    return service
+  }
 }

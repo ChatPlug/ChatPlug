@@ -57,7 +57,7 @@ module.exports = {
   /*
   ** Build configuration
   */
-  plugins: ['~/plugins/vuetify.js'],
+  plugins: ['~/plugins/vuetify.js', '~/plugins/vue-native-websocket.js'],
   css: [
     {
         src: path.join(__dirname, 'assets/css/app.styl'),
