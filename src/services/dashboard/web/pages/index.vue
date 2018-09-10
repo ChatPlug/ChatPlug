@@ -101,16 +101,14 @@
               <v-list-tile color="secondary">
                   <v-list-tile-content >
                     <v-list-tile-title>ChatPlug Updater:</v-list-tile-title>
-                    <!-- v-if="releases !== null && releases.length > 0" v-for="tag_name in releases" -->
-                    <v-list-tile-sub-title  class="px-0 title"><v-icon color="blue darken-2">update</v-icon>{{ currentVersion }}</v-list-tile-sub-title>
+                    <v-list-tile-sub-title  class="px-0 title"><v-icon>cloud</v-icon> {{ currentVersion }} </v-list-tile-sub-title>
+                    <v-list-tile-sub-title  class="px-0 title"><v-icon>computer</v-icon> {{ currentVersion }}</v-list-tile-sub-title>
                   </v-list-tile-content>
                </v-list-tile>
-
              </v-list>
             </v-card>
           </v-flex>
           </v-layout>
-
         </v-container>
       </v-card>
     </v-flex>
