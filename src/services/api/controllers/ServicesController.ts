@@ -196,35 +196,11 @@ export default class ServicesController {
   @Get('/instances/:id/schema')
   async getConfigurationWithSchema(@Param('id') id: number) {
     const service = await this.servicesRepository.findOneOrFail({ id })
-
-    const serviceModule = (await this.context.serviceManager.getAvailableServices()).find(
-      el => el.moduleName === service.moduleName,
-    )
-
-    if (!serviceModule) {
+    const config = this.context.config.getConfigurationWithSchema(service)
+    if (!config) {
       throw new NotFoundError()
     }
-
-    const schema = require(serviceModule.modulePath).Config
-    const cfg = new schema()
-    const fieldList = Reflect.getMetadata(fieldListMetadataKey, cfg) as string[]
-    const config = service.configured ? this.context.config.readConfigForService(service) : null
-    return fieldList.map(key => {
-      const options = classToPlain(Reflect.getMetadata(
-        fieldOptionsMetadataKey,
-        cfg,
-        key,
-      ) as IFieldOptions)
-      // @ts-ignore
-      options.type = FieldType[options.type]
-      if (options['required'] === undefined) {
-        options['required'] = true
-      }
-      if (config) {
-        options['value'] = config[options['name']]
-      }
-      return options
-    })
+    return config
   }
 
   @Get('/instances/:id/status/startup')
@@ -290,6 +266,7 @@ export default class ServicesController {
     service['serviceModule'] = serviceModules.find(
         sm => sm.moduleName === service.moduleName,
       )
+    service['serviceModule'].configSchema = await this.context.config.getConfigurationWithSchema(service)
     return service
   }
 }

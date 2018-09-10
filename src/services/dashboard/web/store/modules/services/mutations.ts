@@ -16,9 +16,6 @@ export default <MutationTree<ServicesState>>{
       if (found) {
         instance.serviceModule.configSchema = found.serviceModule.configSchema
       }
-      if (!instance.serviceModule.configSchema) {
-        instance.serviceModule.configSchema = []
-      }
     }
     state.instances = payload
   },
@@ -29,7 +26,7 @@ export default <MutationTree<ServicesState>>{
 
   [actions.UPDATE_INSTANCE](state, payload: ServiceInstance) {
     const index = state.instances.findIndex((el) => el.id === payload.id)
-    state.instances[index] = payload
+    Vue.set(state.instances, index, payload)
   },
 
   [actions.SET_ENABLED](state, { id, enabled } : { id: number, enabled: boolean }) {
