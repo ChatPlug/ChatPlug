@@ -8,9 +8,7 @@
       <v-toolbar-title class="grey--text text--darken-4">Bridge groups</v-toolbar-title>
       <v-spacer></v-spacer>
 
-      <v-btn icon light>
-        <v-icon color="grey darken-2">add</v-icon>
-      </v-btn>
+      <NewConnectionDialog/>
     </v-toolbar>
     <v-list two-line>
       <template v-for="(connection, index) in connections">
@@ -36,8 +34,13 @@
 import Vue from 'vue'
 import { Component, Prop } from 'nuxt-property-decorator'
 import { Action, namespace } from 'vuex-class'
+import NewConnectionDialog from './NewConnectionDialog.vue'
 
-@Component({})
+@Component({
+  components: {
+    NewConnectionDialog: NewConnectionDialog as any,
+  },
+})
 export default class ThreadConnectionsList extends Vue {
   @Prop() connections
 }
