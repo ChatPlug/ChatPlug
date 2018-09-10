@@ -7,7 +7,7 @@ export default class ThreadConnection {
   @PrimaryGeneratedColumn()
   id: number
 
-  @Column({ unique: true })
+  @Column()
   connectionName: string
 
   @CreateDateColumn({ type: 'datetime' })

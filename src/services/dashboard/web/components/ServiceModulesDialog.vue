@@ -6,6 +6,7 @@
     <div class="text-xs-center">
       <v-dialog
         v-model="dialog"
+        scrollable
         width="500">
 
         <v-card>
