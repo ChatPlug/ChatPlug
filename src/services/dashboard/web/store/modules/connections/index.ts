@@ -1,11 +1,16 @@
 /* tslint:disable:object-shorthand-properties-first*/
 
-import state from './state'
 import actions from './actions'
 import mutations from './mutations'
 import getters from './getters'
+import ConnectionsState from './ConnectionsState'
+import { Module } from 'vuex'
 
-export default {
+export const state: ConnectionsState = {
+  connections: [],
+}
+
+export default <Module<ConnectionsState, {}>>{
   namespaced: true,
   state,
   actions,

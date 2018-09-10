@@ -1,10 +1,10 @@
 <template>
   <section>
     <v-layout row wrap>
-      <v-flex md4 mt-2>
+      <v-flex md5 px-1>
         <ServiceInstanceList :instances="instances" />
       </v-flex>
-      <v-flex md8 pl-2 mt-2 pr-2>
+      <v-flex md7 px-1>
         <nuxt-child />
       </v-flex>
     </v-layout>

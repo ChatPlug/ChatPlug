@@ -69,11 +69,9 @@ export default class extends Vue {
     if (this.currentInstance.serviceModule.configSchema) {
       this.unmodifiedConfig = this.currentInstance.serviceModule.configSchema
 
-      console.log(this.currentInstance.serviceModule.configSchema)
       for (const item of this.currentInstance.serviceModule.configSchema) {
         this.schemaConfig[item['name']!!] = item['value']
       }
-      console.log(this.schemaConfig)
     }
     return this.currentInstance.serviceModule.configSchema || null
   }

@@ -2,8 +2,9 @@
   <v-card>
     <v-toolbar color="white" flat>
       <v-btn icon light>
+        <nuxt-link to="/">
         <v-icon color="grey darken-2">arrow_back</v-icon>
-      </v-btn>
+        </nuxt-link>      </v-btn>
       <v-toolbar-title class="grey--text text--darken-4">Bridge groups</v-toolbar-title>
       <v-spacer></v-spacer>
 
@@ -15,7 +16,7 @@
       <template v-for="(connection, index) in connections">
 
         <v-divider :key="index + '-divider'"></v-divider>
-        <v-list-tile :key="connection.id + '-real-elem'" nuxt :to="`/connections/${connection.id}/status`">
+        <v-list-tile :key="connection.id + '-real-elem'" nuxt :to="`/connections/${connection.id}/threads`">
           <v-list-tile-content>
             <v-list-tile-title>{{ connection.connectionName }}
             </v-list-tile-title>

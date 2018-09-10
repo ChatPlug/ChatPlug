@@ -1,10 +1,10 @@
 <template>
   <section>
     <v-layout row wrap>
-      <v-flex md4>
+      <v-flex md5 px-1>
         <ThreadConnectionsList :connections="connections" />
       </v-flex>
-      <v-flex md8 pl-2>
+      <v-flex md7 px-1>
         <nuxt-child />
       </v-flex>
     </v-layout>
@@ -18,7 +18,7 @@ import { State, namespace, Action } from 'vuex-class'
 import axios from 'axios'
 import * as actions from '../store/modules/connections/actions.types'
 
-const servicesModule = namespace('connections')
+const connectionsModule = namespace('connections')
 
 @Component({
   components: {
@@ -26,8 +26,8 @@ const servicesModule = namespace('connections')
   },
 })
 export default class extends Vue {
-  @servicesModule.Getter('connections') connections
-  @servicesModule.Action(actions.LOAD_CONNECTIONS) loadConnections
+  @connectionsModule.Getter('connections') connections
+  @connectionsModule.Action(actions.LOAD_CONNECTIONS) loadConnections
   async created() {
     await this.loadConnections()
   }
