@@ -38,5 +38,6 @@ export default class ChatPlugContext {
     })
     this.exchangeManager = new ExchangeManager(this)
     this.serviceManager = new ServiceManager(this)
+    this.config.context = this
   }
 }

@@ -23,7 +23,7 @@ export default class FacebookService extends ChatPlugService<FacebookConfig> {
   stopListening: any
 
   async initialize() {
-    /*await this.login()
+    await this.login()
 
     this.messageHandler = new FacebookMessageHandler(this.facebook, this.context.exchangeManager.messageSubject)
 
@@ -45,7 +45,7 @@ export default class FacebookService extends ChatPlugService<FacebookConfig> {
       this.messageHandler.setClient(this.facebook)
       this.stopListening = this.facebook.listen(this.listener)
     }
-    this.messageHandler.onOutgoingMessage(message)*/
+    this.messageHandler.onOutgoingMessage(message)
   }
 
   login() {
