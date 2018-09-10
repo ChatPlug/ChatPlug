@@ -123,11 +123,11 @@ import { State, namespace, Action } from 'vuex-class'
 import * as actions from '../store/modules/updater/actions.types'
 import axios from 'axios'
 
-const servicesModule = namespace('services')
+const updaterModule = namespace('updater')
 
 @Component({})
 export default class extends Vue {
-  @servicesModule.Action(actions.LOAD_VERSION) loadVersion
+  @updaterModule.Action(actions.LOAD_VERSION) loadVersion
   async created() {
     await this.loadVersion()
   }
