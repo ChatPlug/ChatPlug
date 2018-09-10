@@ -5,7 +5,7 @@ import * as action from './actions.types'
 import UpdaterState from './UpdaterState'
 
 export default <ActionTree<UpdaterState, {}>>{
-  async [action.LOAD_VERSION](store, { id }: { id: number }) {
+  async [action.LOAD_VERSION](store) {
     const { tag_name } = await axios.get('https://api.github.com/repos/feelfreelinux/chatplug/releases/latest')
 
     if (tag_name) {
