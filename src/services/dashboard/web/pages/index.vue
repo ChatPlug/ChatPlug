@@ -75,7 +75,7 @@
           g-rid-list-md
         >
           <v-layout row wrap>
-          <v-flex xs3>
+          <v-flex ma-3>
             <v-card color="indigo" class="white--text">
              <v-list three-line>
               <v-list-tile color="secondary">
@@ -89,6 +89,19 @@
                   <v-list-tile-content >
                     <v-list-tile-title>Messages Weelky</v-list-tile-title>
                     <v-list-tile-sub-title class="px-0 title" ><v-icon color="blue darken-2">chat</v-icon> 47 </v-list-tile-sub-title>
+                  </v-list-tile-content>
+               </v-list-tile>
+
+             </v-list>
+            </v-card>
+          </v-flex>
+          <v-flex ma-3>
+            <v-card color="indigo" class="white--text">
+             <v-list three-line>
+              <v-list-tile color="secondary">
+                  <v-list-tile-content >
+                    <v-list-tile-title>ChatPlug Updater:</v-list-tile-title>
+                    <v-list-tile-sub-title class="px-0 title" ><v-icon color="blue darken-2">update</v-icon>There is no updates</v-list-tile-sub-title>
                   </v-list-tile-content>
                </v-list-tile>
 

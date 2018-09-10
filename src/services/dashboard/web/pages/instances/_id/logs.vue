@@ -1,7 +1,7 @@
 
 <template>
     <div>
-        Logs
+        Logger
     </div>
 </template>
 
