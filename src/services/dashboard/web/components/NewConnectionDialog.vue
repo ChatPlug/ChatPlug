@@ -6,6 +6,7 @@
     <div class="text-xs-center">
       <v-dialog
         v-model="dialog"
+        @keydown.enter="createNewConnection()"
         width="400">
 
         <v-card>
@@ -16,7 +17,9 @@
           </v-card-title>
 
       <v-card-text>
-        <v-text-field label="Group name" v-model="connectionName" />
+        <v-text-field autofocus label="Group name" v-model="connectionName"
+            @keyup.enter="createNewConnection()"
+            @keyup.esc="closeDialog()"/>
       </v-card-text>
 
       <v-card-actions>
@@ -24,7 +27,7 @@
           <v-btn
             color="primary"
             flat
-            @click="dialog = false">
+            @click="createNewConnection()">
           Create
           </v-btn>
         </v-card-actions>
@@ -37,10 +40,9 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Prop, Watch } from 'nuxt-property-decorator'
-import ServiceInstanceList from 'ServiceInstanceList.vue'
 import { State, namespace, Action } from 'vuex-class'
 import axios from 'axios'
-import * as actions from '../store/modules/services/actions.types'
+import * as actions from '../store/modules/connections/actions.types'
 import { Route } from 'vue-router'
 
 class VueWithRoute extends Vue {
@@ -51,25 +53,29 @@ const connectionsModule = namespace('connections')
 
 @Component({})
 export default class NewConnctionDialog extends Vue {
-  /*@servicesModule.Getter('newInstanceId') newInstanceId
-  @servicesModule.Action(actions.LOAD_MODULES) loadModules
-  @servicesModule.Action(actions.CREATE_INSTANCE_DRAFT) createDraftAction*/
+  @connectionsModule.Getter('newConnectionId') newConnectionId
+  @connectionsModule.Action(actions.LOAD_CONNECTIONS) loadConnections
+  @connectionsModule.Action(actions.CREATE_CONNECTION) createConnection
   dialog = false
-  connectionName: string
+  connectionName: string = ''
 
   async openDialog() {
     this.dialog = true
-    // this.loadModules()
   }
 
-  /*async createDraft(moduleName: string) {
-    this.createDraftAction({ moduleName })
-  }
-
-  @Watch('newInstanceId')
-  onNewInstanceId(val: number, oldVal: number) {
+  async closeDialog() {
     this.dialog = false
-    this.$router.push(`/instances/${val}/configuration`)
-  }*/
+    this.connectionName = ''
+  }
+
+  async createNewConnection() {
+    this.createConnection({ connectionName: this.connectionName })
+  }
+
+  @Watch('newConnectionId')
+  onNewConnectionId(val: number, oldVal: number) {
+    this.closeDialog()
+    this.$router.push(`/connections/${val}/threads`)
+  }
 }
 </script>

@@ -43,6 +43,7 @@ export default class ConnectionsController {
   async createConnection(@BodyParam('connectionName', { required: true }) connectionName : string) {
     const connection = new ThreadConnection()
     connection.connectionName = connectionName
+    connection.threads = []
     await this.connectionsRepository.save(connection)
     return connection
   }

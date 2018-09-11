@@ -78,7 +78,7 @@ export class ServiceManager {
     return services
   }
 
-  getServiceForId(id: number): ChatPlugService {
+  getServiceForId(id: number): ChatPlugService | undefined {
     return this.services[id]
   }
 
