@@ -7,6 +7,7 @@
 
       <v-spacer></v-spacer>
 
+      <NewThreadDialog/>
       <v-btn flat color="red">
         Delete
       </v-btn>
@@ -24,6 +25,7 @@
   </v-card>
 </template>
 <script lang="ts">
+import NewThreadDialog from '../../components/NewThreadDialog'
 import Vue from 'vue'
 import { Component, Prop } from 'nuxt-property-decorator'
 import { namespace } from 'vuex-class'
@@ -35,6 +37,7 @@ const connectionsModule = namespace('connections')
 
 @Component({
   components: {
+    NewThreadDialog: NewThreadDialog as any,
   },
 })
 export default class InstanceByID extends Vue {
