@@ -63,6 +63,7 @@
       </v-card>
     </v-flex>
     <v-flex  md7 pa-1>
+      
       <v-toolbar color="indigo" dark>
 
         <v-toolbar-title>Summary</v-toolbar-title>
@@ -96,13 +97,28 @@
           </v-flex>
           </v-layout>
         </v-container>
+        <v-snackbar
+          v-model="snackbar"
+          v-if="currentVersion > '0.0.0'"
+          :bottom="y === 'bottom'"
+          :left="x === 'left'"
+          :multi-line="mode === 'multi-line'"
+          :right="x === 'right'"
+          :timeout="timeout"
+          :top="y === 'top'"
+          :vertical="mode === 'vertical'"
+          :color="color"
+        >
+         <v-icon>info</v-icon>&nbsp; Version {{ currentVersion }} is now able to download!
+          <v-btn
+            dark
+            flat
+            @click="snackbar = false"
+          >
+            Close
+          </v-btn>
+    </v-snackbar>
       </v-card>
-      
-      <template v-if="currentVersion > '0.0.0'">
-        <v-alert :value="true" type="info">
-          Update available to {{ currentVersion }}
-        </v-alert>
-    </template>
     </v-flex>
   </v-layout>
 </template>
@@ -122,6 +138,16 @@ export default class extends Vue {
   async created() {
     await this.loadVersion()
   }
+    data () {
+      return {
+        snackbar: true,
+        y: 'top',
+        x: null,
+        mode: '',
+        timeout: 20000,
+        color: 'info',
+      }
+    }
 }
 </script>
 <style scoped>
