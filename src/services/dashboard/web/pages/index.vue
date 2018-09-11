@@ -12,53 +12,23 @@
           See instances
           </v-btn>
         </v-toolbar>
-
-        <v-list two-line subheader>
-          <v-subheader>General</v-subheader>
-
-          <v-list-tile color="green">
-            <v-list-tile-content>
-              <v-list-tile-title>API Status</v-list-tile-title>
-              <v-list-tile-sub-title>Online</v-list-tile-sub-title>
-            </v-list-tile-content>
+                  <v-subheader>Services</v-subheader>
+          <v-list
+            subheader
+            two-line
+          >
+           <template v-for="(instance, index) in instances">
+             <v-divider :key="index + '-divider'"></v-divider>
+            <v-list-tile
+            color="success"
+            :key="index + '-real-elem'"
+            >
+              <v-list-tile-content>
+                <v-list-tile-title v-text="instance.moduleName.charAt(0).toUpperCase() + instance.moduleName.slice(1)"></v-list-tile-title>
+                <v-list-tile-sub-title v-text="'Status: ' + instance.status"></v-list-tile-sub-title>
+              </v-list-tile-content>
           </v-list-tile>
-
-          <v-list-tile color="green">
-            <v-list-tile-content>
-              <v-list-tile-title>DashBoard Status</v-list-tile-title>
-              <v-list-tile-sub-title>Online</v-list-tile-sub-title>
-            </v-list-tile-content>
-          </v-list-tile>
-        </v-list>
-
-        <v-divider></v-divider>
-
-        <v-list
-          subheader
-          two-line
-        >
-          <v-subheader>Services </v-subheader>
-
-          <v-list-tile color="error">
-            <v-list-tile-content>
-              <v-list-tile-title>Discord</v-list-tile-title>
-              <v-list-tile-sub-title>Error</v-list-tile-sub-title>
-            </v-list-tile-content>
-          </v-list-tile>
-
-          <v-list-tile color="secondary">
-            <v-list-tile-content>
-              <v-list-tile-title>Telegram</v-list-tile-title>
-              <v-list-tile-sub-title>Offline</v-list-tile-sub-title>
-            </v-list-tile-content>
-          </v-list-tile>
-
-          <v-list-tile color="secondary">
-            <v-list-tile-content >
-              <v-list-tile-title>Facebook</v-list-tile-title>
-              <v-list-tile-sub-title>Not Configured</v-list-tile-sub-title>
-            </v-list-tile-content>
-          </v-list-tile>
+           </template>
         </v-list>
       </v-card>
     </v-flex>
@@ -127,16 +97,24 @@
 import { Component, Vue } from 'nuxt-property-decorator'
 import { State, namespace, Action } from 'vuex-class'
 import * as actions from '../store/modules/updater/actions.types'
+import * as actionsService from '../store/modules/services/actions.types'
+import ServiceInstance from '../types/ServiceInstance'
 import axios from 'axios'
+import { LOADIPHLPAPI } from 'dns';
 
 const updaterModule = namespace('updater')
+const servicesModule = namespace('services')
 
 @Component({})
 export default class extends Vue {
   @updaterModule.Action(actions.LOAD_VERSION) loadVersion
   @updaterModule.Getter('currentVersion') currentVersion
+  @servicesModule.Getter('instances') instances
+  @servicesModule.Action(actionsService.LOAD_INSTANCES) loadInstances
+
   async created() {
     await this.loadVersion()
+    await this.loadInstances()
   }
     data () {
       return {

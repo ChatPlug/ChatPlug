@@ -4,6 +4,7 @@
   <v-list>
       <v-subheader>Status</v-subheader>
         <v-divider></v-divider>
+        
         <v-list-tile v-if="currentInstance.configured && currentInstance.enabled">
           <v-list-tile-content>
             <v-list-tile-title color=green v-if="currentInstance.status === 'running'">
@@ -68,6 +69,7 @@
         </v-list-tile>
         <v-subheader>Information</v-subheader>
         <template v-for="(data, index) in instanceInformation">
+          <v-divider :key="index + 'real-elem'"/>
           <v-list-tile :key="index">
           <v-list-tile-content>
             <v-list-tile-title color=green>
@@ -76,7 +78,6 @@
             <v-list-tile-sub-title>{{ data.value }}</v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-divider :key="index + 'real-elem'"/>
         </template>
     </v-list>
 </template>
