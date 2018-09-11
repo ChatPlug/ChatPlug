@@ -129,7 +129,10 @@ export default class ServicesController {
 
   @Get('/instances/:id/disable')
   async disableService(@Param('id') id: number) {
-    this.context.serviceManager.terminateService(this.context.serviceManager.getServiceForId(id))
+    const loadedService = this.context.serviceManager.getServiceForId(id)
+    if (loadedService) {
+      this.context.serviceManager.terminateService(loadedService)
+    }
     return await this.servicesRepository.update({ id }, { enabled: false })
   }
 
@@ -206,14 +209,27 @@ export default class ServicesController {
   @Get('/instances/:id/status/startup')
   async startService(@Param('id') id : number) {
     const service = await this.servicesRepository.findOneOrFail({ id })
-    this.context.serviceManager.startupService(this.context.serviceManager.getServiceForId(service.id))
+    const loadedService = this.context.serviceManager.getServiceForId(id)
+    if (loadedService) {
+      this.context.serviceManager.startupService(loadedService)
+    }
+
     return this.servicesRepository.findOneOrFail({ id })
   }
 
   @Get('/instances/:id/status/terminate')
   async terminateService(@Param('id') id : number) {
     const service = await this.servicesRepository.findOneOrFail({ id })
-    this.context.serviceManager.terminateService(this.context.serviceManager.getServiceForId(service.id))
+    const loadedService = this.context.serviceManager.getServiceForId(id)
+    if (loadedService) {
+      this.context.serviceManager.terminateService(loadedService)
+    }
+    const serviceModules = await this.context.serviceManager.getAvailableServices()
+
+    service['serviceModule'] = serviceModules.find(
+        sm => sm.moduleName === service.moduleName,
+      )
+    service['serviceModule'].configSchema = await this.context.config.getConfigurationWithSchema(service)
     return this.servicesRepository.findOneOrFail({ id })
   }
 
@@ -261,6 +277,9 @@ export default class ServicesController {
     service.configured = true
 
     await this.servicesRepository.save(service)
+    if (!this.context.serviceManager.getServiceForId(service.id)) {
+      await this.context.serviceManager.loadService(service)
+    }
     const serviceModules = await this.context.serviceManager.getAvailableServices()
 
     service['serviceModule'] = serviceModules.find(

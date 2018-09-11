@@ -8,6 +8,7 @@ import { Module } from 'vuex'
 
 export const state: ConnectionsState = {
   connections: [],
+  newConnectionId: 0,
 }
 
 export default <Module<ConnectionsState, {}>>{
