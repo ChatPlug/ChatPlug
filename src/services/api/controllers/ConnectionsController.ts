@@ -27,6 +27,7 @@ export default class ConnectionsController {
   @Delete('/:id')
   async deleteConnetionById(@Param('id') id : number) {
     const foundConnection = await this.connectionsRepository.findOne({ id })
+    await this.context.connection.getRepository(Thread).delete({  })
     return this.connectionsRepository.remove(foundConnection!!)
   }
 

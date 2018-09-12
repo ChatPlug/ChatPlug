@@ -4,12 +4,15 @@ import { promisify } from 'util'
 import { Subject } from 'rxjs'
 import { parse } from 'url'
 import log from 'npmlog'
+import { Collection } from 'discord.js'
 
 export class FacebookMessageHandler implements FacegramMessageHandler {
   client: any
   messageSubject: Subject<IChatPlugMessage>
   name = 'facebook'
   handledMessages: any[] = []
+  threadCache = new Collection<String, any>()
+  userCache = new Collection<String, any>()
 
   constructor(client, subject: Subject<IChatPlugMessage>) {
     this.client = client
@@ -23,8 +26,17 @@ export class FacebookMessageHandler implements FacegramMessageHandler {
     this.handledMessages.push(message.messageID)
 
     // TODO: add logging to this part of the script
-    const thread = await promisify(this.client.getThreadInfo)(message.threadID)
-    const sender = (await promisify(this.client.getUserInfo)(message.senderID))[message.senderID]
+    if (!this.threadCache.has(message.threadId)) {
+      this.threadCache.set(message.threadId, await promisify(this.client.getThreadInfo)(message.threadID))
+    }
+
+    if (!this.userCache.has(message.senderID)) {
+      this.userCache.set(message.senderID, (await promisify(this.client.getUserInfo)(message.senderID))[message.senderID])
+      console.log('eluwaa')
+    }
+
+    const sender = this.userCache.get(message.senderID)
+    const thread = this.threadCache.get(message.threadId)
 
     let threadName = sender.name
 
@@ -61,6 +73,7 @@ export class FacebookMessageHandler implements FacegramMessageHandler {
       externalOriginId: thread.threadID,
     } as IChatPlugMessage
 
+    console.log(facegramMessage)
     this.messageSubject.next(facegramMessage)
   }
 

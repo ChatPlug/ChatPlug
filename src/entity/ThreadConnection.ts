@@ -13,9 +13,9 @@ export default class ThreadConnection {
   @CreateDateColumn({ type: 'datetime' })
   createdAt: Date
 
-  @OneToMany(type => Thread, thread => thread.threadConnection, { eager: true, cascade: ['insert'] })
+  @OneToMany(type => Thread, thread => thread.threadConnection, { eager: true, cascade: ['insert', 'remove', 'update'] })
   threads: Thread[]
 
-  @OneToMany(type => Message, message => message.threadConnection, { cascade: ['insert'] })
+  @OneToMany(type => Message, message => message.threadConnection, { cascade: ['insert', 'remove', 'update'] })
   messages: Message[]
 }

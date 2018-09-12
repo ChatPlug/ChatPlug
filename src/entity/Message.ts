@@ -17,10 +17,10 @@ export default class Message {
   @CreateDateColumn({ type: 'datetime' })
   createdAt: Date
 
-  @OneToMany(type => Attachment, attachment => attachment.message, { eager: true, cascade: ['insert'] })
+  @OneToMany(type => Attachment, attachment => attachment.message, { eager: true, cascade: ['insert', 'remove', 'update'] })
   attachements: Attachment[]
 
-  @ManyToOne(type => ThreadConnection, thread => thread.messages, { cascade: ['insert'] })
+  @ManyToOne(type => ThreadConnection, thread => thread.messages, { cascade: ['insert', 'remove', 'update'] })
   threadConnection: ThreadConnection
 
   @Column()

@@ -6,7 +6,7 @@ export default class User {
   @PrimaryGeneratedColumn()
   id: number
 
-  @ManyToOne(type => Service, service => service.users, { cascade: ['insert'] })
+  @ManyToOne(type => Service, service => service.users, { cascade: ['insert', 'remove', 'update'] })
   service: Service
 
   @Column()

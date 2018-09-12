@@ -7,7 +7,7 @@ export default class Thread {
   @PrimaryGeneratedColumn()
   id: number
 
-  @ManyToOne(type => Service, service => service.threads, { eager: true, cascade: ['insert'] })
+  @ManyToOne(type => Service, service => service.threads, { eager: true, cascade: ['insert', 'remove', 'update'] })
   service: Service
 
   @Column()
@@ -16,6 +16,6 @@ export default class Thread {
   @CreateDateColumn({ type: 'datetime' })
   createdAt: Date
 
-  @ManyToOne(type => ThreadConnection, threadConnection => threadConnection.threads, { cascade: ['insert'] })
+  @ManyToOne(type => ThreadConnection, threadConnection => threadConnection.threads, { cascade: ['insert', 'remove', 'update'] })
   threadConnection: ThreadConnection
 }

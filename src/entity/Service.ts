@@ -23,9 +23,9 @@ export default class Service {
   @Column()
   configured: boolean
 
-  @OneToMany(type => Thread, thread => thread.service, { cascade: ['insert'] })
+  @OneToMany(type => Thread, thread => thread.service, { cascade: ['insert', 'remove', 'update'] })
   threads: Thread[]
 
-  @OneToMany(type => User, user => user.service, { cascade: ['insert'] })
+  @OneToMany(type => User, user => user.service, { cascade: ['insert', 'remove', 'update'] })
   users: User[]
 }
