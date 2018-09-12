@@ -1,4 +1,4 @@
-import fs = require('fs')
+import fs from 'fs'
 import log from 'npmlog'
 import path from 'path'
 import TOML from '@iarna/toml'

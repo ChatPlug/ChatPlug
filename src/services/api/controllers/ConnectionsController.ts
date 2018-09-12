@@ -64,8 +64,8 @@ export default class ConnectionsController {
     thread.service = service
     thread.threadConnection = connection
 
-    threadsRepository.save(thread)
-    return thread
+    await threadsRepository.save(thread)
+    return this.connectionsRepository.findOneOrFail({ id: connectionId })
   }
 
   @Delete('/:connId/threads/:id')

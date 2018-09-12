@@ -7,8 +7,8 @@
 
       <v-spacer></v-spacer>
 
-      <NewThreadDialog/>
-      <v-btn flat color="red">
+      <NewThreadDialog :threadConnection="currentConnection"/>
+      <v-btn flat @click="deleteConnection({ id: currentConnection.id })" color="red">
         Delete
       </v-btn>
 
@@ -20,7 +20,8 @@
       <v-tab ripple nuxt :to="baseURL + '/messages'">
         Messages
       </v-tab>
-    </v-tabs>
+      </v-tabs>
+
     <nuxt-child :currentConnection="currentConnection" />
   </v-card>
 </template>
@@ -42,6 +43,7 @@ const connectionsModule = namespace('connections')
 })
 export default class InstanceByID extends Vue {
   @connectionsModule.Getter('connections') connections: ThreadConnection[]
+  @connectionsModule.Action(actions.DELETE_CONNECTION) deleteConnection
 
   id: string
   async asyncData({ params }) {

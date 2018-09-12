@@ -22,7 +22,7 @@
             @keyup.esc="closeDialog()"/>
 
         <v-select :items="labeledInstances"
-          v-model="selectedItems"
+          v-model="selectedItem"
             label="Select"
             item-value="value"/>
       </v-card-text>
@@ -50,6 +50,7 @@ import axios from 'axios'
 import * as serviceAction from '../store/modules/services/actions.types'
 import * as actions from '../store/modules/connections/actions.types'
 import { Route } from 'vue-router'
+import ThreadConnection from '../../../../entity/ThreadConnection'
 
 class VueWithRoute extends Vue {
   $route: Route
@@ -60,12 +61,14 @@ const servicesModule = namespace('services')
 
 @Component({})
 export default class NewThreadDialog extends Vue {
+  @Prop() threadConnection
   @connectionsModule.Getter('newConnectionId') newConnectionId
   @servicesModule.Getter('instances') instances
   @servicesModule.Action(serviceAction.LOAD_INSTANCES) loadInstances
+  @connectionsModule.Action(actions.CREATE_NEW_THREAD) createThread
   dialog = false
   threadId: string = ''
-  selectedItems = []
+  selectedItem: ThreadConnection = {} as any
 
   async created() {
     this.loadInstances()
@@ -85,9 +88,12 @@ export default class NewThreadDialog extends Vue {
   async closeDialog() {
     this.dialog = false
     this.threadId = ''
+    this.selectedItem = {} as any
   }
 
   async createNewThread() {
+    this.createThread({ serviceId: this.selectedItem.id, externalThreadId: this.threadId, connId: this.threadConnection.id })
+    this.closeDialog()
   }
 }
 </script>

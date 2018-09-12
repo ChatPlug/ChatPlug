@@ -39,10 +39,12 @@ export class ExchangeManager {
           for (const actualThread of thread.threadConnection.threads.filter((element) => element.externalServiceId !== message.externalOriginId)) {
             message.externalTargetId = actualThread.externalServiceId
             const serviceInstance = context.serviceManager.getServiceForId(actualThread.service.id)
-            if (serviceInstance.dbService.enabled) {
-              serviceInstance.receiveMessageSubject.next(message)
-            } else {
-              log.verbose('exchange', 'Instance ' + serviceInstance.dbService.instanceName + ' of service ' + serviceInstance.dbService.moduleName + ' disabled, ignoring.')
+            if (serviceInstance) {
+              if (serviceInstance.dbService.enabled) {
+                serviceInstance.receiveMessageSubject.next(message)
+              } else {
+                log.verbose('exchange', 'Instance ' + serviceInstance.dbService.instanceName + ' of service ' + serviceInstance.dbService.moduleName + ' disabled, ignoring.')
+              }
             }
           }
 
