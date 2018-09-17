@@ -39,7 +39,7 @@ If you want to help with the project, you can have a look at [some issues](https
 
 # :warning: Disclamer
 
-We do not guarantee that this bridge will work correctly. We are not responsible for getting banned on any serivices integrated with Facegram. Use at your own discretion.
+We do not guarantee that this bridge will work correctly. We are not responsible for getting banned on any serivices integrated with ChatPlug. Use at your own discretion.
 
 All product and company names are trademarks™ or registered® trademarks of their respective holders. Use of them does not imply any affiliation with or endorsement by them.
 

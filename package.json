@@ -33,6 +33,7 @@
   },
   "homepage": "https://github.com/feelfreelinux/ChatPlug#readme",
   "dependencies": {
+    "@slack/client": "^4.6.0",
     "@types/ws": "^6.0.1",
     "async-retry": "^1.2.1",
     "body-parser": "^1.18.3",
