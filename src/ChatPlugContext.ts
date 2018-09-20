@@ -10,10 +10,12 @@ import Service from './entity/Service'
 import { ChatPlugConfig } from './ChatPlugConfig'
 import User from './entity/User'
 import log from 'npmlog'
+import Logger from './Logger'
 
 export default class ChatPlugContext {
   exchangeManager: ExchangeManager
   serviceManager: ServiceManager
+  logger: Logger
   config = new ChatPlugConfig()
 
   connection: Connection
@@ -38,6 +40,7 @@ export default class ChatPlugContext {
     })
     this.exchangeManager = new ExchangeManager(this)
     this.serviceManager = new ServiceManager(this)
+    this.logger = new Logger(this)
     this.config.context = this
   }
 }

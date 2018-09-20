@@ -1,30 +1,27 @@
 import { ChatPlugMessageHandler } from '../MessageHandler'
-import TelegramBot from 'node-telegram-bot-api'
 import { IChatPlugMessage, IChatPlugAttachement, IChatPlugAttachementType } from '../../models'
 import { promisify } from 'util'
 import { Subject } from 'rxjs'
 import { parse } from 'url'
 import log from 'npmlog'
-import { ContextMessageUpdate, Telegram } from 'telegraf'
-import { Message } from 'telegram-typings'
 import ChatPlugContext from '../../ChatPlugContext'
 import User from '../../entity/User'
 
-export class TelegramMessageHandler implements ChatPlugMessageHandler {
-  client: Telegram
+export class SlackMessageHandler implements ChatPlugMessageHandler {
+  // client:
   messageSubject: Subject<IChatPlugMessage>
   handledMessages: any[] = []
   context: ChatPlugContext
 
-  constructor(client: Telegram, subject: Subject<IChatPlugMessage>, context: ChatPlugContext) {
-    this.client = client
+  constructor(client: Slack, subject: Subject<IChatPlugMessage>, context: ChatPlugContext) {
+    this.
     this.messageSubject = subject
     this.context = context
   }
 
   async onOutgoingMessage(message: Message) {
 
-    console.time('telegramPrepare' + message.message_id)
+    console.time('slackPrepare' + message.message_id)
     // Duplicates handling
     let listOfAttachments: IChatPlugAttachement[] = []
     if (message.photo) {
@@ -98,11 +95,11 @@ export class TelegramMessageHandler implements ChatPlugMessageHandler {
 
     // send a message to the chat acknowledging receipt of their message
     this.messageSubject.next(chatPlugMessage)
-    console.timeEnd('telegramPrepare' + message.message_id)
+    console.timeEnd('SlackPrepare' + message.message_id)
   }
 
   onIncomingMessage = async (message: IChatPlugMessage) => {
-    console.time('telegramSend' + message.externalOriginId)
+    console.time('SlackSend' + message.externalOriginId)
     if (!message.externalTargetId) return
     const formattedMsg = '*' + message.author.username + '*' + ': ' + message.message
     // @ts-ignore
@@ -114,7 +111,7 @@ export class TelegramMessageHandler implements ChatPlugMessageHandler {
     for (const attachment of message.attachments) {
       await this.client.sendPhoto(message.externalTargetId, attachment.url)
     }
-    console.timeEnd('telegramSend' + message.externalOriginId)
+    console.timeEnd('SlackSend' + message.externalOriginId)
   }
 
   setClient(client) {

@@ -1,4 +1,4 @@
-import { FacegramMessageHandler } from '../MessageHandler'
+import { ChatPlugMessageHandler } from '../MessageHandler'
 import { IChatPlugMessage } from '../../models'
 import { promisify } from 'util'
 import { Subject } from 'rxjs'
@@ -6,7 +6,7 @@ import { parse } from 'url'
 import log from 'npmlog'
 import { Collection } from 'discord.js'
 
-export class FacebookMessageHandler implements FacegramMessageHandler {
+export class FacebookMessageHandler implements ChatPlugMessageHandler {
   client: any
   messageSubject: Subject<IChatPlugMessage>
   name = 'facebook'
@@ -44,7 +44,7 @@ export class FacebookMessageHandler implements FacegramMessageHandler {
       threadName = thread.threadName
     }
 
-    const facegramMessage = {
+    const chatPlugMessage = {
       message: message.body,
       attachments: message.attachments.map(attach => {
         if (attach.type === 'share') return // TODO: parse share attachments correctly
@@ -73,8 +73,8 @@ export class FacebookMessageHandler implements FacegramMessageHandler {
       externalOriginId: thread.threadID,
     } as IChatPlugMessage
 
-    console.log(facegramMessage)
-    this.messageSubject.next(facegramMessage)
+    console.log(chatPlugMessage)
+    this.messageSubject.next(chatPlugMessage)
   }
 
   onIncomingMessage = async (message: IChatPlugMessage) => {

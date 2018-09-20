@@ -31,9 +31,9 @@ export default class DiscordService extends ChatPlugService<DiscordConfig> {
     // get array of collections of webhooks from all guilds
     const allWebhooks = await Promise.all(this.discord.guilds.map(guild => guild.fetchWebhooks()))
 
-    // filter them to get only Facegram's webhooks
+    // filter them to get only ChatPlug's webhooks
     const filteredWebhooks = allWebhooks.map(webhooks =>
-      webhooks.filter(webhook => webhook.name.startsWith('Facegram')),
+      webhooks.filter(webhook => webhook.name.startsWith('ChatPlug')),
     )
     // save them to a new collection
     let webhooks = new Collection() as Collection<string, Webhook>

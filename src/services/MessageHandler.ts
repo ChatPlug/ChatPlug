@@ -1,7 +1,7 @@
 import { IChatPlugMessage } from '../models'
 import { Subject } from 'rxjs'
 
-export interface FacegramMessageHandler {
+export interface ChatPlugMessageHandler {
   messageSubject: Subject<IChatPlugMessage>
 
   onOutgoingMessage(message: any)

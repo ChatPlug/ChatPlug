@@ -1,10 +1,10 @@
-import { FacegramMessageHandler } from '../MessageHandler'
+import { ChatPlugMessageHandler } from '../MessageHandler'
 import { IChatPlugMessage } from '../../models'
 import { Subject } from 'rxjs'
 import log from 'npmlog'
 import { Client as DiscordClient, Collection, Webhook, TextChannel } from 'discord.js'
 
-export class DiscordMessageHandler implements FacegramMessageHandler {
+export class DiscordMessageHandler implements ChatPlugMessageHandler {
   client: DiscordClient
   messageSubject: Subject<IChatPlugMessage>
   name = 'discord'
@@ -23,7 +23,7 @@ export class DiscordMessageHandler implements FacegramMessageHandler {
     ) return
 
     // TODO: embed handling
-    const facegramMessage = {
+    const chatPlugMessage = {
       message: message.cleanContent,
       attachments: message.attachments.map(file => ({
         name: file.filename,
@@ -37,7 +37,7 @@ export class DiscordMessageHandler implements FacegramMessageHandler {
       externalOriginId:  message.channel.id,
     } as IChatPlugMessage
 
-    this.messageSubject.next(facegramMessage)
+    this.messageSubject.next(chatPlugMessage)
   }
 
   onIncomingMessage = async (message: IChatPlugMessage) => {
@@ -51,8 +51,8 @@ export class DiscordMessageHandler implements FacegramMessageHandler {
     let webhook = this.webhooks.find('channelID', message.externalTargetId)
     if (!webhook) {
       webhook = await (channel as TextChannel).createWebhook(
-        `Facegram ${(channel as TextChannel).name}`.substr(0, 32),
-        'https://github.com/feelfreelinux/facegram/raw/master/facegram_logo.png',
+        `ChatPlug ${(channel as TextChannel).name}`.substr(0, 32),
+        'https://github.com/feelfreelinux/ChatPlug/raw/master/ChatPlug_logo.png',
       )
       this.webhooks.set(webhook.id, webhook)
     }
