@@ -52,7 +52,7 @@ export class DiscordMessageHandler implements ChatPlugMessageHandler {
     if (!webhook) {
       webhook = await (channel as TextChannel).createWebhook(
         `ChatPlug ${(channel as TextChannel).name}`.substr(0, 32),
-        'https://github.com/feelfreelinux/ChatPlug/raw/master/ChatPlug_logo.png',
+        'https://i.imgur.com/l2QP9Go.png',
       )
       this.webhooks.set(webhook.id, webhook)
     }

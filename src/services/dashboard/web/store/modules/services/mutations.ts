@@ -80,4 +80,11 @@ export default <MutationTree<ServicesState>>{
     }
     Vue.set(instance, 'threads', threads)
   },
+
+  [actions.SET_SEARCH_THREADS](
+    state: ServicesState,
+    { results }: { results: any[] }) {
+    console.log(results)
+    state.searchResults = results
+  },
 }
