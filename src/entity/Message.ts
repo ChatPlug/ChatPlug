@@ -20,7 +20,7 @@ export default class Message {
   @OneToMany(type => Attachment, attachment => attachment.message, { eager: true, cascade: ['insert', 'remove', 'update'] })
   attachements: Attachment[]
 
-  @ManyToOne(type => ThreadConnection, thread => thread.messages, { cascade: ['insert', 'remove', 'update'] })
+  @ManyToOne(type => ThreadConnection, thread => thread.messages, { cascade: ['insert', 'update'] })
   threadConnection: ThreadConnection
 
   @Column()
