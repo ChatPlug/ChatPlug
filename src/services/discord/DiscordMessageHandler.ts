@@ -18,6 +18,8 @@ export class DiscordMessageHandler implements FacegramMessageHandler {
   onOutgoingMessage = message => {
     console.time('discordPrepare' + message.id)
 
+    if (!message.cleanContent) return
+
     if (
       this.webhooks.has(message.author.id) ||
       message.author.username === this.client.user.username
