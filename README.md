@@ -1,17 +1,15 @@
 <p align="center">
-  <a href="https://github.com/feelfreelinux/chatplug"><img src="./chatplug.v2-text.svg" width="400" height="400" alt="Logo"></a>
-   <img src="https://img.shields.io/github/license/feelfreelinux/ChatPlug.svg?style=for-the-badge" alt="GitHub"/>
-    <a href="https://github.com/feelfreelinux/ChatPlug/issues"><img src="https://img.shields.io/github/issues/feelfreelinux/ChatPlug.svg?style=for-the-badge" alt="GitHub issues" /></a>
+  <h1 align="center">
+    <img src="./chatplug.v2-text.svg" width="300px" alt="Chat Plug"/><br/><br/>
+     <img src="https://img.shields.io/github/license/feelfreelinux/ChatPlug.svg?style=for-the-badge" alt="GitHub"/>
+     <a href="https://github.com/feelfreelinux/ChatPlug/issues"><img src="https://img.shields.io/github/issues/feelfreelinux/ChatPlug.svg?style=for-the-badge" alt="GitHub issues" /></a>
+     <img src="https://img.shields.io/badge/Built%20with-%E2%9D%A4%20LOVE-red.svg?longCache=true&amp;style=for-the-badge" alt="LOVE" />
+  </h1>
 </p>
 
 
-[![Discord](https://discordapp.com/api/guilds/456875835954298890/embed.png)](https://discord.gg/eWAgMUG)
-
-*TODO: update description with new services*
-ChatPlug is a simple and extensible bridge between Facebook (Messenger), Discord and Telegram. Reclaim your privacy now, don't let Zuckbot spy on you  and drain your battery. :battery: :moneybag:
-<p align="center">
-  <img src="https://media.giphy.com/media/dSdvPrKU0w8WGo4c9L/giphy.gif">
-</p>
+### *TODO: update description with new services*
+ChatPlug is a simple and extensible bridge between Facebook (Messenger), Discord, Telegram and Slack.
 
 # :question: How does it work?
 
@@ -30,8 +28,6 @@ ChatPlug now uses TypeScript on Node.js.
 
 *TODO: Add instructions when ready*
 
-
-On first run the program will create a file called `config.json` where you have to add your services.
 # :iphone: Usage
 
 *TODO: update*
