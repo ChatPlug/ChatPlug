@@ -3,5 +3,6 @@
     "version": "0.0.1",
     "brandColor": "#0088cc",
     "description": "Enables ChatPlug to create new threads on Telegram (requires a separate account).",
-    "systemService": false
+    "systemService": false,
+    "supportsThreadSearch": false
 }

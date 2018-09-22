@@ -52,6 +52,9 @@ export default class ConnectionsController {
   @Post('/:id/threads')
   async createThread(
     @Param('id') connectionId : number,
+    @BodyParam('avatarUrl', { required: false }) avatarUrl: string | null,
+    @BodyParam('title', { required: true }) title: string,
+    @BodyParam('subtitle', { required: false }) subtitle: string | null,
     @BodyParam('externalThreadId', { required: true }) threadId : string,
     @BodyParam('serviceId', { required: true }) instanceId : number) {
     const servicesRepository = this.context.connection.getRepository(Service)
@@ -64,6 +67,9 @@ export default class ConnectionsController {
     thread.externalServiceId = threadId
     thread.service = service
     thread.threadConnection = connection
+    thread.title = title
+    thread.subtitle = subtitle as any
+    thread.avatarUrl = avatarUrl || 'https://i.imgur.com/l2QP9Go.png'
 
     await threadsRepository.save(thread)
     return this.connectionsRepository.findOneOrFail({ id: connectionId })

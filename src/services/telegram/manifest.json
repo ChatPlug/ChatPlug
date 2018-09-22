@@ -3,5 +3,6 @@
     "version": "0.0.1",
     "brandColor": "#0088cc",
     "description": "Enables ChatPlug to relay messages from/to telegram.",
-    "systemService": false
+    "systemService": false,
+    "supportsThreadSearch": false
 }

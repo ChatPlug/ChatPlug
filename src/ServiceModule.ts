@@ -41,6 +41,9 @@ export default class ServiceModule {
   @IsNotEmpty()
   description: string
 
+  @IsNotEmpty()
+  supportsThreadSearch: boolean
+
   /**
    * If set to true the service will be automatically enabled and not shown in the GUI by default.
    */

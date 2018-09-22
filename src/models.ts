@@ -46,6 +46,13 @@ export interface IChatPlugThread {
   name: string
 }
 
+export interface IChatPlugThreadResult {
+  id: string
+  title: string
+  subtitle: string | null
+  avatarUrl: string | null
+}
+
 export interface IChatPlugUser {
   username: string
   avatar?: string

@@ -7,8 +7,17 @@ export default class Thread {
   @PrimaryGeneratedColumn()
   id: number
 
+  @Column()
+  title: string
+
+  @Column()
+  avatarUrl: string
+
   @ManyToOne(type => Service, service => service.threads, { eager: true, cascade: ['insert', 'update'] })
   service: Service
+
+  @Column({ nullable: true })
+  subtitle: string
 
   @Column()
   externalServiceId: string

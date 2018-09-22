@@ -155,10 +155,10 @@ export default class ServicesController {
   }
 
   @Get('/instances/:id/threads/search')
-  async searchServiceThreads(@QueryParam('query') q: string) {
-    return await [{ title: 'Guildspeak general', id: 0 },
-    { title: 'Guildspeak dev', id: 1 },
-    { title: 'Offtop', id: 2 }].filter((el) => el.title.toLowerCase().includes(q.toLowerCase()))
+  async searchServiceThreads(
+    @QueryParam('query') q: string,
+    @Param('id') id: number) {
+    return await this.context.serviceManager.getServiceForId(id)!!.searchThreads(q)
   }
 
   @Delete('/instances/:id')

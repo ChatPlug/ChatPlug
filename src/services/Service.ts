@@ -1,4 +1,4 @@
-import { IChatPlugMessage } from '../models'
+import { IChatPlugMessage, IChatPlugThreadResult } from '../models'
 import { Subject } from 'rxjs'
 import Service from '../entity/Service'
 import ChatPlugContext from '../ChatPlugContext'
@@ -19,4 +19,6 @@ export class ChatPlugService<TConfig = any> {
   async initialize () {}
 
   async terminate () {}
+
+  async searchThreads(query: string): Promise<IChatPlugThreadResult[]> { return [] }
 }

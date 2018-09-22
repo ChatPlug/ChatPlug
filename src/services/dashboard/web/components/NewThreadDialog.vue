@@ -1,47 +1,63 @@
 <template>
   <div>
-    <v-btn @click="openDialog" icon light>
-      <v-icon color="grey darken-2">add</v-icon>
+    <v-btn @click='openDialog' icon light>
+      <v-icon color='grey darken-2'>add</v-icon>
     </v-btn>
-    <div class="text-xs-center">
+    <div class='text-xs-center'>
       <v-dialog
-        v-model="dialog"
-        @keydown.enter="createNewThread()"
-        width="400">
+        v-model='dialog'
+        width='400'>
 
         <v-card>
           <v-card-title
-            class="headline grey lighten-2"
+            class='headline grey lighten-2'
             primary-title>
-            Create new thread
+            Connect with conversation
           </v-card-title>
 
       <v-card-text>
-        <v-autocomplete
-          :items="searchResults.map(el => 'ChatPlug #' + el.title)"
-          :search-input.sync="searchItem"
-          color="white"
-          label="Select"
-          item-value="title"
-          placeholder="Start typing to Search"
-          prepend-icon="search"
-          />
-        <v-text-field autofocus label="Thread id" v-model="threadId"
-            @keyup.enter="createNewThread()"
-            @keyup.esc="closeDialog()"/>
+      <v-select :items='labeledInstances'
+        v-model='selectedItem'
+        label='Select service'
+        item-value='value'/>
 
-        <v-select :items="labeledInstances"
-          v-model="selectedItem"
-            label="Select"
-            item-value="value"/>
+      <v-autocomplete v-if="dialog && selectedItem !== null && selectedItem.serviceModule.supportsThreadSearch"
+        hide-no-data
+        hide-details
+        :disabled="selectedItem === null"
+        no-filter
+        label='Choose conversation'
+        v-model='threadModel'
+        :items='searchResults'
+        :search-input.sync='searchItem'
+        item-text='title'
+        required return-object>
+      <template
+        slot="item"
+        slot-scope="{ item, tile }"
+      >
+        <v-list-tile-avatar
+        >
+          <img :src="item.avatarUrl"/>
+        </v-list-tile-avatar>
+        <v-list-tile-content>
+          <v-list-tile-title v-text="item.subtitle"></v-list-tile-title>
+          <v-list-tile-sub-title v-text="item.title"></v-list-tile-sub-title>
+        </v-list-tile-content>
+        <v-list-tile-action>
+          <v-icon>mdi-coin</v-icon>
+        </v-list-tile-action>
+      </template>
+      </v-autocomplete>
+
       </v-card-text>
 
       <v-card-actions>
         <v-spacer></v-spacer>
           <v-btn
-            color="primary"
+            color='primary'
             flat
-            @click="createNewThread()">
+            @click='createNewThread()'>
           Create
           </v-btn>
         </v-card-actions>
@@ -51,7 +67,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang='ts'>
 import Vue from 'vue'
 import { Component, Prop, Watch } from 'nuxt-property-decorator'
 import { State, namespace, Action } from 'vuex-class'
@@ -80,25 +96,35 @@ export default class NewThreadDialog extends Vue {
   @servicesModule.Action(serviceAction.SEARCH_THREADS) searchItems
   @connectionsModule.Action(actions.CREATE_NEW_THREAD) createThread
   dialog = false
+  threadModel: { id: string, title: string } = { id: '', title: '' }
   threadId: string = ''
-  selectedItem: ThreadConnection = {} as any
+  selectedItem: ThreadConnection | null = null
 
   async created() {
     this.loadInstances()
   }
 
   @Watch('searchItem')
-  search(val) {
-    console.log("dupa")
-    console.log(this.searchResults)
-    this.searchItems({ id: this.selectedItem.id, query: val })
+  search(val: string) {
+    if (
+      this.selectedItem &&
+      val &&
+      val.toLowerCase() !== this.threadModel.title.toLowerCase()
+    ) {
+      this.searchItems({ id: this.selectedItem.id, query: val })
+    }
   }
 
   get labeledInstances() {
     if (!this.instances) {
       return null
     }
-    return this.instances.map((el) => { return { text: `${el.serviceModule.displayName} (${el.instanceName})`, value: el } })
+    return this.instances.map(el => {
+      return {
+        text: `${el.serviceModule.displayName} (${el.instanceName})`,
+        value: el,
+      }
+    })
   }
 
   async openDialog() {
@@ -112,8 +138,14 @@ export default class NewThreadDialog extends Vue {
   }
 
   async createNewThread() {
-    this.createThread({ serviceId: this.selectedItem.id, externalThreadId: this.threadId, connId: this.threadConnection.id })
-    this.closeDialog()
+    if (this.selectedItem) {
+      this.createThread({
+        serviceId: this.selectedItem.id,
+        externalThreadId: this.threadModel.id,
+        connId: this.threadConnection.id,
+      })
+      this.closeDialog()
+    }
   }
 }
 </script>

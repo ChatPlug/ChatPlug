@@ -18,7 +18,6 @@ export default {
     if (index === -1) {
       state.connections.push(payload)
     } else {
-      console.log(payload)
       Vue.set(state.connections, index, payload)
     }
   },

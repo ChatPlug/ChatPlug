@@ -3,5 +3,6 @@
     "version": "0.0.1",
     "brandColor": "#ED2939",
     "description": "Enables other applications to control ChatPlug via a REST API.",
-    "systemService": true
+    "systemService": true,
+    "supportsThreadSearch": false
 }

@@ -1,5 +1,5 @@
 import log from 'npmlog'
-import { IChatPlugMessage } from '../../models'
+import { IChatPlugMessage, IChatPlugThreadResult } from '../../models'
 import { ChatPlugService } from '../Service'
 import { Subject } from 'rxjs'
 import DiscordConfig from './DiscordConfig'
@@ -46,5 +46,36 @@ export default class DiscordService extends ChatPlugService<DiscordConfig> {
 
   terminate() {
     return this.discord.destroy()
+  }
+
+  discordChannelToTitle = (channel) => {
+    let title = channel.guild.name
+
+    if (channel.parent) {
+      title += ': ' + channel.parent.name
+    }
+
+    return title
+  }
+
+  async searchThreads(query: string): Promise<IChatPlugThreadResult[]> {
+    return this.discord.channels
+    .filter(b => (
+      this.discordChannelToTitle(b)
+        .toLowerCase().indexOf(query.toLowerCase()) !== -1 ||
+        ('#' + (b as any).name)
+          .toLowerCase()
+          .indexOf(query.toLowerCase()) !== -1) &&  b.type !== 'voice' && b.type !== 'category')
+    .map(channel => {
+
+      const title = this.discordChannelToTitle(channel)
+
+      return {
+        title,
+        id: channel.id,
+        subtitle: '#' + ((channel as any).name),
+        avatarUrl: (channel as any).guild.iconURL,
+      } as IChatPlugThreadResult
+    })
   }
 }
