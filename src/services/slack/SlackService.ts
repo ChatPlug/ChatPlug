@@ -18,12 +18,12 @@ export default class SlackService extends ChatPlugService<SlackConfig> {
   token: any
 
   async initialize() {
-    this.token = process.env.SLACK_TOKEN
-    this.rtm = new RTMClient(this.token)
+    this.token = this.config.botToken
+    this.rtm = new RTMClient(this.config.botToken)
 
     this.rtm.start()
 
-    const conversationId = '' // Conversation ID
+    const conversationId = this.config.conversationID // Conversation ID
 
     this.messageHandler = new SlackMessageHandler(this.rtm, this.context.exchangeManager.messageSubject, this.context)
 

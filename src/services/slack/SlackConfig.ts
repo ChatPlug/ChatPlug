@@ -9,5 +9,6 @@ export default class SlackConfig implements IChatPlugServiceConfig {
     required: true,
     hint: 'Slack bot token from api.slack.com',
   })
-    botToken: string
+  botToken: string
+  conversationID: number
 }
