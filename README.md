@@ -1,5 +1,7 @@
 <p align="center">
   <a href="https://github.com/feelfreelinux/chatplug"><img src="./chatplug.v2-text.svg" width="400" height="400" alt="Logo"></a>
+   <img src="https://img.shields.io/github/license/feelfreelinux/ChatPlug.svg?style=for-the-badge" alt="GitHub"/>
+    <a href="https://github.com/feelfreelinux/ChatPlug/issues"><img src="https://img.shields.io/github/issues/feelfreelinux/ChatPlug.svg?style=for-the-badge" alt="GitHub issues" /></a>
 </p>
 
 
