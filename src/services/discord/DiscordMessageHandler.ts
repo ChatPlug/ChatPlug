@@ -19,6 +19,8 @@ export class DiscordMessageHandler implements ChatPlugMessageHandler {
 
     if (!message.cleanContent) return
 
+    if (!message.cleanContent) return
+
     if (
       this.webhooks.has(message.author.id) ||
       message.author.username === this.client.user.username
