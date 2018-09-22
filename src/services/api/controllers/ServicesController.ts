@@ -12,6 +12,7 @@ import {
   JsonController,
   NotFoundError,
   Param,
+  QueryParam,
   Post,
 } from 'routing-controllers'
 import { Repository } from 'typeorm'
@@ -25,7 +26,6 @@ import Service from '../../../entity/Service'
 import fs from 'fs-extra'
 import User from '../../../entity/User'
 import ServiceInstance from '../../dashboard/web/types/ServiceInstance'
-import { IChatPlugServiceStatus } from '../../../models'
 import Thread from '../../../entity/Thread'
 
 const CONFIG_FOLDER_PATH = path.join(__dirname, '../../../../config')
@@ -152,6 +152,13 @@ export default class ServicesController {
   @Get('/instances/:id/threads')
   async getServiceThreads(@Param('id') id: number) {
     return await this.context.connection.getRepository(Thread).find({ where: { service: { id } } })
+  }
+
+  @Get('/instances/:id/threads/search')
+  async searchServiceThreads(@QueryParam('query') q: string) {
+    return await [{ title: 'Guildspeak general', id: 0 },
+    { title: 'Guildspeak dev', id: 1 },
+    { title: 'Offtop', id: 2 }].filter((el) => el.title.toLowerCase().includes(q.toLowerCase()))
   }
 
   @Delete('/instances/:id')

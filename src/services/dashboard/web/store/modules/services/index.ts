@@ -10,6 +10,7 @@ export const state: ServicesState = {
   instances: [],
   modules: [],
   loading: false,
+  searchResults: [],
   newInstanceId: 0,
 }
 

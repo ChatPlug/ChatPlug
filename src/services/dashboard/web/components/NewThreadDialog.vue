@@ -17,6 +17,15 @@
           </v-card-title>
 
       <v-card-text>
+        <v-autocomplete
+          :items="searchResults.map(el => 'ChatPlug #' + el.title)"
+          :search-input.sync="searchItem"
+          color="white"
+          label="Select"
+          item-value="title"
+          placeholder="Start typing to Search"
+          prepend-icon="search"
+          />
         <v-text-field autofocus label="Thread id" v-model="threadId"
             @keyup.enter="createNewThread()"
             @keyup.esc="closeDialog()"/>
@@ -62,9 +71,13 @@ const servicesModule = namespace('services')
 @Component({})
 export default class NewThreadDialog extends Vue {
   @Prop() threadConnection
+  searchItem = ''
   @connectionsModule.Getter('newConnectionId') newConnectionId
+  @servicesModule.Getter('searchResults') searchResults
+
   @servicesModule.Getter('instances') instances
   @servicesModule.Action(serviceAction.LOAD_INSTANCES) loadInstances
+  @servicesModule.Action(serviceAction.SEARCH_THREADS) searchItems
   @connectionsModule.Action(actions.CREATE_NEW_THREAD) createThread
   dialog = false
   threadId: string = ''
@@ -72,6 +85,13 @@ export default class NewThreadDialog extends Vue {
 
   async created() {
     this.loadInstances()
+  }
+
+  @Watch('searchItem')
+  search(val) {
+    console.log("dupa")
+    console.log(this.searchResults)
+    this.searchItems({ id: this.selectedItem.id, query: val })
   }
 
   get labeledInstances() {

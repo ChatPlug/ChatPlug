@@ -95,4 +95,11 @@ export default <ActionTree<ServicesState, {}>>{
       store.commit(action.SET_ENABLED, { id, enabled: true })
     }
   },
+
+  async [action.SEARCH_THREADS](store, { id, query }: { id: number, query: string }) {
+    const { data } = await axios.get(`services/instances/${id}/threads/search?query=${query}`)
+    if (data.data) {
+      store.commit(action.SET_SEARCH_THREADS, { results: data.data })
+    }
+  },
 }
