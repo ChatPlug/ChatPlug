@@ -14,7 +14,6 @@ const { RTMClient } = require('@slack/client')
 export default class SlackService extends ChatPlugService<SlackConfig> {
   messageHandler: SlackMessageHandler
   config: SlackConfig
-  slack: slack<ContextMessageUpdate>
   rtm: any
   token: any
 
@@ -24,7 +23,7 @@ export default class SlackService extends ChatPlugService<SlackConfig> {
 
     this.rtm.start()
 
-    const conversationId = 'ddd' // Conversation ID
+    const conversationId = '' // Conversation ID
 
     this.messageHandler = new SlackMessageHandler(this.rtm, this.context.exchangeManager.messageSubject, this.context)
 
@@ -42,16 +41,7 @@ export default class SlackService extends ChatPlugService<SlackConfig> {
     })
     .catch(console.error)
 
-    rtm.on('message', (event) => {
-      console.log(`Message from ${event.user}: ${event.text}`)
-    })
-
-    rtm.on('reaction_added', (event) => {
-      console.log(`Reaction from ${event.user}: ${event.reaction}`)
-    })
-    rtm.on('reaction_removed', (event) => {
-      console.log(`Reaction removed by ${event.user}: ${event.reaction}`)
-    })
+    rtm.on('message', this.messageHandler.onOutgoingMessage)
 
     rtm.on('ready', (event) => {
       console.log('Slack service is working!')
