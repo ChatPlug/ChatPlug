@@ -1,0 +1,11 @@
+{
+  "type": "sqlite",
+  "synchronize": false,
+  "database": "chatplug.db",
+  "entities": ["src/entity/*.ts"],
+  "migrationsTableName": "chatplug_migrations",
+  "migrations": ["src/migration/*.ts"],
+  "cli": {
+      "migrationsDir": "src/migration"
+  }
+}
