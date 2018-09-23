@@ -21,7 +21,7 @@
         label='Select service'
         item-value='value'/>
 
-      <v-autocomplete v-if="dialog && selectedItem !== null && selectedItem.serviceModule.supportsThreadSearch"
+      <v-autocomplete v-if="dialog && selectedItem !== null && selectedItem.serviceModule && selectedItem.serviceModule.supportsThreadSearch"
         hide-no-data
         hide-details
         :disabled="selectedItem === null"
@@ -32,21 +32,18 @@
         :search-input.sync='searchItem'
         item-text='title'
         required return-object>
+      <v-text-field v-if="dialog && selectedItem !== null && selectedItem.serviceModule && !selectedItem.serviceModule.supportsThreadSearch" label="Connection id"/>
       <template
         slot="item"
         slot-scope="{ item, tile }"
       >
-        <v-list-tile-avatar
-        >
+        <v-list-tile-avatar>
           <img :src="item.avatarUrl"/>
         </v-list-tile-avatar>
         <v-list-tile-content>
-          <v-list-tile-title v-text="item.subtitle"></v-list-tile-title>
-          <v-list-tile-sub-title v-text="item.title"></v-list-tile-sub-title>
+          <v-list-tile-title v-text="item.title"></v-list-tile-title>
+          <v-list-tile-sub-title v-text="item.subtitle"></v-list-tile-sub-title>
         </v-list-tile-content>
-        <v-list-tile-action>
-          <v-icon>mdi-coin</v-icon>
-        </v-list-tile-action>
       </template>
       </v-autocomplete>
 
@@ -96,7 +93,7 @@ export default class NewThreadDialog extends Vue {
   @servicesModule.Action(serviceAction.SEARCH_THREADS) searchItems
   @connectionsModule.Action(actions.CREATE_NEW_THREAD) createThread
   dialog = false
-  threadModel: { id: string, title: string } = { id: '', title: '' }
+  threadModel: { avatarUrl: string, id: string, title: string, subtitle: string } | null = null
   threadId: string = ''
   selectedItem: ThreadConnection | null = null
 
@@ -109,7 +106,7 @@ export default class NewThreadDialog extends Vue {
     if (
       this.selectedItem &&
       val &&
-      val.toLowerCase() !== this.threadModel.title.toLowerCase()
+      (this.threadModel === null || val.toLowerCase() !== this.threadModel!!.title.toLowerCase())
     ) {
       this.searchItems({ id: this.selectedItem.id, query: val })
     }
@@ -135,13 +132,17 @@ export default class NewThreadDialog extends Vue {
     this.dialog = false
     this.threadId = ''
     this.selectedItem = {} as any
+    this.threadModel = null
   }
 
   async createNewThread() {
-    if (this.selectedItem) {
+    if (this.selectedItem && this.threadModel) {
       this.createThread({
+        title: this.threadModel!!.title,
+        subtitle: this.threadModel!!.subtitle,
+        avatarUrl: this.threadModel!!.avatarUrl,
         serviceId: this.selectedItem.id,
-        externalThreadId: this.threadModel.id,
+        externalThreadId: this.threadModel!!.id,
         connId: this.threadConnection.id,
       })
       this.closeDialog()

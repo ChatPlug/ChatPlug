@@ -28,7 +28,7 @@ export default <ActionTree<ConnectionsState, {}>>{
     store.dispatch(action.LOAD_CONNECTIONS)
   },
 
-  async [action.CREATE_NEW_THREAD] (store, payload: { externalThreadId: string, serviceId: number, connId: number }) {
+  async [action.CREATE_NEW_THREAD] (store, payload: { title: string, subtitle: string | null, avatarUrl: string | null, externalThreadId: string, serviceId: number, connId: number }) {
     const { data } = await axios.post(`connections/${payload.connId}/threads`, payload)
 
     if (data.data) {

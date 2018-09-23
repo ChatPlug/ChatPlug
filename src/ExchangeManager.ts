@@ -22,8 +22,16 @@ export class ExchangeManager {
     const threadRepository = context.connection.getRepository(Thread)
     this.messageSubject.subscribe({
       next: async (message) => {
-        const threads = await threadRepository.find({
-          where: { externalServiceId: message.externalOriginId },
+        const threads = await threadRepository.createQueryBuilder('thread')
+          .innerJoinAndSelect('thread.threadConnection', 'threadConnection')
+          .leftJoinAndSelect('threadConnection.threads', 'threads')
+          .leftJoinAndSelect('threadConnection.messages', 'messages')
+          .leftJoinAndSelect('threads.service', 'service')
+          .where('thread.externalServiceId = :id', { id: message.externalOriginId })
+          .getMany()
+        console.log(threads)
+        /*const threads = await threadRepository.find({
+          externalServiceId: message.externalOriginId,
           join: {
             alias: 'thread',
             leftJoinAndSelect: {
@@ -33,7 +41,7 @@ export class ExchangeManager {
               service: 'threads.service',
             },
           },
-        })
+        })*/
 
         for (const thread of threads) {
           for (const actualThread of thread.threadConnection.threads.filter((element) => element.externalServiceId !== message.externalOriginId)) {

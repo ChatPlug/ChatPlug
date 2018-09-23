@@ -52,9 +52,9 @@ export default class ConnectionsController {
   @Post('/:id/threads')
   async createThread(
     @Param('id') connectionId : number,
-    @BodyParam('avatarUrl', { required: false }) avatarUrl: string | null,
-    @BodyParam('title', { required: true }) title: string,
-    @BodyParam('subtitle', { required: false }) subtitle: string | null,
+    @BodyParam('avatarUrl', { required: false, parse: false }) avatarUrl: string,
+    @BodyParam('title', { required: true, parse: false }) title: string,
+    @BodyParam('subtitle', { required: false }) subtitle: string,
     @BodyParam('externalThreadId', { required: true }) threadId : string,
     @BodyParam('serviceId', { required: true }) instanceId : number) {
     const servicesRepository = this.context.connection.getRepository(Service)

@@ -1,13 +1,17 @@
 <template>
-    <v-list two-list>
+    <v-list two-list avatar>
       <template v-if="threads !== null && threads.length > 0" v-for="(thread, index) in threads">
         <v-divider :key="index + '-divider'"></v-divider>
         <v-list-tile :key="index + '-real-elem'">
-          <v-list-tile-content>
-            <v-list-tile-title  v-text="thread.externalServiceId">
-            </v-list-tile-title>
-          </v-list-tile-content>
+        <v-list-tile-avatar>
+          <img :src="thread.avatarUrl"/>
+        </v-list-tile-avatar>
+        <v-list-tile-content>
+          <v-list-tile-title v-text="thread.subtitle"></v-list-tile-title>
+          <v-list-tile-sub-title v-text="thread.title"></v-list-tile-sub-title>
+        </v-list-tile-content>
         </v-list-tile>
+
       </template>
       <template v-if="threads == null || threads.length === 0">
         <div>&nbsp; There is no threads</div>

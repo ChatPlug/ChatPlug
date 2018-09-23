@@ -1,5 +1,5 @@
 import log from 'npmlog'
-import { IChatPlugMessage, IChatPlugThread } from '../../models'
+import { IChatPlugMessage, IChatPlugThread, IChatPlugThreadResult } from '../../models'
 import { ChatPlugService } from '../Service'
 import { Subject } from 'rxjs'
 // import { FacebookConfig } from './FacebookConfig'
@@ -21,10 +21,12 @@ export default class FacebookService extends ChatPlugService<FacebookConfig> {
   messageHandler: FacebookMessageHandler
   facebook: any
   stopListening: any
-
+  importedThreads: IChatPlugThreadResult[] = []
   async initialize() {
     await this.login()
 
+    this.importedThreads = await this.getThreads()
+    console.log(this.importedThreads)
     this.messageHandler = new FacebookMessageHandler(this.facebook, this.context.exchangeManager.messageSubject)
 
     this.receiveMessageSubject.subscribe(this.messageHandler.onIncomingMessage)
@@ -46,6 +48,26 @@ export default class FacebookService extends ChatPlugService<FacebookConfig> {
       this.stopListening = this.facebook.listen(this.listener)
     }
     this.messageHandler.onOutgoingMessage(message)
+  }
+
+  async getThreads() {
+    return new Promise<IChatPlugThreadResult[]>((res, rej) => {
+      this.facebook.getThreadList(50, null, ['INBOX'], (err, list) => {
+
+        res(list.filter((el) => el.name !== null).map((el) => {
+          let subtitle = 'Group'
+          if (!el.isGroup) {
+            subtitle = 'Conversation'
+          }
+          return {
+            subtitle,
+            title: el.name,
+            id: el.threadID,
+            avatarUrl: el.imageSrc || 'https://i.imgur.com/l2QP9Go.png',
+          } as IChatPlugThreadResult
+        }))
+      })
+    })
   }
 
   login() {
@@ -81,5 +103,9 @@ export default class FacebookService extends ChatPlugService<FacebookConfig> {
   async terminate() {
     if (!this.facebook) return log.info('facebook', 'Not logged in')
     await this.facebook.logout
+  }
+
+  async searchThreads(query: string): Promise<IChatPlugThreadResult[]> {
+    return this.importedThreads.filter((el) => el.title.toLowerCase().indexOf(query.toLowerCase()) > -1)
   }
 }

@@ -68,12 +68,12 @@ export default class DiscordService extends ChatPlugService<DiscordConfig> {
           .indexOf(query.toLowerCase()) !== -1) &&  b.type !== 'voice' && b.type !== 'category')
     .map(channel => {
 
-      const title = this.discordChannelToTitle(channel)
+      const subtitle = this.discordChannelToTitle(channel)
 
       return {
-        title,
+        subtitle,
         id: channel.id,
-        subtitle: '#' + ((channel as any).name),
+        title: '#' + ((channel as any).name),
         avatarUrl: (channel as any).guild.iconURL,
       } as IChatPlugThreadResult
     })

@@ -171,7 +171,7 @@ export default class ServicesController {
   @Put('/instances/:id')
   async updateService(
     @Param('id') id: number,
-    @Body() instance: ServiceInstance) {
+    @Body() instance: any) {
     return this.servicesRepository.update({ id }, instance)
   }
 
