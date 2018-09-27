@@ -3,6 +3,7 @@ import { Subject } from 'rxjs'
 import Service from '../entity/Service'
 import ChatPlugContext from '../ChatPlugContext'
 import Message from '../entity/Message'
+import { LogLevel } from '../Logger'
 
 export class ChatPlugService<TConfig = any> {
   config: TConfig
@@ -14,6 +15,10 @@ export class ChatPlugService<TConfig = any> {
     this.dbService = dbService
     this.context = context
     this.config = context.config.readConfigForService(dbService)
+  }
+
+  log(level: LogLevel, msg: string) {
+    this.context.logger.log(this.dbService, level, msg)
   }
 
   async initialize () {}

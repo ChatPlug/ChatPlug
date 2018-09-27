@@ -1,11 +1,10 @@
 import { ChatPlugService } from '../Service'
-import fastify from 'fastify'
 import log from 'npmlog'
 import 'reflect-metadata'
 import ThreadConnection from '../../entity/ThreadConnection'
-import { createExpressServer, useContainer } from 'routing-controllers'
+import { createExpressServer, useContainer, useExpressServer } from 'routing-controllers'
 import ConnectionsController from './controllers/ConnectionsController'
-import { Application } from 'express'
+import express, { Application } from 'express'
 import ContextContainer from './ContextContainer'
 import ErrorMiddleware from './ErrorMiddleware'
 import ResponseMiddleware from './ResponseMiddleware'
@@ -14,6 +13,7 @@ import { Server as WebsocketServer, OPEN } from 'ws'
 import { Server } from 'http'
 import { Subscription } from 'rxjs'
 import { SocketEvent, SocketPacket } from './SocketEvent'
+import cors from 'cors'
 
 export default class ApiService extends ChatPlugService {
   app: Application
@@ -23,7 +23,9 @@ export default class ApiService extends ChatPlugService {
 
   async initialize() {
     useContainer(new ContextContainer(this.context))
-    this.app = createExpressServer({
+    const serv = express()
+    serv.use(cors())
+    this.app = useExpressServer(serv, {
       routePrefix: '/api/v1',
       controllers: [ConnectionsController, ServicesController],
       middlewares: [ErrorMiddleware],

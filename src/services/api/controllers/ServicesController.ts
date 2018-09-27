@@ -27,6 +27,7 @@ import fs from 'fs-extra'
 import User from '../../../entity/User'
 import ServiceInstance from '../../dashboard/web/types/ServiceInstance'
 import Thread from '../../../entity/Thread'
+import Log from '../../../entity/Log'
 
 const CONFIG_FOLDER_PATH = path.join(__dirname, '../../../../config')
 @JsonController('/services')
@@ -152,6 +153,11 @@ export default class ServicesController {
   @Get('/instances/:id/threads')
   async getServiceThreads(@Param('id') id: number) {
     return await this.context.connection.getRepository(Thread).find({ where: { service: { id } } })
+  }
+
+  @Get('/instances/:id/logs')
+  async getServiceLogs(@Param('id') id: number) {
+    return await this.context.connection.getRepository(Log).find({ where: { service: { id } } })
   }
 
   @Get('/instances/:id/threads/search')

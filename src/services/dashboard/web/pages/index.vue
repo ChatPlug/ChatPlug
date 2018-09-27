@@ -1,96 +1,15 @@
 <template>
+  <v-container grid-list-md>
+  <StatusStats/>
   <v-layout row wrap>
-    <v-flex md5 pa-1>
-      <v-card>
-        <v-toolbar color="green" dark>
-
-          <v-toolbar-title>Status</v-toolbar-title>
-
-          <v-spacer></v-spacer>
-
-          <v-btn nuxt to="instances/" center color="green lighten-1">
-          See instances
-          </v-btn>
-        </v-toolbar>
-                  <v-subheader>Services</v-subheader>
-          <v-list
-            subheader
-            two-line
-          >
-           <template v-for="(instance, index) in instances">
-             <v-divider :key="index + '-divider'"></v-divider>
-            <v-list-tile
-            color="success"
-            :key="index + '-real-elem'"
-            >
-              <v-list-tile-content>
-                <v-list-tile-title v-text="instance.moduleName.charAt(0).toUpperCase() + instance.moduleName.slice(1)"></v-list-tile-title>
-                <v-list-tile-sub-title v-text="'Status: ' + instance.status"></v-list-tile-sub-title>
-              </v-list-tile-content>
-          </v-list-tile>
-           </template>
-        </v-list>
-      </v-card>
+    <v-flex md6 pa-1>
+      <StatusInstances/>
     </v-flex>
-    <v-flex  md7 pa-1>
-      
-      <v-toolbar color="indigo" dark>
-
-        <v-toolbar-title>Summary</v-toolbar-title>
-
-      </v-toolbar>
-
-      <v-card>
-        <v-container
-          fluid
-          g-rid-list-md
-        >
-          <v-layout row wrap>
-          <v-flex ma-3>
-            <v-card color="indigo" class="white--text">
-             <v-list three-line>
-              <v-list-tile color="secondary">
-                  <v-list-tile-content >
-                    <v-list-tile-title>Messages Today</v-list-tile-title>
-                    <v-list-tile-sub-title class="px-0 title" ><v-icon color="blue darken-2">chat</v-icon> 14 </v-list-tile-sub-title>
-                  </v-list-tile-content>
-               </v-list-tile>
-
-                <v-list-tile color="secondary">
-                  <v-list-tile-content >
-                    <v-list-tile-title>Messages Weelky</v-list-tile-title>
-                    <v-list-tile-sub-title class="px-0 title" ><v-icon color="blue darken-2">chat</v-icon> 47 </v-list-tile-sub-title>
-                  </v-list-tile-content>
-               </v-list-tile>
-             </v-list>
-            </v-card>
-          </v-flex>
-          </v-layout>
-        </v-container>
-        <v-snackbar
-          v-model="snackbar"
-          v-if="currentVersion > '0.0.0'"
-          :bottom="y === 'bottom'"
-          :left="x === 'left'"
-          :multi-line="mode === 'multi-line'"
-          :right="x === 'right'"
-          :timeout="timeout"
-          :top="y === 'top'"
-          :vertical="mode === 'vertical'"
-          :color="color"
-        >
-         <v-icon>info</v-icon>&nbsp; Version {{ currentVersion }} is now able to download!
-          <v-btn
-            dark
-            flat
-            @click="snackbar = false"
-          >
-            Close
-          </v-btn>
-    </v-snackbar>
-      </v-card>
+    <v-flex  md6 pa-1>
+      <StatusConnections/>
     </v-flex>
   </v-layout>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -99,33 +18,39 @@ import { State, namespace, Action } from 'vuex-class'
 import * as actions from '../store/modules/updater/actions.types'
 import * as actionsService from '../store/modules/services/actions.types'
 import ServiceInstance from '../types/ServiceInstance'
+import StatusConnections from '~/components/StatusConnections.vue'
+import StatusInstances from '~/components/StatusInstances.vue'
+import StatusStats from '~/components/StatusStats.vue'
+
 import axios from 'axios'
-import { LOADIPHLPAPI } from 'dns';
 
 const updaterModule = namespace('updater')
 const servicesModule = namespace('services')
 
-@Component({})
+@Component({
+  components: {
+    StatusInstances: StatusInstances as any,
+    StatusStats: StatusStats as any,
+    StatusConnections: StatusConnections as any,
+  },
+})
 export default class extends Vue {
   @updaterModule.Action(actions.LOAD_VERSION) loadVersion
   @updaterModule.Getter('currentVersion') currentVersion
-  @servicesModule.Getter('instances') instances
-  @servicesModule.Action(actionsService.LOAD_INSTANCES) loadInstances
 
   async created() {
     await this.loadVersion()
-    await this.loadInstances()
   }
-    data () {
-      return {
-        snackbar: true,
-        y: 'top',
-        x: null,
-        mode: '',
-        timeout: 20000,
-        color: 'info',
-      }
+  data () {
+    return {
+      snackbar: true,
+      y: 'top',
+      x: null,
+      mode: '',
+      timeout: 20000,
+      color: 'info',
     }
+  }
 }
 </script>
 <style scoped>

@@ -1,5 +1,10 @@
 {
     "extends": "tslint-config-airbnb",
+    "linterOptions": {
+      "exclude": [
+        "src/migration"
+      ]
+    },
     "rules": {
         "no-unused-variable": false,
         "no-unused-expression": false,

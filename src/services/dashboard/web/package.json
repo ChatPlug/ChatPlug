@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@nuxtjs/axios": "^5.0.0",
+    "date-fns": "^1.29.0",
     "nuxt": "^1.4.2",
     "nuxt-material-design-icons": "^1.0.4",
     "nuxt-property-decorator": "^1.2.0",

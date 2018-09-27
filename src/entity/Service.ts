@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm'
 import User from './User'
 import Thread from './Thread'
 import { IChatPlugServiceStatus } from '../models'
+import Log from './Log'
 
 @Entity()
 export default class Service {
@@ -25,6 +26,9 @@ export default class Service {
 
   @OneToMany(type => Thread, thread => thread.service, { cascade: ['insert', 'remove', 'update'] })
   threads: Thread[]
+
+  @OneToMany(type => Log, log => log.service, { onDelete: 'CASCADE', cascade: ['insert', 'remove', 'update'] })
+  logs: Log[]
 
   @OneToMany(type => User, user => user.service, { cascade: ['insert', 'remove', 'update'] })
   users: User[]

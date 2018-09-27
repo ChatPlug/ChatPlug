@@ -8,6 +8,7 @@ import * as actions from './actions.types'
 import ServicesState from './ServicesState'
 import Vue from 'vue'
 import { SOCKET_ONOPEN } from 'vue-native-websocket'
+import Log from '../../../types/Log'
 
 export default <MutationTree<ServicesState>>{
   [actions.SET_INSTANCES](state, payload: ServiceInstance[]) {
@@ -59,6 +60,17 @@ export default <MutationTree<ServicesState>>{
     }
     Vue.set(instance.serviceModule, 'configSchema', configSchema)
   },
+
+  [actions.SET_LOGS](
+    state: ServicesState,
+    { id, logs } : { id: number, logs: Log[] }) {
+    const instance = state.instances.find(instance => instance.id === id)
+    if (!instance) {
+      throw new Error(`Failed to find instance with id ${id}`)
+    }
+    Vue.set(instance, 'logs', logs)
+  },
+
   [actions.SET_INSTANCE_USER](
     state: ServicesState,
     { id, users }: { id: number; users: ServiceUser[] },

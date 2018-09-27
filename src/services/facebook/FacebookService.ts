@@ -11,6 +11,7 @@ import { FacebookMessageHandler } from './FacebookMessageHandler'
 import { ChatPlugConfig } from '../../ChatPlugConfig'
 import Message from '../../entity/Message'
 import FacebookConfig from './FacebookConfig'
+import { LogLevel } from '../../Logger'
 
 const rl = createInterface({
   input: process.stdin,
@@ -26,7 +27,6 @@ export default class FacebookService extends ChatPlugService<FacebookConfig> {
     await this.login()
 
     this.importedThreads = await this.getThreads()
-    console.log(this.importedThreads)
     this.messageHandler = new FacebookMessageHandler(this.facebook, this.context.exchangeManager.messageSubject)
 
     this.receiveMessageSubject.subscribe(this.messageHandler.onIncomingMessage)
@@ -39,11 +39,12 @@ export default class FacebookService extends ChatPlugService<FacebookConfig> {
 
     // Reconnecting
     if (!message) {
-      log.warn('facebook', 'Message is undefined/null, internet connection may be unavailable')
-      log.info('facebook', 'Reconnecting...')
+      this.log(LogLevel.WARN, 'Message is undefined/null, internet connection may be unavailable')
+      this.log(LogLevel.INFO, 'Reconnecting')
+
       this.stopListening()
       await this.login()
-      log.info('facebook', 'Reconnected to Facebook')
+      this.log(LogLevel.INFO, 'Reconnected to facebook')
       this.messageHandler.setClient(this.facebook)
       this.stopListening = this.facebook.listen(this.listener)
     }
@@ -63,7 +64,6 @@ export default class FacebookService extends ChatPlugService<FacebookConfig> {
             subtitle,
             title: el.name,
             id: el.threadID,
-            avatarUrl: el.imageSrc || 'https://i.imgur.com/l2QP9Go.png',
           } as IChatPlugThreadResult
         }))
       })
@@ -84,7 +84,7 @@ export default class FacebookService extends ChatPlugService<FacebookConfig> {
         async (err, api) => {
           if (err) {
             if (err.error !== 'login-approval') return reject(err)
-            log.info('facebook', 'Login approval pending...')
+            this.context.logger.log(this.dbService, LogLevel.INFO, 'Login approval pending...')
             const message =
               'Enter login approval code to your Facebook account (SMS or Google Authenticator app): '
             const code = await new Promise(result =>
@@ -93,7 +93,7 @@ export default class FacebookService extends ChatPlugService<FacebookConfig> {
             return err.continue(code)
           }
           this.facebook = api
-          log.info('facebook', 'Logged in as', this.config.email)
+          this.log(LogLevel.INFO, 'Logged in as ' + this.config.email)
           resolve()
         },
       )
@@ -101,7 +101,8 @@ export default class FacebookService extends ChatPlugService<FacebookConfig> {
   }
 
   async terminate() {
-    if (!this.facebook) return log.info('facebook', 'Not logged in')
+    if (!this.facebook) return this.log(LogLevel.INFO, 'Not logged in')
+
     await this.facebook.logout
   }
 

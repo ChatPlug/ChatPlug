@@ -73,7 +73,6 @@ export class FacebookMessageHandler implements ChatPlugMessageHandler {
       externalOriginId: thread.threadID,
     } as IChatPlugMessage
 
-    console.log(chatPlugMessage)
     this.messageSubject.next(chatPlugMessage)
   }
 

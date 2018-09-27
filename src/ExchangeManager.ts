@@ -29,19 +29,6 @@ export class ExchangeManager {
           .leftJoinAndSelect('threads.service', 'service')
           .where('thread.externalServiceId = :id', { id: message.externalOriginId })
           .getMany()
-        console.log(threads)
-        /*const threads = await threadRepository.find({
-          externalServiceId: message.externalOriginId,
-          join: {
-            alias: 'thread',
-            leftJoinAndSelect: {
-              threadConnection: 'thread.threadConnection',
-              threads: 'threadConnection.threads',
-              messages: 'threadConnection.messages',
-              service: 'threads.service',
-            },
-          },
-        })*/
 
         for (const thread of threads) {
           for (const actualThread of thread.threadConnection.threads.filter((element) => element.externalServiceId !== message.externalOriginId)) {

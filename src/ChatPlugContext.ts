@@ -11,6 +11,7 @@ import { ChatPlugConfig } from './ChatPlugConfig'
 import User from './entity/User'
 import log from 'npmlog'
 import Logger from './Logger'
+import Log from './entity/Log'
 
 export default class ChatPlugContext {
   exchangeManager: ExchangeManager
@@ -34,6 +35,7 @@ export default class ChatPlugContext {
         ThreadConnection,
         Service,
         User,
+        Log,
       ],
       synchronize: true,
       logging: false,

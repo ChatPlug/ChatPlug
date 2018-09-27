@@ -35,4 +35,10 @@ export default <ActionTree<ConnectionsState, {}>>{
       store.commit(action.UPDATE_CONNECTION, data.data)
     }
   },
+
+  async [action.DELETE_THREAD] (store, payload: { threadId, connId: number }) {
+    const { data } = await axios.delete(`connections/${payload.connId}/threads/${payload.threadId}`, payload)
+
+    store.dispatch(action.LOAD_CONNECTIONS)
+  },
 }

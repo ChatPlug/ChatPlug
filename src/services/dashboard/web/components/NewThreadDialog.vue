@@ -37,9 +37,7 @@
         slot="item"
         slot-scope="{ item, tile }"
       >
-        <v-list-tile-avatar>
-          <img :src="item.avatarUrl"/>
-        </v-list-tile-avatar>
+
         <v-list-tile-content>
           <v-list-tile-title v-text="item.title"></v-list-tile-title>
           <v-list-tile-sub-title v-text="item.subtitle"></v-list-tile-sub-title>
@@ -91,6 +89,7 @@ export default class NewThreadDialog extends Vue {
   @servicesModule.Getter('instances') instances
   @servicesModule.Action(serviceAction.LOAD_INSTANCES) loadInstances
   @servicesModule.Action(serviceAction.SEARCH_THREADS) searchItems
+  @servicesModule.Action(serviceAction.CLEAR_RESULTS) clearResults
   @connectionsModule.Action(actions.CREATE_NEW_THREAD) createThread
   dialog = false
   threadModel: { avatarUrl: string, id: string, title: string, subtitle: string } | null = null
@@ -110,6 +109,11 @@ export default class NewThreadDialog extends Vue {
     ) {
       this.searchItems({ id: this.selectedItem.id, query: val })
     }
+  }
+
+  @Watch('selectedItem')
+  watchSelected(val: string) {
+    this.clearResults()
   }
 
   get labeledInstances() {
@@ -140,7 +144,7 @@ export default class NewThreadDialog extends Vue {
       this.createThread({
         title: this.threadModel!!.title,
         subtitle: this.threadModel!!.subtitle,
-        avatarUrl: this.threadModel!!.avatarUrl,
+        avatarUrl: this.threadModel!!.avatarUrl || null,
         serviceId: this.selectedItem.id,
         externalThreadId: this.threadModel!!.id,
         connId: this.threadConnection.id,

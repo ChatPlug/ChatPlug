@@ -5,15 +5,11 @@ import { Subject } from 'rxjs'
 import DiscordConfig from './DiscordConfig'
 import {
   Client as DiscordClient,
-  TextChannel,
   Collection,
   Webhook,
 } from 'discord.js'
-import { ExchangeManager } from '../../ExchangeManager'
-import { ThreadConnectionsManager } from '../../ThreadConnectionsManager'
 import { DiscordMessageHandler } from './DiscordMessageHandler'
-import ChatPlugContext from '../../ChatPlugContext'
-import Service from '../../entity/Service'
+import { LogLevel } from '../../Logger'
 
 export default class DiscordService extends ChatPlugService<DiscordConfig> {
   messageHandler: DiscordMessageHandler
@@ -38,10 +34,10 @@ export default class DiscordService extends ChatPlugService<DiscordConfig> {
     // save them to a new collection
     let webhooks = new Collection() as Collection<string, Webhook>
     webhooks = webhooks.concat(...filteredWebhooks)
-    log.silly('discord: webhooks', '%o', webhooks)
+    this.log(LogLevel.DEBUG, 'discord: webhooks ' + webhooks.map((el) => el.name).join(','))
 
     this.messageHandler.loadWebhooks(webhooks)
-    log.info('discord', 'Logged in as', this.discord.user.username)
+    this.log(LogLevel.INFO, 'Logged in as ' + this.discord.user.username)
   }
 
   terminate() {

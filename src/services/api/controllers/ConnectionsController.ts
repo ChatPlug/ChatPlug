@@ -4,6 +4,7 @@ import ThreadConnection from '../../../entity/ThreadConnection'
 import { Repository } from 'typeorm'
 import Thread from '../../../entity/Thread'
 import Service from '../../../entity/Service'
+import Message from '../../../entity/Message'
 
 @JsonController('/connections')
 export default class ConnectionsController {
@@ -27,7 +28,8 @@ export default class ConnectionsController {
   @Delete('/:id')
   async deleteConnetionById(@Param('id') id : number) {
     const foundConnection = await this.connectionsRepository.findOne({ id })
-    await this.context.connection.getRepository(Thread).delete({  })
+    await this.context.connection.getRepository(Thread).delete({ threadConnection: foundConnection })
+    await this.context.connection.getRepository(Message).delete({ threadConnection: foundConnection })
     return this.connectionsRepository.remove(foundConnection!!)
   }
 

@@ -74,6 +74,12 @@ export default <ActionTree<ServicesState, {}>>{
   async [action.START_INSTANCE](store, { id }) {
     const { data } = await axios.get(`services/instances/${id}/status/startup`)
   },
+  async [action.LOAD_LOGS](store, { id }) {
+    const { data } = await axios.get(`services/instances/${id}/logs`)
+    if (data.data) {
+      store.commit(action.SET_LOGS, { id, logs: data.data })
+    }
+  },
   async [action.LOAD_INSTANCE_THREAD](store, { id }: { id: number}) {
     const { data } = await axios.get(`services/instances/${id}/threads`)
 
@@ -101,5 +107,8 @@ export default <ActionTree<ServicesState, {}>>{
     if (data.data) {
       store.commit(action.SET_SEARCH_THREADS, { results: data.data })
     }
+  },
+  async [action.CLEAR_RESULTS](store) {
+    store.commit(action.SET_SEARCH_THREADS, { results: [] })
   },
 }
