@@ -13,7 +13,7 @@ export default class Thread {
   @Column()
   avatarUrl: string
 
-  @ManyToOne(type => Service, service => service.threads, { eager: true, cascade: ['insert', 'update'] })
+  @ManyToOne(type => Service, service => service.threads, { eager: true, onDelete: 'CASCADE', cascade: ['insert', 'update'] })
   service: Service
 
   @Column({ nullable: true })
@@ -25,6 +25,6 @@ export default class Thread {
   @CreateDateColumn({ type: 'datetime' })
   createdAt: Date
 
-  @ManyToOne(type => ThreadConnection, threadConnection => threadConnection.threads, { cascade: ['insert', 'update'] })
+  @ManyToOne(type => ThreadConnection, threadConnection => threadConnection.threads, { onDelete: 'CASCADE', cascade: ['insert', 'update'] })
   threadConnection: ThreadConnection
 }

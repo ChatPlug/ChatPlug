@@ -170,6 +170,9 @@ export default class ServicesController {
   @Delete('/instances/:id')
   async deleteService(@Param('id') id: number) {
     const foundService = await this.servicesRepository.findOne({ id })
+    this.context.connection.getRepository(Log).delete({ service: foundService })
+    this.context.connection.getRepository(Thread).delete({ service: foundService })
+    this.context.connection.getRepository(User).delete({ service: foundService })
 
     return this.servicesRepository.remove(foundService!!)
   }
