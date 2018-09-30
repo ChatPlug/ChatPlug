@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany, JoinTable } from 'typeorm'
 import User from './User'
 import Thread from './Thread'
 import { IChatPlugServiceStatus } from '../models'
@@ -20,6 +20,12 @@ export default class Service {
 
   @Column()
   enabled: boolean
+
+  @Column()
+  primaryMode: boolean = false
+
+  @ManyToMany(type => Service, { cascade: true })
+  primaryIgnoredServices: Service[]
 
   @Column()
   configured: boolean

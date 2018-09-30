@@ -30,54 +30,72 @@ export class ExchangeManager {
           .where('thread.externalServiceId = :id', { id: message.externalOriginId })
           .getMany()
 
+        const handledThreadConn: number[] = []
+
         for (const thread of threads) {
           for (const actualThread of thread.threadConnection.threads.filter((element) => element.externalServiceId !== message.externalOriginId)) {
             message.externalTargetId = actualThread.externalServiceId
             const serviceInstance = context.serviceManager.getServiceForId(actualThread.service.id)
             if (serviceInstance) {
-              if (serviceInstance.dbService.enabled) {
+              if (serviceInstance.dbService.enabled && serviceInstance.dbService.status === 'running') {
                 serviceInstance.receiveMessageSubject.next(message)
               } else {
-                log.verbose('exchange', 'Instance ' + serviceInstance.dbService.instanceName + ' of service ' + serviceInstance.dbService.moduleName + ' disabled, ignoring.')
+                log.verbose('exchange', 'Instance ' + serviceInstance.dbService.instanceName + ' of service ' + serviceInstance.dbService.moduleName + ' disabled, or not running ignoring.')
               }
             }
           }
 
-          const conn = context.connection
-          const attachementsRepository = conn.getRepository(Attachment)
-          const userRepository = conn.getRepository(User)
-          const threadConnectionRepository = conn.getRepository(ThreadConnection)
+          if (!handledThreadConn.filter((el) => el === thread.threadConnection.id)) {
+            const conn = context.connection
+            const attachementsRepository = conn.getRepository(Attachment)
+            const userRepository = conn.getRepository(User)
+            const threadConnectionRepository = conn.getRepository(ThreadConnection)
 
-          const dbMessage = new Message()
-          dbMessage.content = message.message
-          if (!dbMessage.content) {
-            dbMessage.content = ''
+            const dbMessage = new Message()
+            dbMessage.content = message.message
+            if (!dbMessage.content) {
+              dbMessage.content = ''
+            }
+            dbMessage.originExternalThreadId = message.externalOriginId
+
+            let user = await userRepository.findOne({ externalServiceId: message.author.externalServiceId })
+            if (!user) {
+              user = new User()
+              user.avatarUrl = message.author.avatar || 'https://yt3.ggpht.com/a-/ACSszfECDj6uDQ7CRDzDJtWeYA-fbDPghCkL_jITzg=s900-mo-c-c0xffffffff-rj-k-no'
+              user.username = message.author.username
+              user.externalServiceId = message.author.externalServiceId
+              user.service = thread.service
+              userRepository.save(user)
+            }
+
+            dbMessage.author = user
+
+            for (const attachment of message.attachments) {
+              const dbAttachement = new Attachment()
+              dbAttachement.message = dbMessage
+              dbAttachement.name = attachment.name
+              dbAttachement.url = attachment.url
+              attachementsRepository.save(dbAttachement)
+            }
+
+            thread.threadConnection.messages.push(dbMessage)
+            // messageRepository.save(dbMessage)
+            threadConnectionRepository.save(thread.threadConnection)
+            handledThreadConn.push(thread.threadConnection.id)
           }
-          dbMessage.originExternalThreadId = message.externalOriginId
+        }
 
-          let user = await userRepository.findOne({ externalServiceId: message.author.externalServiceId })
-          if (!user) {
-            user = new User()
-            user.avatarUrl = message.author.avatar || 'https://yt3.ggpht.com/a-/ACSszfECDj6uDQ7CRDzDJtWeYA-fbDPghCkL_jITzg=s900-mo-c-c0xffffffff-rj-k-no'
-            user.username = message.author.username
-            user.externalServiceId = message.author.externalServiceId
-            user.service = thread.service
-            userRepository.save(user)
-          }
+        // Pass the message to valid `primary mode` services
+        const primaryServices = await this.context.connection.getRepository(Service)
+          .createQueryBuilder('service')
+            .leftJoinAndSelect('service.threads', 'threads')
+            .leftJoinAndSelect('threads.threadConnection', 'threadConnection')
+            .where('service.primaryMode = :id', { id: true })
+            .getMany()
 
-          dbMessage.author = user
-
-          for (const attachment of message.attachments) {
-            const dbAttachement = new Attachment()
-            dbAttachement.message = dbMessage
-            dbAttachement.name = attachment.name
-            dbAttachement.url = attachment.url
-            attachementsRepository.save(dbAttachement)
-          }
-
-          thread.threadConnection.messages.push(dbMessage)
-          // messageRepository.save(dbMessage)
-          threadConnectionRepository.save(thread.threadConnection)
+        console.log(primaryServices)
+        for (const service of primaryServices) {
+          console.dir(service)
         }
       }})
   }

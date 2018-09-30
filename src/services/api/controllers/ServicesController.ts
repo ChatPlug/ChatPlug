@@ -145,6 +145,20 @@ export default class ServicesController {
     return service
   }
 
+  @Get('/instances/:id/markPrimary')
+  async markPrimary(@Param('id') id: number) {
+    await this.servicesRepository.update({ id }, { primaryMode: true })
+    const service = await this.servicesRepository.findOneOrFail({ id })
+    return service
+  }
+
+  @Get('/instances/:id/unmarkPrimary')
+  async unmarkPrimary(@Param('id') id: number) {
+    await this.servicesRepository.update({ id }, { primaryMode: false })
+    const service = await this.servicesRepository.findOneOrFail({ id })
+    return service
+  }
+
   @Get('/instances/:id/users')
   async getServiceUsers(@Param('id') id: number) {
     return await this.context.connection.getRepository(User).find({ where: { service: { id } } })

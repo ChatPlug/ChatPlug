@@ -4,7 +4,7 @@
       <v-card color="indigo accent-2" class="white--text">
         <v-card-title primary-title>
           <div>
-           
+
             <div class="headline">2221
                 <div class="icons">
                 <v-icon class="white--text">message</v-icon>
@@ -21,7 +21,7 @@
           <div>
             <div class="headline">4021</div>
                 <div class="icons">
-                <v-icon class="white--text">text sms</v-icon>
+                <v-icon class="white--text">text_sms</v-icon>
                 </div>
             <span class="white--text">Messages sent this week</span>
           </div>
