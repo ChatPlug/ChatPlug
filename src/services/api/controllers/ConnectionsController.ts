@@ -1,4 +1,4 @@
-import { JsonController, Get, Param, Post, BodyParam, Delete } from 'routing-controllers'
+import { JsonController, Get, Param, Post, BodyParam, Delete, QueryParam } from 'routing-controllers'
 import ChatPlugContext from '../../../ChatPlugContext'
 import ThreadConnection from '../../../entity/ThreadConnection'
 import { Repository } from 'typeorm'
@@ -34,12 +34,27 @@ export default class ConnectionsController {
   }
 
   @Get('/:id/messages')
-  async getMessages(@Param('id') id : number) {
-    const connection = await this.connectionsRepository.findOne({ id }, { relations: ['messages'] })
-    if (connection) {
-      return connection.messages
+  async getMessages(
+    @Param('id') id : number,
+    @QueryParam('after', { required: false }) after: number) {
+    if (after) {
+      return this.context.connection.getRepository(Message)
+        .createQueryBuilder('message')
+        .leftJoin('message.threadConnection', 'threadConnection', 'threadConnection.id = :id', { id })
+        .leftJoinAndSelect('message.attachements', 'attachements')
+        .leftJoinAndSelect('message.author', 'author')
+        .orderBy('message.createdAt', 'DESC')
+        .where('message.id < :after', { after })
+        .take(25)
+        .getMany()
     }
-    return { error: 'Invalid connection' }
+    return this.context.connection.getRepository(Message)
+      .createQueryBuilder('message')
+      .leftJoinAndSelect('message.author', 'author')
+      .leftJoin('message.threadConnection', 'threadConnection', 'threadConnection.id = :id', { id })
+      .orderBy('message.createdAt', 'DESC')
+      .take(25)
+      .getMany()
   }
 
   @Post('/')

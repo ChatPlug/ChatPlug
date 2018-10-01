@@ -45,7 +45,7 @@ export class ExchangeManager {
             }
           }
 
-          if (!handledThreadConn.filter((el) => el === thread.threadConnection.id)) {
+          if (handledThreadConn.filter((el) => el === thread.threadConnection.id).length === 0) {
             const conn = context.connection
             const attachementsRepository = conn.getRepository(Attachment)
             const userRepository = conn.getRepository(User)
@@ -86,7 +86,7 @@ export class ExchangeManager {
         }
 
         // Pass the message to valid `primary mode` services
-        const primaryServices = await this.context.connection.getRepository(Service)
+        /*const primaryServices = await this.context.connection.getRepository(Service)
           .createQueryBuilder('service')
             .leftJoinAndSelect('service.threads', 'threads')
             .leftJoinAndSelect('threads.threadConnection', 'threadConnection')
@@ -96,7 +96,7 @@ export class ExchangeManager {
         console.log(primaryServices)
         for (const service of primaryServices) {
           console.dir(service)
-        }
+        }*/
       }})
   }
 }
