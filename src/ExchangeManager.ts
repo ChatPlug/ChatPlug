@@ -53,6 +53,7 @@ export class ExchangeManager {
 
             const dbMessage = new Message()
             dbMessage.content = message.message
+            dbMessage.service = thread.service
             if (!dbMessage.content) {
               dbMessage.content = ''
             }

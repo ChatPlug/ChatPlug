@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, CreateDat
 import Attachment from './Attachment'
 import ThreadConnection from './ThreadConnection'
 import User from './User'
+import Service from './Service'
 
 @Entity()
 export default class Message {
@@ -22,6 +23,9 @@ export default class Message {
 
   @ManyToOne(type => ThreadConnection, thread => thread.messages, { cascade: ['insert', 'update'] })
   threadConnection: ThreadConnection
+
+  @ManyToOne(type => Service)
+  service: Service
 
   @Column()
   originExternalThreadId: string
