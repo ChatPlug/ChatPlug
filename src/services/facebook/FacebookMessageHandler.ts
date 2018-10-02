@@ -21,71 +21,46 @@ export class FacebookMessageHandler implements ChatPlugMessageHandler {
 
   async onOutgoingMessage(message) {
     // Duplicates handling
-    if (this.handledMessages.includes(message.messageID)) return log.verbose('facebook', 'Possible duplicate message, ignoring')
+    // if (this.handledMessages.includes(message.id)) return log.verbose('facebook', 'Possible duplicate message, ignoring')
     if (this.handledMessages.length > 100) this.handledMessages.splice(100)
-    this.handledMessages.push(message.messageID)
+    this.handledMessages.push(message.id)
 
     // TODO: add logging to this part of the script
     if (!this.threadCache.has(message.threadId)) {
-      this.threadCache.set(message.threadId, await promisify(this.client.getThreadInfo)(message.threadID))
+      this.threadCache.set(message.threadId, await this.client.getThreadInfo(message.threadId))
     }
 
-    if (!this.userCache.has(message.senderID)) {
-      this.userCache.set(message.senderID, (await promisify(this.client.getUserInfo)(message.senderID))[message.senderID])
-      console.log('eluwaa')
+    if (!this.userCache.has(message.authorId)) {
+      this.userCache.set(message.authorId, await this.client.getUserInfo(message.authorId))
     }
 
-    const sender = this.userCache.get(message.senderID)
+    const sender = this.userCache.get(message.authorId)
     const thread = this.threadCache.get(message.threadId)
 
     let threadName = sender.name
 
-    if (message.isGroup) {
-      threadName = thread.threadName
+    if (thread.isGroup) {
+      threadName = thread.name
     }
 
     const chatPlugMessage = {
-      message: message.body,
-      attachments: message.attachments.map(attach => {
-        if (attach.type === 'share') return // TODO: parse share attachments correctly
-
-        let url = attach.image || attach.url
-        if (!url) return // failsafe, but it shouldn't happen
-
-        if (url.match(/^(http|https):\/\/l\.facebook\.com\/l\.php/i)) {
-          url = parse(url, true).query.u
-        }
-
-        if (parse(url).pathname === '/safe_image.php') {
-          url = parse(url, true).query.url
-        }
-
-        return {
-          url,
-          name: (parse(url).pathname || 'filename').split('/').pop(),
-        }
-      }).filter(x => x),
+      message: message.message,
       author: {
-        username: thread.nicknames[message.senderID] || sender.name,
-        avatar: `https://graph.facebook.com/${message.senderID}/picture?width=128`,
-        externalServiceId: message.senderID,
+        username: 'Dupa',
+        avatar: `https://graph.facebook.com/${message.authorId}/picture?width=128`,
+        externalServiceId: message.authorId.toFixed(),
       },
-      externalOriginId: thread.threadID,
+      externalOriginId: thread.id.toFixed(),
     } as IChatPlugMessage
 
+    chatPlugMessage.attachments = []
     this.messageSubject.next(chatPlugMessage)
   }
 
   onIncomingMessage = async (message: IChatPlugMessage) => {
     if (!message.externalTargetId) return
-    this.client.sendMessage(
-      {
-        body: `*${message.author.username}*: ${message.message}`,
-        attachment: await Promise.all(message.attachments.map(attach => attach.url).map(getStreamFromURL)),
-      },
-      message.externalTargetId,
-      err => { if (err) log.error('facebook', err) },
-    )
+    console.log(Number(message.externalTargetId))
+    this.client.sendMessage(Number(message.externalTargetId), `*${message.author.username}*: ${message.message}`)
   }
 
   setClient(client) {
