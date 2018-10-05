@@ -1,13 +1,8 @@
-import 'reflect-metadata'
-import log from 'npmlog'
-import { ChatPlug } from './ChatPlug'
-import ChatPlugContext from './ChatPlugContext'
-import ThreadConnection from './entity/ThreadConnection'
-import Thread from './entity/Thread'
-import Service from './entity/Service'
-import chalk from 'chalk'
-import CLICommands from './configWizard/cli/CLICommands'
-import { getAliasMap } from './configWizard/cli/CLIArguments'
+import 'reflect-metadata';
+import { ChatPlug } from './ChatPlug';
+import ChatPlugContext from './ChatPlugContext';
+import { getAliasMap } from './configWizard/cli/CLIArguments';
+import CLICommands from './configWizard/cli/CLICommands';
 
 const argv = require('yargs-parser')(process.argv.slice(2), {
   alias: getAliasMap(),

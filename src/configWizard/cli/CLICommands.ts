@@ -4,7 +4,8 @@ import CLIArgumentOptions, {
   parameterListMetadataKey,
   helpMessageMetadataKey,
   DescriptionFlags,
-  functionListMetadataKey } from './CLIArguments'
+  functionListMetadataKey,
+} from './CLIArguments'
 import { printHelpMessage } from './CLIHelpCommand'
 import CLIArgument from './CLIArgument'
 import log from 'npmlog'
@@ -15,7 +16,7 @@ import Service from '../../entity/Service'
 import chalk from 'chalk'
 import { ChatPlug } from '../../ChatPlug'
 import HelpMessage from './HelpMessage'
-import fs = require('fs')
+import fs from 'fs'
 import CLIConfigWizard from './CLIConfigWizard'
 import path from 'path'
 import TOML from '@iarna/toml'
@@ -47,14 +48,27 @@ export default class CLICommands {
         key,
       ) as string
 
-      const sortedParameters = parameters.sort((a, b) => { return a.propertyIndex!! - b.propertyIndex!! })
-      if (sortedParameters.every((item) => argv[item.name] !== undefined) && ((Object.keys(argv).length - 1) / 2) === sortedParameters.length) {
-        await this[key].apply(this, sortedParameters.map((item) => { return argv[item.name] }))
+      const sortedParameters = parameters.sort((a, b) => {
+        return a.propertyIndex!! - b.propertyIndex!!
+      })
+      if (
+        sortedParameters.every(item => argv[item.name] !== undefined) &&
+        (Object.keys(argv).length - 1) / 2 === sortedParameters.length
+      ) {
+        await this[key].apply(
+          this,
+          sortedParameters.map(item => {
+            return argv[item.name]
+          }),
+        )
         return
       }
     }
 
-    log.error('core', 'Invalid command. Use --help to see available commands for ChatPlug.')
+    log.error(
+      'core',
+      'Invalid command. Use --help to see available commands for ChatPlug.',
+    )
   }
 
   @HelpMessage('Starts ChatPlug')
@@ -79,7 +93,14 @@ export default class CLICommands {
   }
 
   @HelpMessage('Creates new connection with given name')
-  public async addConnection(@CLIArgument({ name: CLIArguments.CONNECTION, descriptionOverride: 'connection name' }) connectionName: string, @CLIArgument({ name: CLIArguments.ADD }) _: boolean) {
+  public async addConnection(
+    @CLIArgument({
+      name: CLIArguments.CONNECTION,
+      descriptionOverride: 'connection name',
+    })
+    connectionName: string,
+    @CLIArgument({ name: CLIArguments.ADD }) _: boolean,
+  ) {
     const repository = this.connection.getRepository(ThreadConnection)
     const connection = new ThreadConnection()
     connection.connectionName = connectionName
@@ -88,21 +109,33 @@ export default class CLICommands {
     log.info('core', 'Added connection ' + result.connectionName)
   }
 
-  @HelpMessage('Removes thread from given connection with specified service instance')
+  @HelpMessage(
+    'Removes thread from given connection with specified service instance',
+  )
   public async removeThread(
     @CLIArgument({ name: CLIArguments.CONNECTION }) connName: string,
     @CLIArgument({ name: CLIArguments.SERVICE }) serviceName: string,
     @CLIArgument({ name: CLIArguments.INSTANCE }) instance: string,
     @CLIArgument({ name: CLIArguments.THREAD }) threadId: string,
-    @CLIArgument({ name: CLIArguments.REMOVE }) _: boolean) {
+    @CLIArgument({ name: CLIArguments.REMOVE }) _: boolean,
+  ) {
     const serviceRepository = this.connection.getRepository(Service)
     const threadRepository = this.connection.getRepository(Thread)
 
     const connectionRepository = this.connection.getRepository(ThreadConnection)
-    const connection = await connectionRepository.findOne({ connectionName: connName })
-    const foundService = await serviceRepository.findOne({ where: { moduleName: serviceName, instanceName: instance }, relations: ['threads'] })
+    const connection = await connectionRepository.findOne({
+      connectionName: connName,
+    })
+    const foundService = await serviceRepository.findOne({
+      where: { moduleName: serviceName, instanceName: instance },
+      relations: ['threads'],
+    })
 
-    const thread = await threadRepository.findOne({ externalServiceId: threadId, service: foundService, threadConnection: connection })
+    const thread = await threadRepository.findOne({
+      externalServiceId: threadId,
+      service: foundService,
+      threadConnection: connection,
+    })
 
     if (!thread) {
       log.error('core', 'Cannot find thread with specified parameters.')
@@ -110,20 +143,31 @@ export default class CLICommands {
     }
 
     threadRepository.remove(thread)
-    log.info('core', 'Removed thread #' + threadId + ' from connection ' + connName)
+    log.info(
+      'core',
+      'Removed thread #' + threadId + ' from connection ' + connName,
+    )
   }
 
-  @HelpMessage('Creates new thread in given connection with provided service instance')
+  @HelpMessage(
+    'Creates new thread in given connection with provided service instance',
+  )
   public async addThread(
     @CLIArgument({ name: CLIArguments.CONNECTION }) connName: string,
     @CLIArgument({ name: CLIArguments.SERVICE }) serviceName: string,
     @CLIArgument({ name: CLIArguments.INSTANCE }) instance: string,
     @CLIArgument({ name: CLIArguments.THREAD }) threadId: string,
-    @CLIArgument({ name: CLIArguments.ADD }) _: boolean) {
+    @CLIArgument({ name: CLIArguments.ADD }) _: boolean,
+  ) {
     const serviceRepository = this.connection.getRepository(Service)
     const connectionRepository = this.connection.getRepository(ThreadConnection)
-    const connection = await connectionRepository.findOne({ connectionName: connName })
-    const service = await serviceRepository.findOne({ where: { moduleName: serviceName, instanceName: instance }, relations: ['threads'] })
+    const connection = await connectionRepository.findOne({
+      connectionName: connName,
+    })
+    const service = await serviceRepository.findOne({
+      where: { moduleName: serviceName, instanceName: instance },
+      relations: ['threads'],
+    })
 
     if (!service) {
       log.error('core', 'Cannot find service with given name.')
@@ -135,8 +179,15 @@ export default class CLICommands {
       return
     }
 
-    if (connection.threads.some((el) => { return el.externalServiceId === threadId })) {
-      log.error('core', 'Thread with given id already exists in this connection')
+    if (
+      connection.threads.some(el => {
+        return el.externalServiceId === threadId
+      })
+    ) {
+      log.error(
+        'core',
+        'Thread with given id already exists in this connection',
+      )
       return
     }
 
@@ -150,43 +201,61 @@ export default class CLICommands {
     log.info('core', 'Added thread #' + threadId + ' to connection ' + connName)
   }
 
-  @HelpMessage('Removes thread from given connection with specified service instance')
+  @HelpMessage(
+    'Removes thread from given connection with specified service instance',
+  )
   public async removeThreadWithDefaultInstance(
     @CLIArgument({ name: CLIArguments.CONNECTION }) connName: string,
     @CLIArgument({ name: CLIArguments.SERVICE }) serviceName: string,
     @CLIArgument({ name: CLIArguments.THREAD }) threadId: string,
-    @CLIArgument({ name: CLIArguments.REMOVE }) _: boolean) {
+    @CLIArgument({ name: CLIArguments.REMOVE }) _: boolean,
+  ) {
     await this.removeThread(connName, serviceName, 'default', threadId, true)
   }
 
-  @HelpMessage('Creates new thread in given connection with default service instance')
+  @HelpMessage(
+    'Creates new thread in given connection with default service instance',
+  )
   public async addThreadWithDefaultInstance(
     @CLIArgument({ name: CLIArguments.CONNECTION }) connName: string,
     @CLIArgument({ name: CLIArguments.SERVICE }) serviceName: string,
     @CLIArgument({ name: CLIArguments.THREAD }) threadId: string,
-    @CLIArgument({ name: CLIArguments.ADD }) _: boolean) {
+    @CLIArgument({ name: CLIArguments.ADD }) _: boolean,
+  ) {
     await this.addThread(connName, serviceName, 'default', threadId, true)
   }
 
   @HelpMessage('Lists all connections')
-  public async connections(@CLIArgument({ name: CLIArguments.CONNECTION, descriptionOverride: DescriptionFlags.IGNORE }) _: boolean) {
-    const connectionsRepository = this.connection.getRepository(ThreadConnection)
-    const connections = await connectionsRepository.find(
-      {
-        join: {
-          alias: 'connection',
-          leftJoinAndSelect: {
-            threads: 'connection.threads',
-            service: 'threads.service',
-          },
+  public async connections(
+    @CLIArgument({
+      name: CLIArguments.CONNECTION,
+      descriptionOverride: DescriptionFlags.IGNORE,
+    })
+    _: boolean,
+  ) {
+    const connectionsRepository = this.connection.getRepository(
+      ThreadConnection,
+    )
+    const connections = await connectionsRepository.find({
+      join: {
+        alias: 'connection',
+        leftJoinAndSelect: {
+          threads: 'connection.threads',
+          service: 'threads.service',
         },
-      })
+      },
+    })
     for (const connection of connections) {
       const indexText = chalk.gray(connection.id + '')
       log.info(indexText, chalk.greenBright(connection.connectionName))
       log.info(indexText, 'Threads:')
       for (const thread of connection.threads) {
-        log.info(indexText, chalk.blueBright(thread.service.moduleName + '.' + thread.service.instanceName) + chalk.greenBright('#' + thread.externalServiceId))
+        log.info(
+          indexText,
+          chalk.blueBright(
+            thread.service.moduleName + '.' + thread.service.instanceName,
+          ) + chalk.greenBright('#' + thread.externalServiceId),
+        )
       }
     }
   }
@@ -195,9 +264,13 @@ export default class CLICommands {
   public async removeInstance(
     @CLIArgument({ name: CLIArguments.SERVICE }) serviceName: string,
     @CLIArgument({ name: CLIArguments.INSTANCE }) newInstanceName: string,
-    @CLIArgument({ name: CLIArguments.REMOVE }) _: boolean) {
+    @CLIArgument({ name: CLIArguments.REMOVE }) _: boolean,
+  ) {
     const serviceRepository = this.connection.getRepository(Service)
-    const instance = await serviceRepository.findOne({ moduleName: serviceName, instanceName: newInstanceName })
+    const instance = await serviceRepository.findOne({
+      moduleName: serviceName,
+      instanceName: newInstanceName,
+    })
     if (!instance) {
       log.error('services', 'Given service instance does not exist')
       return
@@ -205,13 +278,17 @@ export default class CLICommands {
 
     await serviceRepository.remove(instance)
 
-    log.info('services', 'Removed instance ' + newInstanceName + ' of service ' + serviceName)
+    log.info(
+      'services',
+      'Removed instance ' + newInstanceName + ' of service ' + serviceName,
+    )
   }
 
   @HelpMessage('Removes default service instance')
   public async removeDefaultInstance(
     @CLIArgument({ name: CLIArguments.SERVICE }) serviceName: string,
-    @CLIArgument({ name: CLIArguments.REMOVE }) _: boolean) {
+    @CLIArgument({ name: CLIArguments.REMOVE }) _: boolean,
+  ) {
     await this.removeInstance(serviceName, 'default', true)
   }
 
@@ -219,17 +296,23 @@ export default class CLICommands {
   public async newInstance(
     @CLIArgument({ name: CLIArguments.SERVICE }) serviceName: string,
     @CLIArgument({ name: CLIArguments.INSTANCE }) newInstanceName: string,
-    @CLIArgument({ name: CLIArguments.ADD }) _: boolean) {
+    @CLIArgument({ name: CLIArguments.ADD }) _: boolean,
+  ) {
     const serviceRepository = this.connection.getRepository(Service)
     const availableServices = await this.context.serviceManager.getAvailableServices()
-    const serviceModule = availableServices.find((el) => el.moduleName === serviceName)
+    const serviceModule = availableServices.find(
+      el => el.moduleName === serviceName,
+    )
 
     if (!serviceModule) {
       log.error('services', 'Service with given name does not exist')
       return
     }
 
-    const instance = await serviceRepository.findOne({ moduleName: serviceName, instanceName: newInstanceName  })
+    const instance = await serviceRepository.findOne({
+      moduleName: serviceName,
+      instanceName: newInstanceName,
+    })
     if (instance) {
       log.error('services', 'Instance with given name already exists!')
       return
@@ -238,7 +321,10 @@ export default class CLICommands {
     const wizard = new CLIConfigWizard()
 
     const confSchema = require(serviceModule.modulePath).Config
-    log.info('services', 'Configuring instance ' + newInstanceName + ' of service ' + serviceName)
+    log.info(
+      'services',
+      'Configuring instance ' + newInstanceName + ' of service ' + serviceName,
+    )
     const configuration = await wizard.promptForConfig(confSchema)
 
     const service = new Service()
@@ -252,21 +338,25 @@ export default class CLICommands {
     fs.writeFileSync(
       path.join(
         CONFIG_FOLDER_PATH,
-        service.moduleName +
-          '.' +
-          service.id +
-          '.toml',
+        service.moduleName + '.' + service.id + '.toml',
       ),
       TOML.stringify(configuration),
     )
 
-    log.info('services', 'Created and configured instance ' + newInstanceName + ' of service ' + serviceName)
+    log.info(
+      'services',
+      'Created and configured instance ' +
+        newInstanceName +
+        ' of service ' +
+        serviceName,
+    )
   }
 
   @HelpMessage('Creates and configures default service instance')
   public async newDefaultInstance(
     @CLIArgument({ name: CLIArguments.SERVICE }) serviceName: string,
-    @CLIArgument({ name: CLIArguments.ADD }) _: boolean) {
+    @CLIArgument({ name: CLIArguments.ADD }) _: boolean,
+  ) {
     await this.newInstance(serviceName, 'default', true)
   }
 
@@ -274,11 +364,17 @@ export default class CLICommands {
   public async reconfigureInstance(
     @CLIArgument({ name: CLIArguments.SERVICE }) serviceName: string,
     @CLIArgument({ name: CLIArguments.INSTANCE }) newInstanceName: string,
-    @CLIArgument({ name: CLIArguments.CONFIGURE }) _: boolean) {
+    @CLIArgument({ name: CLIArguments.CONFIGURE }) _: boolean,
+  ) {
     const serviceRepository = this.connection.getRepository(Service)
 
-    const instance = await serviceRepository.findOne({ moduleName: serviceName, instanceName: newInstanceName  })
-    const serviceModule = (await this.context.serviceManager.getAvailableServices()).find((el) => el.moduleName === serviceName)
+    const instance = await serviceRepository.findOne({
+      moduleName: serviceName,
+      instanceName: newInstanceName,
+    })
+    const serviceModule = (await this.context.serviceManager.getAvailableServices()).find(
+      el => el.moduleName === serviceName,
+    )
     if (!serviceModule) {
       log.error('services', 'Given service does not exist')
       return
@@ -291,15 +387,18 @@ export default class CLICommands {
 
     const wizard = new CLIConfigWizard()
     const confSchema = require(serviceModule.modulePath).Config
-    log.info('services', 'Reconfiguring instance ' + newInstanceName + ' of service ' + serviceName)
+    log.info(
+      'services',
+      'Reconfiguring instance ' +
+        newInstanceName +
+        ' of service ' +
+        serviceName,
+    )
     const configuration = await wizard.promptForConfig(confSchema)
     fs.writeFileSync(
       path.join(
         CONFIG_FOLDER_PATH,
-        serviceName +
-        '.' +
-        newInstanceName +
-        '.toml',
+        serviceName + '.' + newInstanceName + '.toml',
       ),
       TOML.stringify(configuration),
     )
@@ -310,23 +409,44 @@ export default class CLICommands {
   @HelpMessage('Reconfigures default instance of given service')
   public async reconfigureDefaultInstance(
     @CLIArgument({ name: CLIArguments.SERVICE }) serviceName: string,
-    @CLIArgument({ name: CLIArguments.CONFIGURE }) _: boolean) {
+    @CLIArgument({ name: CLIArguments.CONFIGURE }) _: boolean,
+  ) {
     await this.reconfigureInstance(serviceName, 'default', true)
   }
 
   @HelpMessage('Lists all services')
-  public async services(@CLIArgument({ name: CLIArguments.SERVICE, descriptionOverride: DescriptionFlags.IGNORE }) _: boolean) {
+  public async services(
+    @CLIArgument({
+      name: CLIArguments.SERVICE,
+      descriptionOverride: DescriptionFlags.IGNORE,
+    })
+    _: boolean,
+  ) {
     const serviceRepository = this.connection.getRepository(Service)
 
     const services = await this.context.serviceManager.getAvailableServices()
     for (const service of services) {
       console.log('')
       console.log('Service ' + chalk.redBright(service.moduleName))
-      console.log(chalk.green(service.displayName) + chalk.greenBright(' v' + service.version))
+      console.log(
+        chalk.green(service.displayName) +
+          chalk.greenBright(' v' + service.version),
+      )
       console.log(chalk.blue(service.description))
-      const serviceInstances = await serviceRepository.find({ moduleName: service.moduleName })
+      const serviceInstances = await serviceRepository.find({
+        moduleName: service.moduleName,
+      })
       if (serviceInstances.length > 0) {
-        console.log('instances: ' + serviceInstances.map((el) => { return el.enabled ? chalk.green(el.instanceName) : chalk.red(el.instanceName) }).join(', '))
+        console.log(
+          'instances: ' +
+            serviceInstances
+              .map(el => {
+                return el.enabled
+                  ? chalk.green(el.instanceName)
+                  : chalk.red(el.instanceName)
+              })
+              .join(', '),
+        )
       }
     }
   }
@@ -335,9 +455,13 @@ export default class CLICommands {
   public async disableServiceInstance(
     @CLIArgument({ name: CLIArguments.SERVICE }) serviceName: string,
     @CLIArgument({ name: CLIArguments.INSTANCE }) newInstanceName: string,
-    @CLIArgument({ name: CLIArguments.DISABLE }) _: boolean) {
+    @CLIArgument({ name: CLIArguments.DISABLE }) _: boolean,
+  ) {
     const serviceRepository = await this.connection.getRepository(Service)
-    const instance = await serviceRepository.findOne({ moduleName: serviceName, instanceName: newInstanceName })
+    const instance = await serviceRepository.findOne({
+      moduleName: serviceName,
+      instanceName: newInstanceName,
+    })
 
     if (!instance) {
       log.info('services', 'Given service instance does not exist')
@@ -346,16 +470,23 @@ export default class CLICommands {
 
     instance.enabled = false
     serviceRepository.save(instance)
-    log.info('services', 'Disabled instance ' + newInstanceName + ' of service ' + serviceName)
+    log.info(
+      'services',
+      'Disabled instance ' + newInstanceName + ' of service ' + serviceName,
+    )
   }
 
   @HelpMessage('Enable instance of given service')
   public async enableServiceInstance(
     @CLIArgument({ name: CLIArguments.SERVICE }) serviceName: string,
     @CLIArgument({ name: CLIArguments.INSTANCE }) newInstanceName: string,
-    @CLIArgument({ name: CLIArguments.ENABLE }) _: boolean) {
+    @CLIArgument({ name: CLIArguments.ENABLE }) _: boolean,
+  ) {
     const serviceRepository = await this.connection.getRepository(Service)
-    const instance = await serviceRepository.findOne({ moduleName: serviceName, instanceName: newInstanceName })
+    const instance = await serviceRepository.findOne({
+      moduleName: serviceName,
+      instanceName: newInstanceName,
+    })
 
     if (!instance) {
       log.info('services', 'Given service instance does not exist')
@@ -364,20 +495,25 @@ export default class CLICommands {
 
     instance.enabled = true
     serviceRepository.save(instance)
-    log.info('services', 'Enabled instance ' + newInstanceName + ' of service ' + serviceName)
+    log.info(
+      'services',
+      'Enabled instance ' + newInstanceName + ' of service ' + serviceName,
+    )
   }
 
   @HelpMessage('Disable default instance of given service')
   public async disableDefaultServiceInstance(
     @CLIArgument({ name: CLIArguments.SERVICE }) serviceName: string,
-    @CLIArgument({ name: CLIArguments.DISABLE }) _: boolean) {
+    @CLIArgument({ name: CLIArguments.DISABLE }) _: boolean,
+  ) {
     await this.disableServiceInstance(serviceName, 'default', true)
   }
 
   @HelpMessage('Enable default instance of given service')
   public async enableDefaultServiceInstance(
     @CLIArgument({ name: CLIArguments.SERVICE }) serviceName: string,
-    @CLIArgument({ name: CLIArguments.ENABLE }) _: boolean) {
+    @CLIArgument({ name: CLIArguments.ENABLE }) _: boolean,
+  ) {
     await this.enableServiceInstance(serviceName, 'default', true)
   }
 }
