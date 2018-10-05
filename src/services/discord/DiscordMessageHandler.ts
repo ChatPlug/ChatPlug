@@ -3,16 +3,19 @@ import { IChatPlugMessage } from '../../models'
 import { Subject } from 'rxjs'
 import log from 'npmlog'
 import { Client as DiscordClient, Collection, Webhook, TextChannel } from 'discord.js'
+import Service from '../../entity/Service'
 
 export class DiscordMessageHandler implements ChatPlugMessageHandler {
   client: DiscordClient
   messageSubject: Subject<IChatPlugMessage>
   name = 'discord'
+  service: Service
   webhooks: Collection<string, Webhook>
 
-  constructor(client: DiscordClient, subject: Subject<IChatPlugMessage>) {
+  constructor(client: DiscordClient, subject: Subject<IChatPlugMessage>, service: Service) {
     this.client = client
     this.messageSubject = subject
+    this.service = service
   }
 
   onOutgoingMessage = message => {
@@ -34,6 +37,8 @@ export class DiscordMessageHandler implements ChatPlugMessageHandler {
         externalServiceId: message.author.id,
       },
       externalOriginId:  message.channel.id,
+      externalOriginName:  message.channel.name,
+      originService: this.service,
     } as IChatPlugMessage
 
     this.messageSubject.next(chatPlugMessage)

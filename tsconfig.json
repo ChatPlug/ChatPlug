@@ -4,7 +4,8 @@
         "esModuleInterop": true,
         "strictNullChecks": true,
         "importHelpers": true,
-        "target": "es2017",
+        "target": "es2018",
+        "downlevelIteration": true,
         "noImplicitAny": false,
         "moduleResolution": "node",
         "sourceMap": true,
@@ -12,7 +13,8 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "lib": [
-          "esnext"
+          "esnext",
+          "es2016",
         ],
         "baseUrl": ".",
         "paths": {
