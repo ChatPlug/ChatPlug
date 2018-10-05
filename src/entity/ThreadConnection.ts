@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn } from 'typeorm'
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, CreateDateColumn, JoinTable } from 'typeorm'
 import Thread from './Thread'
 import Message from './Message'
 
@@ -14,8 +14,10 @@ export default class ThreadConnection {
   createdAt: Date
 
   @OneToMany(type => Thread, thread => thread.threadConnection, { onDelete:'CASCADE', eager: true, cascade: ['insert', 'remove', 'update'] })
+  @JoinTable()
   threads: Thread[]
 
   @OneToMany(type => Message, message => message.threadConnection, { onDelete:'CASCADE', cascade: ['insert', 'remove', 'update'] })
+  @JoinTable()
   messages: Message[]
 }

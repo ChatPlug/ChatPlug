@@ -87,17 +87,54 @@ export class ExchangeManager {
         }
 
         // Pass the message to valid `primary mode` services
-        /*const primaryServices = await this.context.connection.getRepository(Service)
+        const primaryServices = await this.context.connection.getRepository(Service)
           .createQueryBuilder('service')
             .leftJoinAndSelect('service.threads', 'threads')
             .leftJoinAndSelect('threads.threadConnection', 'threadConnection')
             .where('service.primaryMode = :id', { id: true })
             .getMany()
 
-        console.log(primaryServices)
         for (const service of primaryServices) {
-          console.dir(service)
-        }*/
+          const threadRepo = this.context.connection.getRepository(Thread)
+          const threads = await threadRepo
+            .createQueryBuilder('thread')
+            .leftJoinAndSelect('thread.threadConnection', 'threadConnection')
+            .leftJoinAndSelect('threadConnection.threads', 'threads')
+            .leftJoinAndSelect('thread.service', 'service')
+            .where('service.primaryMode = :id', { id: true })
+            .getMany()
+
+          const conns = [...(new Set(threads.map((el) => el.threadConnection)) as any)].filter((el) => el && el.threads.some((el) => el.externalServiceId === message.externalOriginId))
+          if (conns.length > 0) {
+
+          } else {
+            const conn = new ThreadConnection()
+            conn.connectionName = message.externalOriginName || message.externalOriginId
+            conn.threads = []
+            conn.messages = []
+            await (this.context.connection.getRepository(ThreadConnection).save(conn))
+
+            const targetThread = new Thread()
+            targetThread.title = 'Primary connected'
+            targetThread.avatarUrl = 'https://pbs.twimg.com/profile_images/1047758884780294144/_-wbVBfz_400x400.jpg'
+            targetThread.externalServiceId = message.externalOriginId
+            targetThread.subtitle = ''
+            targetThread.service = service!!
+            targetThread.threadConnection = conn
+
+            const originThread = new Thread()
+            originThread.title = message.externalOriginName || message.externalOriginId
+            originThread.avatarUrl = 'https://pbs.twimg.com/profile_images/1047758884780294144/_-wbVBfz_400x400.jpg'
+            originThread.externalServiceId = message.externalOriginId
+            originThread.subtitle = ''
+            originThread.service = message.originService!!
+            originThread.threadConnection = conn
+
+            conn.threads.push(originThread)
+            conn.threads.push(targetThread)
+            await (this.context.connection.getRepository(ThreadConnection).save(conn))
+          }
+        }
       }})
   }
 }

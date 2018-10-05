@@ -1,5 +1,6 @@
 import { Subject } from 'rxjs'
 import { ChatPlugService } from './services/Service'
+import Service from './entity/Service'
 
 export interface IChatPlugMessage {
   message: string
@@ -7,6 +8,8 @@ export interface IChatPlugMessage {
   author: IChatPlugUser
   externalOriginId: string
   externalTargetId: string
+  externalOriginName: string | null
+  originService: Service | null
 }
 
 export interface IChatPlugAttachement {

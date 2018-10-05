@@ -25,6 +25,7 @@ export default class Service {
   primaryMode: boolean = false
 
   @ManyToMany(type => Service, { cascade: true })
+  @JoinTable()
   primaryIgnoredServices: Service[]
 
   @Column()
@@ -34,8 +35,10 @@ export default class Service {
   threads: Thread[]
 
   @OneToMany(type => Log, log => log.service, { onDelete: 'CASCADE', cascade: ['insert', 'remove', 'update'] })
+  @JoinTable()
   logs: Log[]
 
   @OneToMany(type => User, user => user.service, { cascade: ['insert', 'remove', 'update'] })
+  @JoinTable()
   users: User[]
 }
