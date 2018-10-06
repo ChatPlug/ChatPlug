@@ -22,7 +22,7 @@ export default class Service {
   enabled: boolean
 
   @Column()
-  primaryMode: boolean = false
+  primaryMode: boolean
 
   @ManyToMany(type => Service, { cascade: true })
   @JoinTable()

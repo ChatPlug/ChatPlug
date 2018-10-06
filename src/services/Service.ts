@@ -8,17 +8,17 @@ import { LogLevel } from '../Logger'
 export class ChatPlugService<TConfig = any> {
   config: TConfig
   receiveMessageSubject = new Subject<IChatPlugMessage>()
-  dbService: Service
+  id: number
   context: ChatPlugContext
 
-  constructor(dbService: Service, context: ChatPlugContext) {
-    this.dbService = dbService
+  constructor(service: Service, context: ChatPlugContext) {
+    this.id = service.id
     this.context = context
-    this.config = context.config.readConfigForService(dbService)
+    this.config = context.config.readConfigForService(service)
   }
 
-  log(level: LogLevel, msg: string) {
-    this.context.logger.log(this.dbService, level, msg)
+  async log(level: LogLevel, msg: string) {
+    this.context.logger.log(await this.context.connection.getRepository(Service).findOneOrFail({ id: this.id }), level, msg)
   }
 
   async initialize () {}

@@ -9,18 +9,18 @@ export class DiscordMessageHandler implements ChatPlugMessageHandler {
   client: DiscordClient
   messageSubject: Subject<IChatPlugMessage>
   name = 'discord'
-  service: Service
+  id: number
   webhooks: Collection<string, Webhook>
 
-  constructor(client: DiscordClient, subject: Subject<IChatPlugMessage>, service: Service) {
+  constructor(client: DiscordClient, subject: Subject<IChatPlugMessage>, id: number) {
     this.client = client
     this.messageSubject = subject
-    this.service = service
+    this.id = id
   }
 
   onOutgoingMessage = message => {
     if (
-      this.webhooks.has(message.author.id) ||
+      this.webhooks && this.webhooks.has(message.author.id) ||
       message.author.username === this.client.user.username
     ) return
 
@@ -38,7 +38,7 @@ export class DiscordMessageHandler implements ChatPlugMessageHandler {
       },
       externalOriginId:  message.channel.id,
       externalOriginName:  message.channel.name,
-      originService: this.service,
+      originServiceId: this.id,
     } as IChatPlugMessage
 
     this.messageSubject.next(chatPlugMessage)
