@@ -110,6 +110,7 @@ export default class ServicesController {
     const service = new Service()
     service.configured = false
     service.enabled = true
+    service.primaryMode = false
     service.instanceName = 'Instance name'
     service.moduleName = serviceModule.moduleName
 

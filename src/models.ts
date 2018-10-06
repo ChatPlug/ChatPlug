@@ -9,7 +9,7 @@ export interface IChatPlugMessage {
   externalOriginId: string
   externalTargetId: string
   externalOriginName: string | null
-  originService: Service | null
+  originServiceId: number | null
 }
 
 export interface IChatPlugAttachement {

@@ -104,48 +104,46 @@ export class ServiceManager {
         'services',
         service.moduleName,
       ) as any)).Service(service, this.context)
-      this.services[service.id].dbService = service
-      service.status = IChatPlugServiceStatus.SHUTDOWN
-      await this.context.connection.getRepository(Service).save(service)
-
+      await this.context.connection.getRepository(Service).update({ id: service.id }, { status: 'shutdown' })
       return true
     }
 
-    service.configured = false
-    await this.context.connection.getRepository(Service).save(service)
+    await this.context.connection.getRepository(Service).update({ id: service.id }, { configured: false })
     return false
   }
 
   async startupService(service: ChatPlugService) {
-    if (service.dbService.status !== IChatPlugServiceStatus.CRASHED
-      && service.dbService.status !== IChatPlugServiceStatus.SHUTDOWN) {
+    const dbService = await this.context.connection.getRepository(Service).findOneOrFail({ id: service.id })
+    if (dbService.status !== IChatPlugServiceStatus.CRASHED
+      && dbService.status !== IChatPlugServiceStatus.SHUTDOWN) {
       return
     }
     log.info(
       'services',
-      `Service instance ${service.dbService.instanceName} (${
-        service.dbService.moduleName
+      `Service instance ${dbService.instanceName} (${
+        dbService.moduleName
       }) enabled, initializing...`,
     )
-    this.setServiceStatus(service, IChatPlugServiceStatus.STARTING)
+    await this.setServiceStatus(service, IChatPlugServiceStatus.STARTING)
     service.initialize().catch(async (e) => {
-      this.setServiceStatus(service, IChatPlugServiceStatus.CRASHED)
+      await this.setServiceStatus(service, IChatPlugServiceStatus.CRASHED)
       await service.terminate()
-    }).then(() => {
-      this.setServiceStatus(service, IChatPlugServiceStatus.RUNNING)
+    }).then(async () => {
+      await this.setServiceStatus(service, IChatPlugServiceStatus.RUNNING)
     })
   }
 
   async terminateService(service: ChatPlugService) {
-    if (service.dbService.status === IChatPlugServiceStatus.SHUTDOWN || service.dbService.status === IChatPlugServiceStatus.CRASHED) {
+    const dbService = await this.context.connection.getRepository(Service).findOneOrFail({ id: service.id })
+    if (dbService.status === IChatPlugServiceStatus.SHUTDOWN || dbService.status === IChatPlugServiceStatus.CRASHED) {
       return
     }
     await this.setServiceStatus(service, IChatPlugServiceStatus.TERMINATING)
     try {
       await service.terminate()
-      this.setServiceStatus(service, IChatPlugServiceStatus.SHUTDOWN)
+      await this.setServiceStatus(service, IChatPlugServiceStatus.SHUTDOWN)
     } catch (e) {
-      this.setServiceStatus(service, IChatPlugServiceStatus.CRASHED)
+      await this.setServiceStatus(service, IChatPlugServiceStatus.CRASHED)
     }
   }
 
@@ -163,9 +161,8 @@ export class ServiceManager {
   }
 
   async setServiceStatus(service: ChatPlugService, status: IChatPlugServiceStatus) {
-    service.dbService.status = status
-    this.statusSubject.next({ serviceId: service.dbService.id, statusUpdate: status })
-    await this.context.connection.getRepository(Service).save(service.dbService)
+    this.statusSubject.next({ serviceId: service.id, statusUpdate: status })
+    await this.context.connection.getRepository(Service).update({ id: service.id }, { status })
   }
 
   async terminateServices() {
