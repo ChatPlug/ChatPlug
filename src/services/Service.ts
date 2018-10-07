@@ -1,4 +1,4 @@
-import { IChatPlugMessage, IChatPlugThreadResult } from '../models'
+import { IChatPlugMessage, IChatPlugThreadResult, MessagePacket } from '../models'
 import { Subject } from 'rxjs'
 import Service from '../entity/Service'
 import ChatPlugContext from '../ChatPlugContext'
@@ -7,7 +7,7 @@ import { LogLevel } from '../Logger'
 
 export class ChatPlugService<TConfig = any> {
   config: TConfig
-  receiveMessageSubject = new Subject<IChatPlugMessage>()
+  receiveMessageSubject = new Subject<MessagePacket>()
   id: number
   context: ChatPlugContext
 

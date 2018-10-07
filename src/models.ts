@@ -1,6 +1,8 @@
 import { Subject } from 'rxjs'
 import { ChatPlugService } from './services/Service'
 import Service from './entity/Service'
+import Message from './entity/Message'
+import Thread from './entity/Thread'
 
 export interface IChatPlugMessage {
   message: string
@@ -16,6 +18,11 @@ export interface IChatPlugAttachement {
   type: IChatPlugAttachementType,
   url: string
   name: string
+}
+
+export interface MessagePacket {
+  message: Message
+  targetThread: Thread
 }
 
 export enum IChatPlugAttachementType {

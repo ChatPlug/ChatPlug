@@ -20,7 +20,6 @@ export default class MessagingService extends ChatPlugService<MessagingConfig> {
       client.on('message', (message) => {
         try {
           const event = JSON.parse(message.toString())
-          console .dir(event)
           if (event.event === 'message') {
             const data = event.data
             const chatPlugMessage = {
@@ -39,7 +38,6 @@ export default class MessagingService extends ChatPlugService<MessagingConfig> {
               originServiceId: this.id,
             } as IChatPlugMessage
 
-            console.dir(chatPlugMessage)
             this.context.exchangeManager.messageSubject.next(chatPlugMessage)
           }
         } catch (e) {
@@ -50,6 +48,7 @@ export default class MessagingService extends ChatPlugService<MessagingConfig> {
 
     this.receiveMessageSubject.subscribe({
       next: (message) => {
+        (message as any).message.threadConnection = null
         this.broadcastPacket(message)
       },
     })

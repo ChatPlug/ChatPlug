@@ -1,5 +1,5 @@
 import { ChatPlugMessageHandler } from '../MessageHandler'
-import { IChatPlugMessage, IChatPlugAttachement, IChatPlugAttachementType } from '../../models'
+import { IChatPlugMessage, IChatPlugAttachement, IChatPlugAttachementType, MessagePacket } from '../../models'
 import { promisify } from 'util'
 import { Subject } from 'rxjs'
 import { parse } from 'url'
@@ -98,8 +98,8 @@ export class SlackMessageHandler implements ChatPlugMessageHandler {
     console.timeEnd('SlackPrepare' + message.message_id)
   }
 
-  onIncomingMessage = async (message: IChatPlugMessage) => {
-    console.time('SlackSend' + message.externalOriginId)
+  onIncomingMessage = async (message: MessagePacket) => {
+    /*console.time('SlackSend' + message.externalOriginId)
     if (!message.externalTargetId) return
     const formattedMsg = '*' + message.author.username + '*' + ': ' + message.message
     // @ts-ignore
@@ -111,11 +111,11 @@ export class SlackMessageHandler implements ChatPlugMessageHandler {
     for (const attachment of message.attachments) {
       await this.client.sendPhoto(message.externalTargetId, attachment.url)
     }
-    console.timeEnd('SlackSend' + message.externalOriginId)
+    console.timeEnd('SlackSend' + message.externalOriginId)*/
   }
 
   setClient(client) {
-    this.client = client
+    // this.client = client
   }
 
   async fileIdToAttachement(fileId: string): Promise<IChatPlugAttachement> {

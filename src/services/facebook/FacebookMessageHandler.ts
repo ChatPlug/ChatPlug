@@ -1,5 +1,5 @@
 import { ChatPlugMessageHandler } from '../MessageHandler'
-import { IChatPlugMessage } from '../../models'
+import { IChatPlugMessage, MessagePacket } from '../../models'
 import { promisify } from 'util'
 import { Subject } from 'rxjs'
 import { parse } from 'url'
@@ -57,10 +57,10 @@ export class FacebookMessageHandler implements ChatPlugMessageHandler {
     this.messageSubject.next(chatPlugMessage)
   }
 
-  onIncomingMessage = async (message: IChatPlugMessage) => {
-    if (!message.externalTargetId) return
-    console.log(Number(message.externalTargetId))
-    this.client.sendMessage(Number(message.externalTargetId), `*${message.author.username}*: ${message.message}`)
+  onIncomingMessage = async (message: MessagePacket) => {
+    if (!message.targetThread.externalServiceId) return
+    console.log(Number(message.targetThread.externalServiceId))
+    this.client.sendMessage(Number(message.targetThread.externalServiceId), `*${message.message.author.username}*: ${message.message.content}`)
   }
 
   setClient(client) {
