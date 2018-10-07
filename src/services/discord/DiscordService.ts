@@ -37,7 +37,7 @@ export default class DiscordService extends ChatPlugService<DiscordConfig> {
     this.log(LogLevel.DEBUG, 'discord: webhooks ' + webhooks.map((el) => el.name).join(','))
 
     this.messageHandler.loadWebhooks(webhooks)
-    this.log(LogLevel.INFO, 'Logged in as ' + this.discord.user.username)
+    await this.log(LogLevel.INFO, 'Logged in as ' + this.discord.user.username)
   }
 
   terminate() {

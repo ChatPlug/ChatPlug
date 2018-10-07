@@ -25,7 +25,6 @@ export class ExchangeManager {
         const threads = await threadRepository.createQueryBuilder('thread')
           .innerJoinAndSelect('thread.threadConnection', 'threadConnection')
           .leftJoinAndSelect('threadConnection.threads', 'threads')
-          .leftJoinAndSelect('threadConnection.messages', 'messages')
           .leftJoinAndSelect('threads.service', 'service')
           .where('thread.externalServiceId = :id', { id: message.externalOriginId })
           .getMany()
@@ -37,8 +36,10 @@ export class ExchangeManager {
             message.externalTargetId = actualThread.externalServiceId
             const serviceInstance = context.serviceManager.getServiceForId(actualThread.service.id)
             if (serviceInstance) {
-              const dbService = actualThread.service
+              const dbService = await this.context.connection.getRepository(Service).findOneOrFail({ id: actualThread.service.id })
+              console.dir(dbService)
               if (dbService.enabled && dbService.status === 'running') {
+                (message as any).threadConnectionId = thread.threadConnection.id
                 serviceInstance.receiveMessageSubject.next(message)
               } else {
                 log.verbose('exchange', 'Instance ' + dbService.instanceName + ' of service ' + dbService.moduleName + ' disabled, or not running ignoring.')
@@ -89,7 +90,7 @@ export class ExchangeManager {
         const targetThread = new Thread()
         targetThread.title = 'Primary connected'
         targetThread.avatarUrl = 'https://pbs.twimg.com/profile_images/1047758884780294144/_-wbVBfz_400x400.jpg'
-        targetThread.externalServiceId = message.externalOriginId
+        targetThread.externalServiceId = '' + conn.id
         targetThread.subtitle = ''
         targetThread.service = await this.context.connection.getRepository(Service).findOneOrFail({ id: service.id })
         targetThread.threadConnection = conn
@@ -103,6 +104,7 @@ export class ExchangeManager {
         if (serviceInstance) {
           const dbService = await this.context.connection.getRepository(Service).findOneOrFail({ id: service.id })
           if (dbService.enabled && dbService.status === 'running') {
+            (message as any).threadConnectionId = conn.id
             serviceInstance.receiveMessageSubject.next(message)
           } else {
             log.verbose('exchange', 'Instance ' + dbService.instanceName + ' of service ' + dbService.moduleName + ' disabled, or not running ignoring.')
