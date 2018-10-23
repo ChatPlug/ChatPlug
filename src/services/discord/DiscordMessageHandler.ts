@@ -47,7 +47,7 @@ export class DiscordMessageHandler implements ChatPlugMessageHandler {
 
   onIncomingMessage = async (packet: MessagePacket) => {
     const message = packet.message
-
+    console.dir(message)
     const channel = this.client.channels.get(packet.targetThread.externalServiceId)
     if (!channel || channel.type !== 'text') {
       return log.warn('discord', `Channel ${packet.targetThread.externalServiceId} not found!`)

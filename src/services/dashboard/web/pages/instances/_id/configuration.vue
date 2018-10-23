@@ -1,5 +1,6 @@
 <template>
   <v-container>
+    <v-checkbox :input-value="currentInstance.primaryMode" label="Primary service"/>
     <EditableLabel label="Instance name" :value="currentInstance.instanceName" @input="updateInsanceName"/>
     <v-divider/>
     <template v-for="configField in configSchema">
