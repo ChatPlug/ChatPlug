@@ -36,18 +36,20 @@ export class ExchangeManager {
           for (const actualThread of thread.threadConnection.threads.filter((element) => element.externalServiceId !== message.externalOriginId)) {
             message.externalTargetId = actualThread.externalServiceId
             const serviceInstance = context.serviceManager.getServiceForId(actualThread.service.id)
-
-            if (handledThreadConn.filter((el) => el === thread.threadConnection.id).length === 0) {
-              dbMessage = await this.saveMessageForThread(message, thread)
-              handledThreadConn.push(thread.threadConnection.id)
-            }
-
             if (serviceInstance) {
               const dbService = await this.context.connection.getRepository(Service).findOneOrFail({ id: actualThread.service.id })
 
+              if (handledThreadConn.filter((el) => el === thread.threadConnection.id).length === 0) {
+                handledThreadConn.push(thread.threadConnection.id)
+                dbMessage = await this.saveMessageForThreadConnection(message, thread.threadConnection)
+              }
+
               if (dbService.enabled && dbService.status === 'running') {
                 (message as any).threadConnectionId = thread.threadConnection.id
-                serviceInstance.receiveMessageSubject.next({ message: dbMessage!!, targetThread: actualThread })
+                const toSend = JSON.parse(JSON.stringify({ message: dbMessage!!, targetThread: actualThread }))
+                toSend.message.attachements = toSend.message.attachements || []
+
+                serviceInstance.receiveMessageSubject.next(toSend)
               } else {
                 log.verbose('exchange', 'Instance ' + dbService.instanceName + ' of service ' + dbService.moduleName + ' disabled, or not running ignoring.')
               }
@@ -69,9 +71,11 @@ export class ExchangeManager {
       .leftJoinAndSelect('threadConnection.threads', 'threads2')
       .where('service.primaryMode = :id', { id: true })
       .getMany()
+    console.log(message)
 
     for (const service of primaryServices) {
       const conns = [...(new Set(service.threads.map((el) => el.threadConnection)) as any)].filter((el) => el && el.threads.some((el) => el.externalServiceId === message.externalOriginId))
+      console.log(conns)
       if (conns.length > 0) {
       } else {
         const conn = new ThreadConnection()
@@ -101,7 +105,7 @@ export class ExchangeManager {
         conn.threads.push(targetThread)
         await connRepo.save(conn)
 
-        const msg = await this.saveMessageForThread(message, originThread)
+        const msg = await this.saveMessageForThreadConnection(message, originThread.threadConnection)
 
         message.externalOriginId = targetThread.externalServiceId
         const serviceInstance = this.context.serviceManager.getServiceForId(service!!.id)
@@ -109,7 +113,10 @@ export class ExchangeManager {
           const dbService = await this.context.connection.getRepository(Service).findOneOrFail({ id: service.id })
           if (dbService.enabled && dbService.status === 'running') {
             (message as any).threadConnectionId = conn.id
-            serviceInstance.receiveMessageSubject.next({ targetThread, message: msg })
+            const toSend = JSON.parse(JSON.stringify({ targetThread, message: msg }))
+            toSend.message.attachements = toSend.message.attachements || []
+
+            serviceInstance.receiveMessageSubject.next(toSend)
           } else {
             log.verbose('exchange', 'Instance ' + dbService.instanceName + ' of service ' + dbService.moduleName + ' disabled, or not running ignoring.')
           }
@@ -118,7 +125,7 @@ export class ExchangeManager {
     }
   }
 
-  private async saveMessageForThread(message: IChatPlugMessage, thread: Thread): Promise<Message> {
+  private async saveMessageForThreadConnection(message: IChatPlugMessage, thread: ThreadConnection): Promise<Message> {
     const conn = this.context.connection
     const attachementsRepository = conn.getRepository(Attachment)
     const userRepository = conn.getRepository(User)
@@ -129,7 +136,7 @@ export class ExchangeManager {
     const dbMessage = new Message()
     dbMessage.content = message.message
     dbMessage.service = service
-    dbMessage.threadConnection = thread.threadConnection
+    dbMessage.threadConnection = thread
     if (!dbMessage.content) {
       dbMessage.content = ''
     }
@@ -155,7 +162,7 @@ export class ExchangeManager {
       attachementsRepository.save(dbAttachement)
     }
 
-    messageRepository.save(dbMessage)
+    await messageRepository.save(dbMessage)
     return dbMessage
   }
 }

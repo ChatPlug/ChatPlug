@@ -16,6 +16,7 @@ interface ServiceInstance {
   logs: Log[] | null,
   status: string,
   users: ServiceUser[],
+  primaryMode: boolean,
   threads: ServiceThread[]
 }
 
