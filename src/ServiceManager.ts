@@ -7,7 +7,7 @@ import fs from 'fs-extra'
 import ServiceModule from './ServiceModule'
 import { plainToClass } from 'class-transformer'
 import { validate } from 'class-validator'
-import { IChatplugServiceStatusUpdate, IChatPlugServiceStatus } from './models'
+import { IChatPlugServiceStatusUpdate, IChatPlugServiceStatus } from './models'
 import { Subject } from 'rxjs'
 
 export interface ServiceMap {
@@ -19,7 +19,7 @@ const CONFIG_FOLDER_PATH = path.join(__dirname, '../config')
 export class ServiceManager {
   services: ServiceMap
   context: ChatPlugContext
-  statusSubject : Subject<IChatplugServiceStatusUpdate>
+  statusSubject : Subject<IChatPlugServiceStatusUpdate>
 
   constructor(context: ChatPlugContext) {
     this.context = context

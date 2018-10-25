@@ -41,7 +41,7 @@ export enum IChatPlugServiceStatus {
   SHUTDOWN = 'shutdown',
 }
 
-export interface IChatplugServiceStatusUpdate {
+export interface IChatPlugServiceStatusUpdate {
   serviceId: number,
   statusUpdate: IChatPlugServiceStatus,
 }
