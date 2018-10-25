@@ -20,11 +20,6 @@ export class FacebookMessageHandler implements ChatPlugMessageHandler {
   }
 
   async onOutgoingMessage(message) {
-    // Duplicates handling
-    // if (this.handledMessages.includes(message.id)) return log.verbose('facebook', 'Possible duplicate message, ignoring')
-    if (this.handledMessages.length > 100) this.handledMessages.splice(100)
-    this.handledMessages.push(message.id)
-
     // TODO: add logging to this part of the script
     if (!this.threadCache.has(message.threadId)) {
       this.threadCache.set(message.threadId, await this.client.getThreadInfo(message.threadId))
@@ -37,20 +32,26 @@ export class FacebookMessageHandler implements ChatPlugMessageHandler {
     const sender = this.userCache.get(message.authorId)
     const thread = this.threadCache.get(message.threadId)
 
-    let threadName = sender.name
-
-    if (thread.isGroup) {
-      threadName = thread.name
+    let originName
+    try {
+      originName = thread.isGroup ?
+        (thread.name || thread.id) :
+        ((thread.nicknames ? thread.nicknames[thread.id] : null) || this.userCache.get(thread.id).name)
+    } catch (err) {
+      originName = thread.name || thread.id
     }
+
+    const nickname = thread.nicknames ? thread.nicknames[message.authorId.toString()] : null
 
     const chatPlugMessage = {
       message: message.message,
       author: {
-        username: 'Dupa',
-        avatar: `https://graph.facebook.com/${message.authorId}/picture?width=128`,
+        username: nickname || sender.name,
+        avatar: sender.profilePicLarge,
         externalServiceId: message.authorId.toFixed(),
       },
       externalOriginId: thread.id.toFixed(),
+      externalOriginName: originName,
     } as IChatPlugMessage
 
     chatPlugMessage.attachments = []
