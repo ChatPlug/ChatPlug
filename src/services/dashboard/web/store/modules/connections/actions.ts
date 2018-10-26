@@ -1,6 +1,6 @@
 /* tslint:disable:function-name */
 import { ActionTree } from 'vuex'
-import axios from '~/axios'
+import axios from 'axios'
 import * as action from './actions.types'
 import ConnectionsState from './ConnectionsState'
 import encodeParams from '../../../encodeParams'
@@ -37,7 +37,7 @@ export default <ActionTree<ConnectionsState, {}>>{
   },
 
   async [action.DELETE_THREAD] (store, payload: { threadId, connId: number }) {
-    const { data } = await axios.delete(`connections/${payload.connId}/threads/${payload.threadId}`, payload)
+    const { data } = await axios.delete(`connections/${payload.connId}/threads/${payload.threadId}`)
 
     store.dispatch(action.LOAD_CONNECTIONS)
   },

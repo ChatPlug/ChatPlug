@@ -1,4 +1,4 @@
-import { Nuxt, Builder } from 'nuxt'
+const { Nuxt, Builder } = require('nuxt')
 
 export default function dashboardHttpHandler() {
   // Require Nuxt config
