@@ -15,6 +15,7 @@
         "lib": [
           "esnext",
           "es2016",
+          "dom"
         ],
         "baseUrl": ".",
         "paths": {
