@@ -14,7 +14,6 @@ export class SlackMessageHandler implements ChatPlugMessageHandler {
   context: ChatPlugContext
 
   constructor(client: Slack, subject: Subject<IChatPlugMessage>, context: ChatPlugContext) {
-    this.
     this.messageSubject = subject
     this.context = context
   }
