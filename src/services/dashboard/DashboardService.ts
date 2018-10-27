@@ -2,7 +2,7 @@ import { ChatPlugService } from '../Service'
 import DashboardConfig from './DashboardConfig'
 import Service from '../../entity/Service'
 import ApiService from '../api/ApiService'
-import dashboardHttpHandler from 'chatplug-dashboard/dashboardHttpHandler'
+import dashboardHttpHandler from './web/dashboardHttpHandler'
 
 export default class DashboardService extends ChatPlugService<DashboardConfig> {
   async getAPIExpressInstance() {

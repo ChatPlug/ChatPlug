@@ -39,7 +39,6 @@
     "async-retry": "^1.2.1",
     "body-parser": "^1.18.3",
     "chalk": "^2.4.1",
-    "chatplug-dashboard": "file:src/services/dashboard/web",
     "class-transformer": "^0.1.9",
     "class-validator": "^0.9.1",
     "consola": "^1.4.3",

@@ -71,11 +71,9 @@ export class ExchangeManager {
       .leftJoinAndSelect('threadConnection.threads', 'threads2')
       .where('service.primaryMode = :id', { id: true })
       .getMany()
-    console.log(message)
 
     for (const service of primaryServices) {
       const conns = [...(new Set(service.threads.map((el) => el.threadConnection)) as any)].filter((el) => el && el.threads.some((el) => el.externalServiceId === message.externalOriginId))
-      console.log(conns)
       if (conns.length > 0) {
       } else {
         const conn = new ThreadConnection()
