@@ -1,4 +1,4 @@
-import webpack, { Configuration } from 'webpack'
+import webpack, { Configuration, Compiler } from 'webpack'
 import path from 'path'
 import externals from 'webpack-node-externals'
 import loggingHelper from './loggingHelper'
@@ -12,6 +12,8 @@ function flag(f: string) {
 
 async function run() {
   const production = flag('--prod')
+  const watch = flag('--watch')
+  const compilers: (Compiler)[] = []
   const dist = path.resolve(__dirname, '../dist')
   loggingHelper.info('Production mode:', production)
 
@@ -51,8 +53,8 @@ async function run() {
       __filename: false,
     },
   }
-  const doneLib = loggingHelper.timed('building chatplug.lib.js')
-  await new Promise((res, rej) =>
+
+  compilers.push(
     webpack(
       merge(baseCfg, {
         entry: [path.resolve(__dirname, '../src/index.ts')],
@@ -70,23 +72,10 @@ async function run() {
           }),
         ],
       }),
-      (err, stats) => {
-        doneLib()
-        if (err || stats.hasErrors()) {
-          // Handle errors here
-          console.error(stats.toString())
-          rej(err)
-          return
-        }
-        res()
-
-        // Done processing
-      },
     ),
   )
 
-  const doneEntry = loggingHelper.timed('building chatplug.js executable')
-  await new Promise((res, rej) =>
+  compilers.push(
     webpack(
       merge(baseCfg, {
         entry: [path.resolve(__dirname, '../src/bootstrap.ts')],
@@ -98,26 +87,14 @@ async function run() {
           new webpack.DllReferencePlugin({
             name: './chatplug.lib',
             context: path.resolve(__dirname, '../'),
-            manifest: require(path.resolve(
+            manifest: path.resolve(
               __dirname,
               '../dist/chatplug.lib.manifest.json',
-            )),
+            ),
             sourceType: 'commonjs2',
           }),
         ],
       }),
-      (err, stats) => {
-        doneEntry()
-        if (err || stats.hasErrors()) {
-          // Handle errors here
-          console.error(stats.toString())
-          rej(err)
-          return
-        }
-        res()
-
-        // Done processing
-      },
     ),
   )
 
@@ -128,8 +105,42 @@ async function run() {
     if (!(await fs.stat(dirPath)).isDirectory()) {
       continue
     }
+    let c = await buildService(dirPath, baseCfg)
+    if (c) {
+      compilers.push(c)
+    }
+  }
 
-    await buildService(dirPath, baseCfg)
+  for (const compiler of compilers) {
+    if (!compiler) {
+      throw new Error('Compiler is undefined')
+    }
+    const done = loggingHelper.timed(
+      `Done compiling of ${(compiler as any).options.output.path}`,
+    )
+    await new Promise(res =>
+      compiler.run(d => {
+        done()
+        res()
+      }),
+    )
+  }
+
+  if (watch) {
+    for (const compiler of compilers) {
+      if (!compiler) {
+        throw new Error('Compiler is undefined')
+      }
+      compiler.watch(
+        {
+          aggregateTimeout: 300,
+          poll: undefined,
+        },
+        (err, stats) => {
+          console.log('Compiled while watching', err)
+        },
+      )
+    }
   }
 }
 
