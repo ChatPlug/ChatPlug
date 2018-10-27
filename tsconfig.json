@@ -14,7 +14,7 @@
         "experimentalDecorators": true,
         "lib": [
           "esnext",
-          "es2016",
+          "es2016"
         ],
         "baseUrl": ".",
         "paths": {
@@ -27,6 +27,8 @@
         "src/**/*"
     ],
     "exclude": [
-      "src/migration/**"
+      "src/migration/**",
+      "src/services/dashboard/web/**",
+      "src/services/slack/**" // TODO: remove when slack is fixed
     ]
 }
