@@ -2,22 +2,26 @@
   "compilerOptions": {
     "module": "commonjs",
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
     "strictNullChecks": true,
     "importHelpers": true,
-    "target": "es2017",
+    "target": "es2018",
+    "downlevelIteration": true,
     "noImplicitAny": false,
     "moduleResolution": "node",
     "sourceMap": true,
     "outDir": "dist",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "lib": ["esnext"],
+    "lib": ["esnext", "es2016"],
     "baseUrl": ".",
     "paths": {
       "*": ["node_modules/*"]
     }
   },
-  "include": ["src/**/*", "build-tool/serviceBuilder.ts"],
-  "exclude": ["src/migration/**", "src/services/dashboard/web/**"]
+  "include": ["src/**/*"],
+  "exclude": [
+    "src/migration/**",
+    "src/services/dashboard/web/**",
+    "src/services/slack/**" // TODO: remove when slack is fixed
+  ]
 }

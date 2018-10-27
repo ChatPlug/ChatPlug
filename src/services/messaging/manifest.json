@@ -1,0 +1,8 @@
+{
+  "displayName": "Messaging",
+  "version": "0.0.1",
+  "brandColor": "#3b5998",
+  "description": "Provides real time messaging protocol for mobile clients.",
+  "systemService": true,
+  "supportsThreadSearch": true
+}

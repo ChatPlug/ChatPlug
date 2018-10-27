@@ -9,6 +9,9 @@ export default class Service {
   @PrimaryGeneratedColumn()
   id: number
 
+  @Column({ default: false })
+  deleted: boolean
+
   @Column()
   instanceName: string
 
@@ -22,9 +25,10 @@ export default class Service {
   enabled: boolean
 
   @Column()
-  primaryMode: boolean = false
+  primaryMode: boolean
 
   @ManyToMany(type => Service, { cascade: true })
+  @JoinTable()
   primaryIgnoredServices: Service[]
 
   @Column()
@@ -34,8 +38,10 @@ export default class Service {
   threads: Thread[]
 
   @OneToMany(type => Log, log => log.service, { onDelete: 'CASCADE', cascade: ['insert', 'remove', 'update'] })
+  @JoinTable()
   logs: Log[]
 
   @OneToMany(type => User, user => user.service, { cascade: ['insert', 'remove', 'update'] })
+  @JoinTable()
   users: User[]
 }

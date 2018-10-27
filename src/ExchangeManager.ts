@@ -17,7 +17,7 @@ export class ExchangeManager {
   messageSubject = new Subject<IChatPlugMessage>()
   notificationSubject = new Subject<IChatPlugMessage>()
 
-  constructor (context: ChatPlugContext) {
+  constructor(context: ChatPlugContext) {
     this.context = context
     const threadRepository = context.connection.getRepository(Thread)
     this.messageSubject.subscribe({
@@ -25,79 +25,143 @@ export class ExchangeManager {
         const threads = await threadRepository.createQueryBuilder('thread')
           .innerJoinAndSelect('thread.threadConnection', 'threadConnection')
           .leftJoinAndSelect('threadConnection.threads', 'threads')
-          .leftJoinAndSelect('threadConnection.messages', 'messages')
           .leftJoinAndSelect('threads.service', 'service')
-          .where('thread.externalServiceId = :id', { id: message.externalOriginId })
+          .where('thread.deleted = false')
+          .andWhere('thread.externalServiceId = :id', { id: message.externalOriginId })
           .getMany()
 
         const handledThreadConn: number[] = []
+        let dbMessage: Message | null = null
 
         for (const thread of threads) {
-          for (const actualThread of thread.threadConnection.threads.filter((element) => element.externalServiceId !== message.externalOriginId)) {
+          for (const actualThread of thread.threadConnection.threads.filter((element) => !element.deleted && element.externalServiceId !== message.externalOriginId)) {
             message.externalTargetId = actualThread.externalServiceId
             const serviceInstance = context.serviceManager.getServiceForId(actualThread.service.id)
             if (serviceInstance) {
-              if (serviceInstance.dbService.enabled && serviceInstance.dbService.status === 'running') {
-                serviceInstance.receiveMessageSubject.next(message)
+              const dbService = await this.context.connection.getRepository(Service).findOneOrFail({ id: actualThread.service.id })
+
+              if (handledThreadConn.filter((el) => el === thread.threadConnection.id).length === 0) {
+                handledThreadConn.push(thread.threadConnection.id)
+                dbMessage = await this.saveMessageForThreadConnection(message, thread.threadConnection)
+              }
+
+              if (dbService.enabled && dbService.status === 'running') {
+                (message as any).threadConnectionId = thread.threadConnection.id
+                const toSend = JSON.parse(JSON.stringify({ message: dbMessage!!, targetThread: actualThread }))
+                toSend.message.attachements = toSend.message.attachements || []
+
+                serviceInstance.receiveMessageSubject.next(toSend)
               } else {
-                log.verbose('exchange', 'Instance ' + serviceInstance.dbService.instanceName + ' of service ' + serviceInstance.dbService.moduleName + ' disabled, or not running ignoring.')
+                log.verbose('exchange', 'Instance ' + dbService.instanceName + ' of service ' + dbService.moduleName + ' disabled, or not running ignoring.')
               }
             }
           }
-
-          if (handledThreadConn.filter((el) => el === thread.threadConnection.id).length === 0) {
-            const conn = context.connection
-            const attachementsRepository = conn.getRepository(Attachment)
-            const userRepository = conn.getRepository(User)
-            const threadConnectionRepository = conn.getRepository(ThreadConnection)
-
-            const dbMessage = new Message()
-            dbMessage.content = message.message
-            dbMessage.service = thread.service
-            if (!dbMessage.content) {
-              dbMessage.content = ''
-            }
-            dbMessage.originExternalThreadId = message.externalOriginId
-
-            let user = await userRepository.findOne({ externalServiceId: message.author.externalServiceId })
-            if (!user) {
-              user = new User()
-              user.avatarUrl = message.author.avatar || 'https://yt3.ggpht.com/a-/ACSszfECDj6uDQ7CRDzDJtWeYA-fbDPghCkL_jITzg=s900-mo-c-c0xffffffff-rj-k-no'
-              user.username = message.author.username
-              user.externalServiceId = message.author.externalServiceId
-              user.service = thread.service
-              userRepository.save(user)
-            }
-
-            dbMessage.author = user
-
-            for (const attachment of message.attachments) {
-              const dbAttachement = new Attachment()
-              dbAttachement.message = dbMessage
-              dbAttachement.name = attachment.name
-              dbAttachement.url = attachment.url
-              attachementsRepository.save(dbAttachement)
-            }
-
-            thread.threadConnection.messages.push(dbMessage)
-            // messageRepository.save(dbMessage)
-            threadConnectionRepository.save(thread.threadConnection)
-            handledThreadConn.push(thread.threadConnection.id)
-          }
         }
 
-        // Pass the message to valid `primary mode` services
-        /*const primaryServices = await this.context.connection.getRepository(Service)
-          .createQueryBuilder('service')
-            .leftJoinAndSelect('service.threads', 'threads')
-            .leftJoinAndSelect('threads.threadConnection', 'threadConnection')
-            .where('service.primaryMode = :id', { id: true })
-            .getMany()
+        await this.passToPrimaryServices(message)
+      },
+    })
+  }
 
-        console.log(primaryServices)
-        for (const service of primaryServices) {
-          console.dir(service)
-        }*/
-      }})
+  private async passToPrimaryServices(message: IChatPlugMessage) {
+    // Pass the message to valid `primary mode` services
+    const primaryServices = await this.context.connection.getRepository(Service)
+      .createQueryBuilder('service')
+      .leftJoinAndSelect('service.threads', 'threads')
+      .leftJoinAndSelect('threads.threadConnection', 'threadConnection')
+      .leftJoinAndSelect('threadConnection.threads', 'threads2')
+      .where('service.primaryMode = :id', { id: true })
+      .getMany()
+
+    for (const service of primaryServices) {
+      const conns = [...(new Set(service.threads.map((el) => el.threadConnection)) as any)].filter((el) => el && el.threads.some((el) => !el.deleted && el.externalServiceId === message.externalOriginId))
+      if (conns.length > 0) {
+      } else {
+        const conn = new ThreadConnection()
+        const connRepo = this.context.connection.getRepository(ThreadConnection)
+        conn.connectionName = message.externalOriginName || message.externalOriginId
+        conn.threads = []
+        conn.messages = []
+        await connRepo.save(conn)
+
+        const originThread = new Thread()
+        originThread.title = message.externalOriginName || message.externalOriginId
+        originThread.avatarUrl = 'https://pbs.twimg.com/profile_images/1047758884780294144/_-wbVBfz_400x400.jpg'
+        originThread.externalServiceId =  message.externalOriginId
+        originThread.subtitle = ''
+        originThread.service = await this.context.connection.getRepository(Service).findOneOrFail({ id: message.originServiceId!! })
+        originThread.threadConnection = conn
+
+        const targetThread = new Thread()
+        targetThread.title = 'Primary connected'
+        targetThread.avatarUrl = 'https://pbs.twimg.com/profile_images/1047758884780294144/_-wbVBfz_400x400.jpg'
+        targetThread.externalServiceId = '' + conn.id
+        targetThread.subtitle = ''
+        targetThread.service = await this.context.connection.getRepository(Service).findOneOrFail({ id: service.id })
+        targetThread.threadConnection = conn
+
+        conn.threads.push(originThread)
+        conn.threads.push(targetThread)
+        await connRepo.save(conn)
+
+        const msg = await this.saveMessageForThreadConnection(message, originThread.threadConnection)
+
+        message.externalOriginId = targetThread.externalServiceId
+        const serviceInstance = this.context.serviceManager.getServiceForId(service!!.id)
+        if (serviceInstance) {
+          const dbService = await this.context.connection.getRepository(Service).findOneOrFail({ id: service.id })
+          if (dbService.enabled && dbService.status === 'running') {
+            (message as any).threadConnectionId = conn.id
+            const toSend = JSON.parse(JSON.stringify({ targetThread, message: msg }))
+            toSend.message.attachements = toSend.message.attachements || []
+
+            serviceInstance.receiveMessageSubject.next(toSend)
+          } else {
+            log.verbose('exchange', 'Instance ' + dbService.instanceName + ' of service ' + dbService.moduleName + ' disabled, or not running ignoring.')
+          }
+        }
+      }
+    }
+  }
+
+  private async saveMessageForThreadConnection(message: IChatPlugMessage, thread: ThreadConnection): Promise<Message> {
+    const conn = this.context.connection
+    const attachementsRepository = conn.getRepository(Attachment)
+    const userRepository = conn.getRepository(User)
+    const messageRepository = conn.getRepository(Message)
+
+    const service = await this.context.connection.getRepository(Service).findOneOrFail({ id: message.originServiceId!! })
+
+    const dbMessage = new Message()
+    dbMessage.content = message.message
+    dbMessage.service = service
+    dbMessage.threadConnection = thread
+    if (!dbMessage.content) {
+      dbMessage.content = ''
+    }
+    dbMessage.originExternalThreadId = message.externalOriginId
+
+    let user = await userRepository.findOne({ externalServiceId: message.author.externalServiceId })
+    if (!user) {
+      user = new User()
+      user.avatarUrl = message.author.avatar || 'https://yt3.ggpht.com/a-/ACSszfECDj6uDQ7CRDzDJtWeYA-fbDPghCkL_jITzg=s900-mo-c-c0xffffffff-rj-k-no'
+      user.username = message.author.username
+      user.externalServiceId = message.author.externalServiceId
+      user.service = service
+      userRepository.save(user)
+    }
+
+    dbMessage.author = user
+
+    for (const attachment of message.attachments) {
+      const dbAttachement = new Attachment()
+      dbAttachement.message = dbMessage
+      dbAttachement.name = attachment.name
+      dbAttachement.url = attachment.url
+      attachementsRepository.save(dbAttachement)
+    }
+
+    await messageRepository.save(dbMessage)
+    return dbMessage
   }
 }

@@ -49,7 +49,7 @@ $ npm run start # run everytime you want to restart the app while developing
 # :clap: Contributing
 If you want to help with the project, you can have a look at [some issues](https://github.com/feelfreelinux/ChatPlug/issues) or join our discord server [discordapp.com/invite](https://discord.gg/xdWemhA). All help is much appreciated :smile:
 
-# :warning: Disclamer
+# :warning: Disclameratus
 
 We do not guarantee that this bridge will work correctly. We are not responsible for getting banned on any serivices integrated with ChatPlug. Use at your own discretion.
 

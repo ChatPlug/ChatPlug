@@ -1,23 +1,27 @@
 import { ChatPlugMessageHandler } from '../MessageHandler'
-import { IChatPlugMessage } from '../../models'
+import { IChatPlugMessage, MessagePacket } from '../../models'
 import { Subject } from 'rxjs'
 import log from 'npmlog'
 import { Client as DiscordClient, Collection, Webhook, TextChannel } from 'discord.js'
+import Service from '../../entity/Service'
+import Message from '../../entity/Message'
 
 export class DiscordMessageHandler implements ChatPlugMessageHandler {
   client: DiscordClient
   messageSubject: Subject<IChatPlugMessage>
   name = 'discord'
+  id: number
   webhooks: Collection<string, Webhook>
 
-  constructor(client: DiscordClient, subject: Subject<IChatPlugMessage>) {
+  constructor(client: DiscordClient, subject: Subject<IChatPlugMessage>, id: number) {
     this.client = client
     this.messageSubject = subject
+    this.id = id
   }
 
   onOutgoingMessage = message => {
     if (
-      this.webhooks.has(message.author.id) ||
+      this.webhooks && this.webhooks.has(message.author.id) ||
       message.author.username === this.client.user.username
     ) return
 
@@ -34,20 +38,22 @@ export class DiscordMessageHandler implements ChatPlugMessageHandler {
         externalServiceId: message.author.id,
       },
       externalOriginId:  message.channel.id,
+      externalOriginName:  message.channel.name,
+      originServiceId: this.id,
     } as IChatPlugMessage
 
     this.messageSubject.next(chatPlugMessage)
   }
 
-  onIncomingMessage = async (message: IChatPlugMessage) => {
-    if (!message.externalTargetId) return
-
-    const channel = this.client.channels.get(message.externalTargetId)
+  onIncomingMessage = async (packet: MessagePacket) => {
+    const message = packet.message
+    console.dir(message)
+    const channel = this.client.channels.get(packet.targetThread.externalServiceId)
     if (!channel || channel.type !== 'text') {
-      return log.warn('discord', `Channel ${message.externalTargetId} not found!`)
+      return log.warn('discord', `Channel ${packet.targetThread.externalServiceId} not found!`)
     }
 
-    let webhook = this.webhooks.find('channelID', message.externalTargetId)
+    let webhook = this.webhooks.find('channelID', packet.targetThread.externalServiceId)
     if (!webhook) {
       webhook = await (channel as TextChannel).createWebhook(
         `ChatPlug ${(channel as TextChannel).name}`.substr(0, 32),
@@ -56,13 +62,13 @@ export class DiscordMessageHandler implements ChatPlugMessageHandler {
       this.webhooks.set(webhook.id, webhook)
     }
 
-    message.message = resolveMentions(message.message, channel)
+    message.content = resolveMentions(message.content, channel)
 
     webhook
-      .send(message.message, {
+      .send(message.content, {
         username: trim(message.author.username),
-        avatarURL: message.author.avatar,
-        files: message.attachments.map(file => ({
+        avatarURL: message.author.avatarUrl,
+        files: message.attachements.map(file => ({
           attachment: file.url,
           name: file.name,
         })),

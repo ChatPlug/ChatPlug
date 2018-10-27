@@ -6,6 +6,9 @@ export default class Attachment {
   @PrimaryGeneratedColumn()
   id: number
 
+  @Column({ default: false })
+  deleted: boolean
+
   @Column()
   url: string
 

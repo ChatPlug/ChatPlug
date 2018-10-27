@@ -1,5 +1,5 @@
 import log from 'npmlog'
-import { IChatPlugMessage } from '../../models'
+import { IChatPlugMessage, MessagePacket } from '../../models'
 import { ChatPlugService } from '../Service'
 import { Subject } from 'rxjs'
 import TelegramThreadImporterConfig from './TelegramThreadImporterConfig'
@@ -10,7 +10,7 @@ import { Client } from 'tdl'
 
 export default class TelegramThreadImporterService extends ChatPlugService<TelegramThreadImporterConfig> {
   messageSubject: Subject<IChatPlugMessage>
-  receiveMessageSubject: Subject<IChatPlugMessage> = new Subject()
+  receiveMessageSubject: Subject<MessagePacket> = new Subject()
   config: TelegramThreadImporterConfig
   client: Client
   coreConfig: ChatPlugConfig
@@ -27,7 +27,7 @@ export default class TelegramThreadImporterService extends ChatPlugService<Teleg
     await this.client.connect()
 
     this.receiveMessageSubject.subscribe(
-      async (msg: IChatPlugMessage) => {
+      async (msg: MessagePacket) => {
         /*if (msg.origin.service !== 'telegram') {
           const user = await this.client.invoke({
             _: 'getUser',

@@ -1,5 +1,8 @@
 import { Subject } from 'rxjs'
 import { ChatPlugService } from './services/Service'
+import Service from './entity/Service'
+import Message from './entity/Message'
+import Thread from './entity/Thread'
 
 export interface IChatPlugMessage {
   message: string
@@ -7,12 +10,19 @@ export interface IChatPlugMessage {
   author: IChatPlugUser
   externalOriginId: string
   externalTargetId: string
+  externalOriginName: string | null
+  originServiceId: number | null
 }
 
 export interface IChatPlugAttachement {
   type: IChatPlugAttachementType,
   url: string
   name: string
+}
+
+export interface MessagePacket {
+  message: Message
+  targetThread: Thread
 }
 
 export enum IChatPlugAttachementType {
@@ -31,7 +41,7 @@ export enum IChatPlugServiceStatus {
   SHUTDOWN = 'shutdown',
 }
 
-export interface IChatplugServiceStatusUpdate {
+export interface IChatPlugServiceStatusUpdate {
   serviceId: number,
   statusUpdate: IChatPlugServiceStatus,
 }

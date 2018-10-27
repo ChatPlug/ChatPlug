@@ -12,19 +12,16 @@ import { LogLevel } from '../../Logger'
 export default class FacebookService extends ChatPlugService<FacebookConfig> {
   messageHandler: FacebookMessageHandler
   facebook: any
-  stopListening: any
   importedThreads: IChatPlugThreadResult[] = []
   async initialize() {
     await this.login()
 
     this.importedThreads = await this.getThreads()
-    this.messageHandler = new FacebookMessageHandler(this.facebook, this.context.exchangeManager.messageSubject)
+    this.messageHandler = new FacebookMessageHandler(this.facebook, this.context.exchangeManager.messageSubject, this.id)
 
     this.receiveMessageSubject.subscribe(this.messageHandler.onIncomingMessage)
 
-    this.stopListening = this.facebook.on('message', (message) => {
-      this.messageHandler.onOutgoingMessage(message)
-    })
+    this.facebook.on('message', message => this.messageHandler.onOutgoingMessage(message))
   }
 
   listener = async (err, message) => {

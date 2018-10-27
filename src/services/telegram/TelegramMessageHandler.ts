@@ -1,6 +1,6 @@
 import { ChatPlugMessageHandler } from '../MessageHandler'
 import TelegramBot from 'node-telegram-bot-api'
-import { IChatPlugMessage, IChatPlugAttachement, IChatPlugAttachementType } from '../../models'
+import { IChatPlugMessage, IChatPlugAttachement, IChatPlugAttachementType, MessagePacket } from '../../models'
 import { promisify } from 'util'
 import { Subject } from 'rxjs'
 import { parse } from 'url'
@@ -101,8 +101,8 @@ export class TelegramMessageHandler implements ChatPlugMessageHandler {
     console.timeEnd('telegramPrepare' + message.message_id)
   }
 
-  onIncomingMessage = async (message: IChatPlugMessage) => {
-    console.time('telegramSend' + message.externalOriginId)
+  onIncomingMessage = async (message: MessagePacket) => {
+    /*console.time('telegramSend' + message.externalOriginId)
     if (!message.externalTargetId) return
     const formattedMsg = '*' + message.author.username + '*' + ': ' + message.message
     // @ts-ignore
@@ -114,7 +114,7 @@ export class TelegramMessageHandler implements ChatPlugMessageHandler {
     for (const attachment of message.attachments) {
       await this.client.sendPhoto(message.externalTargetId, attachment.url)
     }
-    console.timeEnd('telegramSend' + message.externalOriginId)
+    console.timeEnd('telegramSend' + message.externalOriginId)*/
   }
 
   setClient(client) {

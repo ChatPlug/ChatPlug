@@ -330,6 +330,7 @@ export default class CLICommands {
     const service = new Service()
     service.configured = true
     service.enabled = true
+    service.primaryMode = false
     service.instanceName = newInstanceName
     service.moduleName = serviceModule.moduleName
 

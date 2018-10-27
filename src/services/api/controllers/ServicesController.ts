@@ -42,7 +42,7 @@ export default class ServicesController {
 
   @Get('/instances')
   async getServiceInstances() {
-    const instances = await this.servicesRepository.find()
+    const instances = await this.servicesRepository.find({ deleted: false })
     const serviceModules = await this.context.serviceManager.getAvailableServices()
     return instances.map(ins => ({
       ...classToPlain(ins),
@@ -111,6 +111,7 @@ export default class ServicesController {
     const service = new Service()
     service.configured = false
     service.enabled = true
+    service.primaryMode = false
     service.instanceName = 'Instance name'
     service.moduleName = serviceModule.moduleName
 
@@ -162,17 +163,17 @@ export default class ServicesController {
 
   @Get('/instances/:id/users')
   async getServiceUsers(@Param('id') id: number) {
-    return await this.context.connection.getRepository(User).find({ where: { service: { id } } })
+    return await this.context.connection.getRepository(User).find({ where: { service: { id }, deleted: false } })
   }
 
   @Get('/instances/:id/threads')
   async getServiceThreads(@Param('id') id: number) {
-    return await this.context.connection.getRepository(Thread).find({ where: { service: { id } } })
+    return await this.context.connection.getRepository(Thread).find({ where: { service: { id }, deleted: false } })
   }
 
   @Get('/instances/:id/logs')
   async getServiceLogs(@Param('id') id: number) {
-    return await this.context.connection.getRepository(Log).find({ where: { service: { id } } })
+    return await this.context.connection.getRepository(Log).find({ where: { service: { id }, deleted: false } })
   }
 
   @Get('/instances/:id/threads/search')
@@ -185,9 +186,9 @@ export default class ServicesController {
   @Delete('/instances/:id')
   async deleteService(@Param('id') id: number) {
     const foundService = await this.servicesRepository.findOne({ id })
-    this.context.connection.getRepository(Log).delete({ service: foundService })
-    this.context.connection.getRepository(Thread).delete({ service: foundService })
-    this.context.connection.getRepository(User).delete({ service: foundService })
+    this.context.connection.getRepository(Log).update({ service: foundService }, { deleted: true })
+    this.context.connection.getRepository(Thread).update({ service: foundService }, { deleted: true })
+    this.context.connection.getRepository(User).update({ service: foundService }, { deleted: true })
 
     return this.servicesRepository.remove(foundService!!)
   }

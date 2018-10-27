@@ -1,4 +1,4 @@
-import { IChatPlugMessage } from '../models'
+import { IChatPlugMessage, MessagePacket } from '../models'
 import { Subject } from 'rxjs'
 
 export interface ChatPlugMessageHandler {
@@ -6,5 +6,5 @@ export interface ChatPlugMessageHandler {
 
   onOutgoingMessage(message: any)
 
-  onIncomingMessage(message: IChatPlugMessage)
+  onIncomingMessage(packet: MessagePacket)
 }

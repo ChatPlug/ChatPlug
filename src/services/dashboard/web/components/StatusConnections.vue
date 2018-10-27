@@ -23,12 +23,12 @@
             <v-list-tile-title>{{ connection.connectionName }}
             </v-list-tile-title>
             <v-list-tile-sub-title>
-              Connects: {{ connection.threads.map((el) => el.service.moduleName).join(', ') }}
+              Connects: {{ connection.threads.filter((el) => !el.deleted).map((el) => el.service.moduleName).join(', ') }}
             </v-list-tile-sub-title>
           </v-list-tile-content>
         </v-list-tile>
 
-      </template>
+      </template>s
         </v-list>
       </v-card>
 </template>

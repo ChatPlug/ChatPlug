@@ -17,7 +17,7 @@ export default class ConnectionsController {
 
   @Get('/')
   async getConnections() {
-    return this.connectionsRepository.find()
+    return this.connectionsRepository.find({ deleted: false })
   }
 
   @Get('/:id')
@@ -26,11 +26,19 @@ export default class ConnectionsController {
   }
 
   @Delete('/:id')
-  async deleteConnetionById(@Param('id') id : number) {
-    const foundConnection = await this.connectionsRepository.findOne({ id })
-    await this.context.connection.getRepository(Thread).delete({ threadConnection: foundConnection })
-    await this.context.connection.getRepository(Message).delete({ threadConnection: foundConnection })
-    return this.connectionsRepository.remove(foundConnection!!)
+  async deleteConnectionById(@Param('id') id : number) {
+    await this.context.connection.createQueryBuilder()
+      .update(Thread)
+      .set({ deleted: true })
+      .where('threadConnection.id = :threadConnection', { threadConnection: id })
+      .execute()
+    await this.context.connection.createQueryBuilder()
+      .update(Message)
+      .set({ deleted: true })
+      .where('threadConnection.id = :threadConnection', { threadConnection: id })
+      .execute()
+
+    return this.connectionsRepository.update({ id }, { deleted: true })
   }
 
   @Get('/:id/messages')
@@ -40,20 +48,25 @@ export default class ConnectionsController {
     if (after) {
       return this.context.connection.getRepository(Message)
         .createQueryBuilder('message')
-        .leftJoin('message.threadConnection', 'threadConnection', 'threadConnection.id = :id', { id })
+        .leftJoin('message.threadConnection', 'threadConnection')
         .leftJoinAndSelect('message.attachements', 'attachements')
         .leftJoinAndSelect('message.service', 'service')
         .leftJoinAndSelect('message.author', 'author')
         .orderBy('message.createdAt', 'DESC')
         .where('message.id < :after', { after })
+        .andWhere('threadConnection.id = :id', { id })
+        .andWhere('deleted = false')
         .take(25)
         .getMany()
     }
     return this.context.connection.getRepository(Message)
       .createQueryBuilder('message')
+      .leftJoin('message.threadConnection', 'threadConnection')
+      .leftJoinAndSelect('message.attachements', 'attachements')
       .leftJoinAndSelect('message.author', 'author')
       .leftJoinAndSelect('message.service', 'service')
-      .leftJoin('message.threadConnection', 'threadConnection', 'threadConnection.id = :id', { id })
+      .where('threadConnection.id = :id', { id })
+      .andWhere('deleted = false')
       .orderBy('message.createdAt', 'DESC')
       .take(25)
       .getMany()
@@ -99,8 +112,12 @@ export default class ConnectionsController {
     @Param('connId') connId : number,
     @Param('id') id : number) {
     const threadsRepository = this.context.connection.getRepository(Thread)
-    const foundThread = await threadsRepository.findOne({ id })
-    await threadsRepository.remove(foundThread!!)
+    await threadsRepository.update({ id }, { deleted: true })
+    const test = await this.context.connection.createQueryBuilder()
+      .update(Thread)
+      .set({ deleted: true })
+      .where('id = :id', { id })
+      .execute()
     return this.connectionsRepository.findOneOrFail({ id: connId })
   }
 }

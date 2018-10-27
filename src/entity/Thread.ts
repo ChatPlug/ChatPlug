@@ -7,6 +7,9 @@ export default class Thread {
   @PrimaryGeneratedColumn()
   id: number
 
+  @Column({ default: false })
+  deleted: boolean
+
   @Column()
   title: string
 
@@ -25,6 +28,6 @@ export default class Thread {
   @CreateDateColumn({ type: 'datetime' })
   createdAt: Date
 
-  @ManyToOne(type => ThreadConnection, threadConnection => threadConnection.threads, { onDelete: 'CASCADE', cascade: ['insert', 'update'] })
+  @ManyToOne(type => ThreadConnection, threadConnection => threadConnection.threads, { onDelete: 'CASCADE' })
   threadConnection: ThreadConnection
 }
