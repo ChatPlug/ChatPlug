@@ -1,0 +1,8 @@
+{
+    "displayName": "Slack",
+    "version": "0.0.1",
+    "brandColor": "#6ecadc",
+    "description": "Enables ChatPlug to relay messages from/to slack.",
+    "systemService": false,
+    "supportsThreadSearch": false
+}

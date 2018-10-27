@@ -1,0 +1,30 @@
+{
+  "name": "chatplug-dashboard",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@nuxtjs/axios": "^5.0.0",
+    "date-fns": "^1.29.0",
+    "nuxt": "^1.4.2",
+    "nuxt-material-design-icons": "^1.0.4",
+    "nuxt-property-decorator": "^1.2.0",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.2",
+    "vue-native-websocket": "^2.0.9",
+    "vuetify": "^1.2.4",
+    "vuex": "^3.0.1",
+    "vuex-class": "^0.3.1"
+  },
+  "scripts": {
+    "dev": "nuxt",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate",
+    "prepublish": "npm run generate"
+  },
+  "devDependencies": {
+    "@types/node": "^10.5.8",
+    "ts-loader": "^3.5",
+    "typescript": "^3.0.1"
+  }
+}

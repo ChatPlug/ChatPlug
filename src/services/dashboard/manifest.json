@@ -1,0 +1,8 @@
+{
+    "displayName": "Dashboard",
+    "version": "0.0.1",
+    "brandColor": "#00cc00",
+    "description": "Allows ChatPlug to be controlled via a web-based dashboard.",
+    "systemService": true,
+    "supportsThreadSearch": false
+}

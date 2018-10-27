@@ -1,5 +1,8 @@
-config.ini
-facegram_sessions.session
-conversations.json
-downloads/
-__pycache__
+dist/**/*
+node_modules
+chatplug.db
+config.json
+.vscode
+bin/
+config/
+session.json
