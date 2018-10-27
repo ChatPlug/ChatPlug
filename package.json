@@ -5,15 +5,11 @@
   "main": "/dist/index",
   "typings": "/src/types/index.d.ts",
   "scripts": {
-    "start": "npm run serve",
-    "dev": "npm run tslint && ts-node src/index.ts",
-    "build": "npm run tslint && shx rm -rf dist && npm run build-ts && pkg . --outdir bin",
-    "serve": "node dist/index.js",
     "cli": "ts-node ./node_modules/typeorm/cli.js",
-    "test": "npm run tslint && shx rm -rf dist && npm run build-ts",
-    "build-ts": "tsc",
-    "watch-ts": "tsc -w",
-    "tslint": "tslint -c tslint.json -p tsconfig.json"
+    "test": "npm run tslint",
+    "build-prod": "ts-node ./build-tool/buildTool.ts --prod",
+    "build-watch": "ts-node ./build-tool/buildTool.ts --watch",
+    "start": "node dist/chatplug"
   },
   "repository": {
     "type": "git",
