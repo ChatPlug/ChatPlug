@@ -7,16 +7,12 @@ import log from 'npmlog'
 import { Collection } from 'discord.js'
 
 export class FacebookMessageHandler implements ChatPlugMessageHandler {
-  client: any
-  messageSubject: Subject<IChatPlugMessage>
   name = 'facebook'
   handledMessages: any[] = []
   threadCache = new Collection<String, any>()
   userCache = new Collection<String, any>()
 
-  constructor(client, subject: Subject<IChatPlugMessage>) {
-    this.client = client
-    this.messageSubject = subject
+  constructor(public client, public messageSubject: Subject<IChatPlugMessage>, public id: number) {
   }
 
   async onOutgoingMessage(message) {
@@ -24,6 +20,7 @@ export class FacebookMessageHandler implements ChatPlugMessageHandler {
     if (!this.threadCache.has(message.threadId)) {
       this.threadCache.set(message.threadId, await this.client.getThreadInfo(message.threadId))
     }
+
 
     if (!this.userCache.has(message.authorId)) {
       this.userCache.set(message.authorId, await this.client.getUserInfo(message.authorId))
@@ -52,6 +49,7 @@ export class FacebookMessageHandler implements ChatPlugMessageHandler {
       },
       externalOriginId: thread.id.toFixed(),
       externalOriginName: originName,
+      originServiceId: this.id,
     } as IChatPlugMessage
 
     chatPlugMessage.attachments = []
@@ -60,7 +58,6 @@ export class FacebookMessageHandler implements ChatPlugMessageHandler {
 
   onIncomingMessage = async (message: MessagePacket) => {
     if (!message.targetThread.externalServiceId) return
-    console.log(Number(message.targetThread.externalServiceId))
     this.client.sendMessage(Number(message.targetThread.externalServiceId), `*${message.message.author.username}*: ${message.message.content}`)
   }
 

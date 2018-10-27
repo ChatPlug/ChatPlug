@@ -17,7 +17,7 @@ export default class FacebookService extends ChatPlugService<FacebookConfig> {
     await this.login()
 
     this.importedThreads = await this.getThreads()
-    this.messageHandler = new FacebookMessageHandler(this.facebook, this.context.exchangeManager.messageSubject)
+    this.messageHandler = new FacebookMessageHandler(this.facebook, this.context.exchangeManager.messageSubject, this.id)
 
     this.receiveMessageSubject.subscribe(this.messageHandler.onIncomingMessage)
 

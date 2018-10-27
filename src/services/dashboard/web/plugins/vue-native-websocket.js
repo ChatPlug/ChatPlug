@@ -14,7 +14,6 @@ export default ({ store }, inject) => {
 
       if (this.format === 'json' && event.data) {
         msg = JSON.parse(event.data)
-        console.log(msg)
         if (msg.mutation) {
           target = [msg.namespace || '', msg.mutation].filter((e) => !!e).join('/')
         } else if (msg.action) {

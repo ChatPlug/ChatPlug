@@ -129,7 +129,6 @@ export class ServiceManager {
       await this.setServiceStatus(service, IChatPlugServiceStatus.CRASHED)
       await service.terminate()
     }).then(async () => {
-      console.log('ddd')
       await this.setServiceStatus(service, IChatPlugServiceStatus.RUNNING)
     })
   }
