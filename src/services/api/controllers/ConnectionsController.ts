@@ -112,8 +112,12 @@ export default class ConnectionsController {
     @Param('connId') connId : number,
     @Param('id') id : number) {
     const threadsRepository = this.context.connection.getRepository(Thread)
-    const foundThread = await threadsRepository.findOne({ id })
-    await threadsRepository.update(foundThread!!, { deleted: true })
+    await threadsRepository.update({ id }, { deleted: true })
+    const test = await this.context.connection.createQueryBuilder()
+      .update(Thread)
+      .set({ deleted: true })
+      .where('id = :id', { id })
+      .execute()
     return this.connectionsRepository.findOneOrFail({ id: connId })
   }
 }

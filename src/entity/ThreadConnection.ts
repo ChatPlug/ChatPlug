@@ -16,7 +16,7 @@ export default class ThreadConnection {
   @CreateDateColumn({ type: 'datetime' })
   createdAt: Date
 
-  @OneToMany(type => Thread, thread => thread.threadConnection, { onDelete:'CASCADE', eager: true, cascade: ['insert', 'remove', 'update'] })
+  @OneToMany(type => Thread, thread => thread.threadConnection, { eager: true, onDelete:'CASCADE', cascade: ['insert', 'remove', 'update'] })
   @JoinTable()
   threads: Thread[]
 

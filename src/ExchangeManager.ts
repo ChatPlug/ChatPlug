@@ -34,7 +34,7 @@ export class ExchangeManager {
         let dbMessage: Message | null = null
 
         for (const thread of threads) {
-          for (const actualThread of thread.threadConnection.threads.filter((element) => element.externalServiceId !== message.externalOriginId)) {
+          for (const actualThread of thread.threadConnection.threads.filter((element) => !element.deleted && element.externalServiceId !== message.externalOriginId)) {
             message.externalTargetId = actualThread.externalServiceId
             const serviceInstance = context.serviceManager.getServiceForId(actualThread.service.id)
             if (serviceInstance) {
@@ -74,7 +74,7 @@ export class ExchangeManager {
       .getMany()
 
     for (const service of primaryServices) {
-      const conns = [...(new Set(service.threads.map((el) => el.threadConnection)) as any)].filter((el) => el && el.threads.some((el) => el.externalServiceId === message.externalOriginId))
+      const conns = [...(new Set(service.threads.map((el) => el.threadConnection)) as any)].filter((el) => el && el.threads.some((el) => !el.deleted && el.externalServiceId === message.externalOriginId))
       if (conns.length > 0) {
       } else {
         const conn = new ThreadConnection()

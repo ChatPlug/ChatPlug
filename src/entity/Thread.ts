@@ -28,6 +28,6 @@ export default class Thread {
   @CreateDateColumn({ type: 'datetime' })
   createdAt: Date
 
-  @ManyToOne(type => ThreadConnection, threadConnection => threadConnection.threads, { onDelete: 'CASCADE', cascade: ['insert', 'update'] })
+  @ManyToOne(type => ThreadConnection, threadConnection => threadConnection.threads, { onDelete: 'CASCADE' })
   threadConnection: ThreadConnection
 }
