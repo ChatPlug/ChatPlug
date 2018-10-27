@@ -7,8 +7,8 @@
   "scripts": {
     "cli": "ts-node ./node_modules/typeorm/cli.js",
     "test": "npm run tslint",
-    "build-prod": "ts-node ./build-tool/buildTool.ts --prod",
-    "build-watch": "ts-node ./build-tool/buildTool.ts --watch",
+    "build": "ts-node ./build-tool/buildTool.ts --prod",
+    "watch": "ts-node ./build-tool/buildTool.ts --watch",
     "start": "node dist/chatplug"
   },
   "repository": {
