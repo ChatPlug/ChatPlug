@@ -81,11 +81,7 @@ async function run() {
       __dirname: false,
       __filename: false,
     },
-    plugins: [
-      new webpack.DefinePlugin({
-        __REQUIRE_BYPASS_WEBPACK__: '(require)',
-      }),
-    ],
+    plugins: [],
     optimization: {
       minimize: false,
     },

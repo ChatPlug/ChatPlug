@@ -9,6 +9,7 @@ import { plainToClass } from 'class-transformer'
 import { validate } from 'class-validator'
 import { IChatplugServiceStatusUpdate, IChatPlugServiceStatus } from './models'
 import { Subject } from 'rxjs'
+import nativeRequire from './utils/nativeRequire';
 
 export interface ServiceMap {
   [id: number]: ChatPlugService
@@ -99,8 +100,7 @@ export class ServiceManager {
       if (this.services[service.id]) {
         return true
       }
-      const rq = eval('req' + 'uire') // trick to use the native require even in node.
-      this.services[service.id] = new (__REQUIRE_BYPASS_WEBPACK__(path.join(
+      this.services[service.id] = new (nativeRequire(path.join(
          __dirname,
         'services',
         service.moduleName,

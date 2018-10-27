@@ -20,6 +20,7 @@ import fs from 'fs'
 import CLIConfigWizard from './CLIConfigWizard'
 import path from 'path'
 import TOML from '@iarna/toml'
+import nativeRequire from '../../utils/nativeRequire';
 
 const CONFIG_FOLDER_PATH = path.join(__dirname, '../config/')
 
@@ -319,7 +320,7 @@ export default class CLICommands {
     }
 
     const wizard = new CLIConfigWizard()
-    const confSchema = __REQUIRE_BYPASS_WEBPACK__(serviceModule.modulePath).Config
+    const confSchema = nativeRequire(serviceModule.modulePath).Config
     log.info(
       'services',
       'Configuring instance ' + newInstanceName + ' of service ' + serviceName,
@@ -385,8 +386,7 @@ export default class CLICommands {
     }
 
     const wizard = new CLIConfigWizard()
-    const rq = eval('req' + 'uire')
-    const confSchema = __REQUIRE_BYPASS_WEBPACK__(serviceModule.modulePath).Config
+    const confSchema = nativeRequire(serviceModule.modulePath).Config
     log.info(
       'services',
       'Reconfiguring instance ' +

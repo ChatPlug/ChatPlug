@@ -5,6 +5,7 @@ import ApiService from '../api/ApiService'
 import express from 'express'
 import path from 'path'
 import Logger, { LogLevel } from '../../Logger'
+import nativeRequire from '../../utils/nativeRequire';
 
 export default class DashboardService extends ChatPlugService<DashboardConfig> {
   logger = new Logger(this.context)
@@ -28,12 +29,11 @@ export default class DashboardService extends ChatPlugService<DashboardConfig> {
     if (process.env.CHATPLUG_DASHBOARD_DEV_HTTP_HANDLER) {
       this.log(
         LogLevel.INFO,
-        ' Using process.env.CHATPLUG_DASHBOARD_DEV_HTTP_HANDLER',
+        'Using process.env.CHATPLUG_DASHBOARD_DEV_HTTP_HANDLER',
       )
-      const rq = eval('req' + 'uire')
       let handler
       try {
-        handler = (__REQUIRE_BYPASS_WEBPACK__(process.env.CHATPLUG_DASHBOARD_DEV_HTTP_HANDLER) as any)()
+        handler = (nativeRequire(process.env.CHATPLUG_DASHBOARD_DEV_HTTP_HANDLER) as any)()
       } catch (e) {
         console.log('ERROR', e)
       }
