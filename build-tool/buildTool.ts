@@ -5,8 +5,8 @@ import loggingHelper from './loggingHelper'
 import merge from 'webpack-merge'
 import fs, { mkdirp } from 'fs-extra'
 import buildService from './buildService'
-
-function flag(f: string) {
+import { exec } from 'child_process'
+export function flag(f: string) {
   return process.argv.indexOf(f) !== -1
 }
 
@@ -21,6 +21,35 @@ async function run() {
   await fs.remove(dist)
   doneClean()
 
+  let nuxtBuildPromise: Promise<void> | null = null
+  if (production) {
+    nuxtBuildPromise = (async _ => {
+      await new Promise((res, rej) => {
+        let nuxtProc = exec(
+          `${path.resolve(
+            __dirname,
+            '../src/services/dashboard/web/node_modules/.bin/nuxt',
+          )} generate`,
+          {
+            cwd: path.resolve(__dirname, '../src/services/dashboard/web'),
+          },
+        )
+        nuxtProc.stdout.pipe(process.stdout)
+        nuxtProc.stderr.pipe(process.stderr)
+        nuxtProc.on('exit', code => {
+          if (code === 0) {
+            res()
+          } else {
+            rej()
+          }
+        })
+      })
+      await fs.copy(
+        path.resolve(__dirname, '../src/services/dashboard/web/dist'),
+        path.resolve(__dirname, '../dist/dashboard-web'),
+      )
+    })()
+  }
   const baseCfg: Configuration = {
     mode: production ? 'production' : 'development',
     target: 'node',
@@ -51,6 +80,10 @@ async function run() {
     node: {
       __dirname: false,
       __filename: false,
+    },
+    plugins: [],
+    optimization: {
+      minimize: false,
     },
   }
 
@@ -147,6 +180,9 @@ async function run() {
         },
       )
     }
+  }
+  if (production) {
+    await nuxtBuildPromise
   }
 }
 

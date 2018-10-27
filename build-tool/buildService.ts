@@ -3,22 +3,41 @@ import path from 'path'
 import loggingHelper from './loggingHelper'
 import merge from 'webpack-merge'
 import fs from 'fs-extra'
+import { flag } from './buildTool'
 
 export default async function buildService(
   sourcePath: string,
   baseWebpackConfig: Configuration,
 ) {
+  const prod = flag('--prod')
   const serviceName = path.basename(sourcePath)
-  if (!(await fs.pathExists(path.resolve(sourcePath, 'manifest.json')))) {
+  const outDir = path.resolve(__dirname, '../dist/services/', serviceName)
+  const manifestPath = path.resolve(sourcePath, 'manifest.json')
+  if (!(await fs.pathExists(manifestPath))) {
     loggingHelper.warn(
       `Service ${serviceName} has no manifest, skipping build.`,
     )
     return null
   }
 
-  const done = loggingHelper.timed(`building service ${serviceName}`)
-  const outDir = path.resolve(__dirname, '../dist/services/', serviceName)
+  await fs.copy(manifestPath, path.resolve(outDir, 'manifest.json'))
 
+  const done = loggingHelper.timed(`building service ${serviceName}`)
+  let defineFields = {}
+  if (prod) {
+    defineFields['process.env.CHATPLUG_DASHBOARD_STATIC_DIR'] = JSON.stringify(
+      './dashboard-web/',
+    )
+  } else {
+    defineFields[
+      'process.env.CHATPLUG_DASHBOARD_DEV_HTTP_HANDLER'
+    ] = JSON.stringify(
+      path.resolve(
+        __dirname,
+        '../src/services/dashboard/web/dashboardHttpHandler',
+      ),
+    )
+  }
   return webpack(
     merge(baseWebpackConfig, {
       entry: path.resolve(sourcePath, 'index.ts'),
@@ -39,14 +58,7 @@ export default async function buildService(
           ),
           sourceType: 'commonjs2',
         }),
-        new webpack.DefinePlugin({
-          'process.env.CHATPLUG_DASHBOARD_DEV_HTTP_HANDLER': `${JSON.stringify(
-            path.resolve(
-              __dirname,
-              '../src/services/dashboard/web/dashboardHttpHandler',
-            ),
-          )}`,
-        }),
+        new webpack.DefinePlugin(defineFields),
       ],
     }),
   )
