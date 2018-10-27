@@ -7,6 +7,9 @@ export default class Thread {
   @PrimaryGeneratedColumn()
   id: number
 
+  @Column({ default: false })
+  deleted: boolean
+
   @Column()
   title: string
 

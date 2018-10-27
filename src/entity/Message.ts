@@ -9,6 +9,9 @@ export default class Message {
   @PrimaryGeneratedColumn()
   id: number
 
+  @Column({ default: false })
+  deleted: boolean
+
   @Column()
   content: string
 

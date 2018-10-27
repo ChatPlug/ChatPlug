@@ -9,6 +9,9 @@ export default class Service {
   @PrimaryGeneratedColumn()
   id: number
 
+  @Column({ default: false })
+  deleted: boolean
+
   @Column()
   instanceName: string
 

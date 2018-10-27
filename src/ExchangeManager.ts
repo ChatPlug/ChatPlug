@@ -26,7 +26,8 @@ export class ExchangeManager {
           .innerJoinAndSelect('thread.threadConnection', 'threadConnection')
           .leftJoinAndSelect('threadConnection.threads', 'threads')
           .leftJoinAndSelect('threads.service', 'service')
-          .where('thread.externalServiceId = :id', { id: message.externalOriginId })
+          .where('thread.deleted = false')
+          .andWhere('thread.externalServiceId = :id', { id: message.externalOriginId })
           .getMany()
 
         const handledThreadConn: number[] = []

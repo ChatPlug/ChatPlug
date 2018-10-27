@@ -6,6 +6,9 @@ export default class Log {
   @PrimaryGeneratedColumn()
   id: number
 
+  @Column({ default: false })
+  deleted: boolean
+
   @Column()
   logLevel: string
 

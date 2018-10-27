@@ -21,7 +21,6 @@ export class FacebookMessageHandler implements ChatPlugMessageHandler {
       this.threadCache.set(message.threadId, await this.client.getThreadInfo(message.threadId))
     }
 
-
     if (!this.userCache.has(message.authorId)) {
       this.userCache.set(message.authorId, await this.client.getUserInfo(message.authorId))
     }

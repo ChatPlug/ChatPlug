@@ -7,6 +7,9 @@ export default class ThreadConnection {
   @PrimaryGeneratedColumn()
   id: number
 
+  @Column({ default: false })
+  deleted: boolean
+
   @Column()
   connectionName: string
 

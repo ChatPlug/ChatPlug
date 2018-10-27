@@ -88,7 +88,7 @@ export class ServiceManager {
 
   async loadServices() {
     const repo = this.context.connection.getRepository(Service)
-    const services = await repo.find({ enabled: true })
+    const services = await repo.find({ enabled: true, deleted: false })
     for (const service of services) {
       await this.loadService(service)
     }
