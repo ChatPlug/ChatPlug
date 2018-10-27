@@ -25,9 +25,7 @@ export default async function buildService(
   const done = loggingHelper.timed(`building service ${serviceName}`)
   let defineFields = {}
   if (prod) {
-    defineFields['process.env.CHATPLUG_DASHBOARD_STATIC_DIR'] = JSON.stringify(
-      './dashboard-web/',
-    )
+    defineFields['process.env.CHATPLUG_DASHBOARD_STATIC_DIR'] = `require('path').join(__dirname, '../../dashboard-web')`
   } else {
     defineFields[
       'process.env.CHATPLUG_DASHBOARD_DEV_HTTP_HANDLER'

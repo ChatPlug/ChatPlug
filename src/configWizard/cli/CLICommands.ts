@@ -319,8 +319,7 @@ export default class CLICommands {
     }
 
     const wizard = new CLIConfigWizard()
-    const rq = eval('req' + 'uire')
-    const confSchema = rq(serviceModule.modulePath).Config
+    const confSchema = __REQUIRE_BYPASS_WEBPACK__(serviceModule.modulePath).Config
     log.info(
       'services',
       'Configuring instance ' + newInstanceName + ' of service ' + serviceName,
@@ -387,7 +386,7 @@ export default class CLICommands {
 
     const wizard = new CLIConfigWizard()
     const rq = eval('req' + 'uire')
-    const confSchema = rq(serviceModule.modulePath).Config
+    const confSchema = __REQUIRE_BYPASS_WEBPACK__(serviceModule.modulePath).Config
     log.info(
       'services',
       'Reconfiguring instance ' +

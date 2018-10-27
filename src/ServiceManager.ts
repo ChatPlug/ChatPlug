@@ -100,7 +100,7 @@ export class ServiceManager {
         return true
       }
       const rq = eval('req' + 'uire') // trick to use the native require even in node.
-      this.services[service.id] = new (rq(path.join(
+      this.services[service.id] = new (__REQUIRE_BYPASS_WEBPACK__(path.join(
          __dirname,
         'services',
         service.moduleName,

@@ -1,7 +1,7 @@
 import ServiceModule from './ServiceModule'
 import ServiceUser from './ServiceUser'
 import ServiceThread from './ServiceThread'
-import Log from '../../../../entity/Log'
+import Log from './Log'
 
 /**
  * See the Service entity this is just a frontend version.

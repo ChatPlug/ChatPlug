@@ -64,9 +64,9 @@ async function run() {
             },
             {
               loader: 'ts-loader',
-              // options: {
-              //   transpileOnly: true,
-              // },
+              options: {
+                transpileOnly: true,
+              },
             },
           ],
           exclude: path.resolve(__dirname, '../src/services/dashboard/web'),
@@ -81,7 +81,11 @@ async function run() {
       __dirname: false,
       __filename: false,
     },
-    plugins: [],
+    plugins: [
+      new webpack.DefinePlugin({
+        __REQUIRE_BYPASS_WEBPACK__: '(require)',
+      }),
+    ],
     optimization: {
       minimize: false,
     },

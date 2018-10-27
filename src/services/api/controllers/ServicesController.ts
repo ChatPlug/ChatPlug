@@ -64,7 +64,7 @@ export default class ServicesController {
       throw new NotFoundError()
     }
 
-    const schema = require(serviceModule.modulePath).Config
+    const schema = __REQUIRE_BYPASS_WEBPACK__(serviceModule.modulePath).Config
     const fieldList = Reflect.getMetadata(
       fieldListMetadataKey,
       new schema(),
@@ -207,7 +207,7 @@ export default class ServicesController {
       throw new NotFoundError()
     }
 
-    const schema = require(serviceModule.modulePath).Config
+    const schema = __REQUIRE_BYPASS_WEBPACK__(serviceModule.modulePath).Config
     const cfg = new schema()
     const fieldList = Reflect.getMetadata(fieldListMetadataKey, cfg) as string[]
 
@@ -283,7 +283,7 @@ export default class ServicesController {
       throw new NotFoundError()
     }
 
-    const schema = require(serviceModule.modulePath).Config
+    const schema = __REQUIRE_BYPASS_WEBPACK__(serviceModule.modulePath).Config
     const fieldList = Reflect.getMetadata(
       fieldListMetadataKey,
       new schema(),

@@ -42,7 +42,7 @@ export class ChatPlugConfig {
       return
     }
 
-    const schema = require(serviceModule.modulePath).Config
+    const schema = __REQUIRE_BYPASS_WEBPACK__(serviceModule.modulePath).Config
     const cfg = new schema()
     const fieldList = Reflect.getMetadata(fieldListMetadataKey, cfg) as string[]
     const config = service.configured ? this.context.config.readConfigForService(service) : null

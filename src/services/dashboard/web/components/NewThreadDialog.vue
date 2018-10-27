@@ -70,7 +70,7 @@ import axios from 'axios'
 import * as serviceAction from '../store/modules/services/actions.types'
 import * as actions from '../store/modules/connections/actions.types'
 import { Route } from 'vue-router'
-import ThreadConnection from '../../../../entity/ThreadConnection'
+import ThreadConnection from '../types/ThreadConnection'
 
 class VueWithRoute extends Vue {
   $route: Route
