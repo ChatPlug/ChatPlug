@@ -57,6 +57,7 @@ async function run() {
   compilers.push(
     webpack(
       merge(baseCfg, {
+        name: 'chatplug.lib',
         entry: [path.resolve(__dirname, '../src/index.ts')],
         output: {
           path: dist,
@@ -78,6 +79,7 @@ async function run() {
   compilers.push(
     webpack(
       merge(baseCfg, {
+        name: 'chatplug',
         entry: [path.resolve(__dirname, '../src/bootstrap.ts')],
         output: {
           path: path.resolve(__dirname, '../dist'),
@@ -115,9 +117,7 @@ async function run() {
     if (!compiler) {
       throw new Error('Compiler is undefined')
     }
-    const done = loggingHelper.timed(
-      `Done compiling of ${(compiler as any).options.output.path}`,
-    )
+    const done = loggingHelper.timed(`Compiled ${compiler.options.name}`)
     await new Promise(res =>
       compiler.run(d => {
         done()
@@ -131,13 +131,19 @@ async function run() {
       if (!compiler) {
         throw new Error('Compiler is undefined')
       }
+      compiler.hooks.watchRun.tap('watchNotifier', _ => {
+        loggingHelper.info(`Compiling ${compiler.options.name}`)
+      })
       compiler.watch(
         {
-          aggregateTimeout: 300,
-          poll: undefined,
+          aggregateTimeout: 1000,
+          poll: 1000,
         },
         (err, stats) => {
-          console.log('Compiled while watching', err)
+          loggingHelper.info(`Compiled ${compiler.options.name}`)
+          if (err) {
+            console.log(err)
+          }
         },
       )
     }

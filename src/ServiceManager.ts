@@ -101,7 +101,7 @@ export class ServiceManager {
       }
       const rq = eval('req' + 'uire') // trick to use the native require even in node.
       this.services[service.id] = new (rq(path.join(
-        __dirname,
+         __dirname,
         'services',
         service.moduleName,
       ) as any)).Service(service, this.context)

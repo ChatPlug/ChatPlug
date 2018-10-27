@@ -21,7 +21,7 @@ import CLIConfigWizard from './CLIConfigWizard'
 import path from 'path'
 import TOML from '@iarna/toml'
 
-const CONFIG_FOLDER_PATH = path.join(__dirname, '../../../config')
+const CONFIG_FOLDER_PATH = path.join(__dirname, '../config/')
 
 export default class CLICommands {
   context: ChatPlugContext
@@ -319,8 +319,8 @@ export default class CLICommands {
     }
 
     const wizard = new CLIConfigWizard()
-
-    const confSchema = require(serviceModule.modulePath).Config
+    const rq = eval('req' + 'uire')
+    const confSchema = rq(serviceModule.modulePath).Config
     log.info(
       'services',
       'Configuring instance ' + newInstanceName + ' of service ' + serviceName,
@@ -386,7 +386,8 @@ export default class CLICommands {
     }
 
     const wizard = new CLIConfigWizard()
-    const confSchema = require(serviceModule.modulePath).Config
+    const rq = eval('req' + 'uire')
+    const confSchema = rq(serviceModule.modulePath).Config
     log.info(
       'services',
       'Reconfiguring instance ' +

@@ -39,6 +39,14 @@ export default async function buildService(
           ),
           sourceType: 'commonjs2',
         }),
+        new webpack.DefinePlugin({
+          'process.env.CHATPLUG_DASHBOARD_DEV_HTTP_HANDLER': `${JSON.stringify(
+            path.resolve(
+              __dirname,
+              '../src/services/dashboard/web/dashboardHttpHandler',
+            ),
+          )}`,
+        }),
       ],
     }),
   )
