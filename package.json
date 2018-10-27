@@ -5,15 +5,11 @@
   "main": "/dist/index",
   "typings": "/src/types/index.d.ts",
   "scripts": {
-    "start": "npm run serve",
-    "dev": "npm run tslint && ts-node src/index.ts",
-    "build": "npm run tslint && shx rm -rf dist && npm run build-ts && pkg . --outdir bin",
-    "serve": "node dist/index.js",
     "cli": "ts-node ./node_modules/typeorm/cli.js",
-    "test": "npm run tslint && shx rm -rf dist && npm run build-ts",
-    "build-ts": "tsc",
-    "watch-ts": "tsc -w",
-    "tslint": "tslint -c tslint.json -p tsconfig.json"
+    "test": "npm run tslint",
+    "build-prod": "ts-node ./build-tool/buildTool.ts --prod",
+    "build-watch": "ts-node ./build-tool/buildTool.ts --watch",
+    "start": "node dist/chatplug"
   },
   "repository": {
     "type": "git",
@@ -35,6 +31,9 @@
   "homepage": "https://github.com/feelfreelinux/ChatPlug#readme",
   "dependencies": {
     "@slack/client": "^4.6.0",
+    "@types/webpack": "^4.4.14",
+    "@types/webpack-merge": "^4.1.3",
+    "@types/webpack-node-externals": "^1.6.3",
     "@types/ws": "^6.0.1",
     "async-retry": "^1.2.1",
     "body-parser": "^1.18.3",
@@ -59,7 +58,11 @@
     "sqlite3": "^4.0.2",
     "tdl": "^3.8.1",
     "telegraf": "^3.22.1",
+    "ts-loader": "^5.2.1",
     "typeorm": "^0.2.7",
+    "webpack": "^4.20.2",
+    "webpack-merge": "^4.1.4",
+    "webpack-node-externals": "^1.7.2",
     "ws": "^6.0.0",
     "yargs-parser": "^10.1.0"
   },

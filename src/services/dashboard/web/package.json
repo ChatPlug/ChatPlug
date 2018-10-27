@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
-    "@nuxtjs/axios": "^5.0.0",
+    "@nuxtjs/axios": "^5.3.3",
     "date-fns": "^1.29.0",
-    "nuxt": "^1.4.2",
+    "nuxt": "^2.2.0",
     "nuxt-material-design-icons": "^1.0.4",
     "nuxt-property-decorator": "^1.2.0",
     "stylus": "^0.54.5",
@@ -19,12 +19,11 @@
     "dev": "nuxt",
     "build": "nuxt build",
     "start": "nuxt start",
-    "generate": "nuxt generate",
-    "prepublish": "npm run generate"
+    "generate": "nuxt generate"
   },
   "devDependencies": {
-    "@types/node": "^10.5.8",
-    "ts-loader": "^3.5",
-    "typescript": "^3.0.1"
+    "@types/node": "^10.12.0",
+    "ts-loader": "^5.2",
+    "typescript": "^3.1.3"
   }
 }

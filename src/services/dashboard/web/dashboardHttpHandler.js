@@ -1,6 +1,6 @@
 const { Nuxt, Builder } = require('nuxt')
 
-export default function dashboardHttpHandler() {
+module.exports = function dashboardHttpHandler() {
   // Require Nuxt config
   const config = require('./nuxt.config.js')
 

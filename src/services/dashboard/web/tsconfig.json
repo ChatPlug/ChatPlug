@@ -14,12 +14,10 @@
     "allowJs": true,
     "baseUrl": ".",
     "paths": {
-      "*": ["./*", "node_modules/*"]
-    },
-    "outDir": "dist"
+      "~/*": ["./*"]
+    }
   },
-  "exclude": [
-    "modules/typescript.js",
-    "nuxt.config.js"
+  "include": [
+    "./**/*"
   ]
 }

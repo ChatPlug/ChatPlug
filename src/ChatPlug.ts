@@ -4,7 +4,7 @@ import { Subject } from 'rxjs'
 import { FieldType } from './configWizard/IFieldOptions'
 import { ThreadConnectionsManager } from './ThreadConnectionsManager'
 import ChatPlugContext from './ChatPlugContext'
-import fs = require('fs')
+import fs from 'fs'
 import path from 'path'
 import TOML from '@iarna/toml'
 

@@ -12,6 +12,7 @@ import IFieldOptions, {
 } from './configWizard/IFieldOptions'
 import ChatPlugContext from './ChatPlugContext'
 import { classToPlain } from 'class-transformer'
+import nativeRequire from './utils/nativeRequire';
 
 const CONFIG_FOLDER_PATH = path.join(__dirname, '../config')
 
@@ -42,7 +43,7 @@ export class ChatPlugConfig {
       return
     }
 
-    const schema = require(serviceModule.modulePath).Config
+    const schema = nativeRequire(serviceModule.modulePath).Config
     const cfg = new schema()
     const fieldList = Reflect.getMetadata(fieldListMetadataKey, cfg) as string[]
     const config = service.configured ? this.context.config.readConfigForService(service) : null

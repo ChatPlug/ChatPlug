@@ -26,7 +26,21 @@ You can grab the binaries [here](https://github.com/feelfreelinux/ChatPlug/relea
 
 ChatPlug now uses TypeScript on Node.js.
 
-*TODO: Add instructions when ready*
+
+
+```
+
+$ npm run build # production build (takes over a minute)
+$ npm run start
+
+```
+
+```
+
+$ npm run watch # development watch build (leave it in the background)
+$ npm run start # run everytime you want to restart the app while developing
+
+```
 
 # :iphone: Usage
 

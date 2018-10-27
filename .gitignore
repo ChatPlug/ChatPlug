@@ -6,3 +6,4 @@ config.json
 bin/
 config/
 session.json
+chatplug.db-journal

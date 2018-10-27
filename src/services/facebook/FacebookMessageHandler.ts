@@ -64,7 +64,3 @@ export class FacebookMessageHandler implements ChatPlugMessageHandler {
     this.client = client
   }
 }
-
-function getStreamFromURL(url) {
-  return new Promise((resolve, reject) => require('https').get(url, res => resolve(res)))
-}

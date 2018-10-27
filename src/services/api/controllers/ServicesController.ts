@@ -28,6 +28,7 @@ import User from '../../../entity/User'
 import ServiceInstance from '../../dashboard/web/types/ServiceInstance'
 import Thread from '../../../entity/Thread'
 import Log from '../../../entity/Log'
+import nativeRequire from '../../../utils/nativeRequire';
 
 const CONFIG_FOLDER_PATH = path.join(__dirname, '../../../../config')
 @JsonController('/services')
@@ -64,7 +65,7 @@ export default class ServicesController {
       throw new NotFoundError()
     }
 
-    const schema = require(serviceModule.modulePath).Config
+    const schema = nativeRequire(serviceModule.modulePath).Config
     const fieldList = Reflect.getMetadata(
       fieldListMetadataKey,
       new schema(),
@@ -208,7 +209,7 @@ export default class ServicesController {
       throw new NotFoundError()
     }
 
-    const schema = require(serviceModule.modulePath).Config
+    const schema = nativeRequire(serviceModule.modulePath).Config
     const cfg = new schema()
     const fieldList = Reflect.getMetadata(fieldListMetadataKey, cfg) as string[]
 
@@ -284,7 +285,7 @@ export default class ServicesController {
       throw new NotFoundError()
     }
 
-    const schema = require(serviceModule.modulePath).Config
+    const schema = nativeRequire(serviceModule.modulePath).Config
     const fieldList = Reflect.getMetadata(
       fieldListMetadataKey,
       new schema(),
