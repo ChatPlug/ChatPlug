@@ -13,25 +13,26 @@ import IFieldOptions, {
 import ChatPlugContext from './ChatPlugContext'
 import { classToPlain } from 'class-transformer'
 import nativeRequire from './utils/nativeRequire';
+import configFolderPath from './utils/configFolderPath';
 
-const CONFIG_FOLDER_PATH = path.join(__dirname, '../config')
+
 
 export class ChatPlugConfig {
   tomlConfig: any
   context: ChatPlugContext
   constructor () {
     // If config folder doesn't exist, create one
-    if (!fs.existsSync(CONFIG_FOLDER_PATH)) {
-      fs.mkdirSync(CONFIG_FOLDER_PATH)
+    if (!fs.existsSync(configFolderPath)) {
+      fs.mkdirSync(configFolderPath)
     }
   }
 
   readConfigForService (service: Service) {
-    return TOML.parse(fs.readFileSync(path.join(CONFIG_FOLDER_PATH, service.moduleName + '.' + service.id + '.toml')))
+    return TOML.parse(fs.readFileSync(path.join(configFolderPath, service.moduleName + '.' + service.id + '.toml')))
   }
 
   configurationExists(service: Service) {
-    return fs.existsSync(path.join(CONFIG_FOLDER_PATH, service.moduleName + '.' + service.id + '.toml'))
+    return fs.existsSync(path.join(configFolderPath, service.moduleName + '.' + service.id + '.toml'))
   }
 
   async getConfigurationWithSchema(service: Service) {

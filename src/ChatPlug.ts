@@ -1,14 +1,9 @@
-import { ChatPlugConfig } from './ChatPlugConfig'
-import { IChatPlugMessage } from './models'
-import { Subject } from 'rxjs'
-import { FieldType } from './configWizard/IFieldOptions'
-import { ThreadConnectionsManager } from './ThreadConnectionsManager'
-import ChatPlugContext from './ChatPlugContext'
-import fs from 'fs'
-import path from 'path'
-import TOML from '@iarna/toml'
-
-const CONFIG_FOLDER_PATH = path.join(__dirname, '../config')
+import fs from 'fs';
+import { Subject } from 'rxjs';
+import { ChatPlugConfig } from './ChatPlugConfig';
+import ChatPlugContext from './ChatPlugContext';
+import { IChatPlugMessage } from './models';
+import { ThreadConnectionsManager } from './ThreadConnectionsManager';
 
 export class ChatPlug {
   config: ChatPlugConfig

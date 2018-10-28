@@ -5,7 +5,10 @@ import loggingHelper from './loggingHelper'
 import merge from 'webpack-merge'
 import fs, { mkdirp } from 'fs-extra'
 import buildService from './buildService'
-import { exec } from 'child_process'
+import buildDashboard from './buildDashboard'
+import { rejects } from 'assert'
+import packageApp from './packageApp'
+
 export function flag(f: string) {
   return process.argv.indexOf(f) !== -1
 }
@@ -13,6 +16,8 @@ export function flag(f: string) {
 async function run() {
   const production = flag('--prod')
   const watch = flag('--watch')
+  const packageMode = flag('--pkg')
+
   const compilers: (Compiler)[] = []
   const dist = path.resolve(__dirname, '../dist')
   loggingHelper.info('Production mode:', production)
@@ -23,36 +28,12 @@ async function run() {
 
   let nuxtBuildPromise: Promise<void> | null = null
   if (production) {
-    nuxtBuildPromise = (async _ => {
-      await new Promise((res, rej) => {
-        let nuxtProc = exec(
-          `${path.resolve(
-            __dirname,
-            '../src/services/dashboard/web/node_modules/.bin/nuxt',
-          )} generate`,
-          {
-            cwd: path.resolve(__dirname, '../src/services/dashboard/web'),
-          },
-        )
-        nuxtProc.stdout.pipe(process.stdout)
-        nuxtProc.stderr.pipe(process.stderr)
-        nuxtProc.on('exit', code => {
-          if (code === 0) {
-            res()
-          } else {
-            rej()
-          }
-        })
-      })
-      await fs.copy(
-        path.resolve(__dirname, '../src/services/dashboard/web/dist'),
-        path.resolve(__dirname, '../dist/dashboard-web'),
-      )
-    })()
+    nuxtBuildPromise = buildDashboard()
   }
   const baseCfg: Configuration = {
     mode: production ? 'production' : 'development',
     target: 'node',
+    devtool: (packageMode || production) ? false : undefined,
     module: {
       rules: [
         {
@@ -146,13 +127,30 @@ async function run() {
     }
   }
 
+  /**
+   * A list of modules which need to be packaged with the app.
+   */
+  let externalModules: string[] = []
   for (const compiler of compilers) {
     if (!compiler) {
       throw new Error('Compiler is undefined')
     }
     const done = loggingHelper.timed(`Compiled ${compiler.options.name}`)
-    await new Promise(res =>
-      compiler.run(d => {
+    await new Promise((res, rej) =>
+      compiler.run((err, stats) => {
+        if (err) {
+          return rej(err)
+        }
+        externalModules = [
+          ...externalModules,
+          ...stats.compilation.modules
+            .filter(
+              m =>
+                ['commonjs', 'commonjs2'].includes(m.externalType) &&
+                !m.request.startsWith('.'),
+            )
+            .map(m => m.request),
+        ]
         done()
         res()
       }),
@@ -173,7 +171,9 @@ async function run() {
           poll: 1000,
         },
         (err, stats) => {
-          loggingHelper.info(`Compiled ${compiler.options.name}`)
+          loggingHelper.info(
+            `Compiled ${compiler.options.name} in ${stats.toJson().time}ms`,
+          )
           if (err) {
             console.log(err)
           }
@@ -183,6 +183,9 @@ async function run() {
   }
   if (production) {
     await nuxtBuildPromise
+  }
+  if (packageMode) {
+    await packageApp(externalModules)
   }
 }
 

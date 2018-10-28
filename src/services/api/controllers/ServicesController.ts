@@ -1,36 +1,19 @@
-import TOML from '@iarna/toml'
-import { classToPlain } from 'class-transformer'
-import path from 'path'
-import {
-  BadRequestError,
-  BodyParam,
-  Get,
-  Delete,
-  Put,
-  Body,
-  InternalServerError,
-  JsonController,
-  NotFoundError,
-  Param,
-  QueryParam,
-  Post,
-} from 'routing-controllers'
-import { Repository } from 'typeorm'
-import ChatPlugContext from '../../../ChatPlugContext'
-import IFieldOptions, {
-  fieldListMetadataKey,
-  fieldOptionsMetadataKey,
-  FieldType,
-} from '../../../configWizard/IFieldOptions'
-import Service from '../../../entity/Service'
-import fs from 'fs-extra'
-import User from '../../../entity/User'
-import ServiceInstance from '../../dashboard/web/types/ServiceInstance'
-import Thread from '../../../entity/Thread'
-import Log from '../../../entity/Log'
+import TOML from '@iarna/toml';
+import { classToPlain } from 'class-transformer';
+import fs from 'fs-extra';
+import path from 'path';
+import { BadRequestError, Body, BodyParam, Delete, Get, JsonController, NotFoundError, Param, Post, Put, QueryParam } from 'routing-controllers';
+import { Repository } from 'typeorm';
+import ChatPlugContext from '../../../ChatPlugContext';
+import IFieldOptions, { fieldListMetadataKey, fieldOptionsMetadataKey, FieldType } from '../../../configWizard/IFieldOptions';
+import Log from '../../../entity/Log';
+import Service from '../../../entity/Service';
+import Thread from '../../../entity/Thread';
+import User from '../../../entity/User';
 import nativeRequire from '../../../utils/nativeRequire';
+import configFolderPath from '../../../utils/configFolderPath';
 
-const CONFIG_FOLDER_PATH = path.join(__dirname, '../../../../config')
+
 @JsonController('/services')
 export default class ServicesController {
   servicesRepository: Repository<Service>
@@ -88,7 +71,7 @@ export default class ServicesController {
 
     fs.writeFileSync(
       path.join(
-        CONFIG_FOLDER_PATH,
+        configFolderPath,
         service.moduleName + '.' + service.id + '.toml',
       ),
       TOML.stringify(configuration),
@@ -296,7 +279,7 @@ export default class ServicesController {
 
     fs.writeFileSync(
       path.join(
-        CONFIG_FOLDER_PATH,
+        configFolderPath,
         service.moduleName + '.' + service.id + '.toml',
       ),
       TOML.stringify(configuration),

@@ -1,22 +1,21 @@
-import log from 'npmlog'
-import { ChatPlugService } from './services/Service'
-import ChatPlugContext from './ChatPlugContext'
-import Service from './entity/Service'
-import path from 'path'
-import fs from 'fs-extra'
-import ServiceModule from './ServiceModule'
-import { plainToClass } from 'class-transformer'
-import { validate } from 'class-validator'
-import { IChatPlugServiceStatusUpdate, IChatPlugServiceStatus } from './models'
-import { Subject } from 'rxjs'
-import nativeRequire from './utils/nativeRequire'
+import { plainToClass } from 'class-transformer';
+import { validate } from 'class-validator';
+import fs from 'fs-extra';
+import log from 'npmlog';
+import path from 'path';
+import { Subject } from 'rxjs';
+import ChatPlugContext from './ChatPlugContext';
+import Service from './entity/Service';
+import { IChatPlugServiceStatus, IChatPlugServiceStatusUpdate } from './models';
+import ServiceModule from './ServiceModule';
+import { ChatPlugService } from './services/Service';
+import nativeRequire from './utils/nativeRequire';
 
 export interface ServiceMap {
   [id: number]: ChatPlugService
 }
 
-const CONFIG_FOLDER_PATH = path.join(__dirname, '../config')
-
+const servicesPath = path.join(__dirname, 'services')
 export class ServiceManager {
   services: ServiceMap
   context: ChatPlugContext
@@ -29,7 +28,6 @@ export class ServiceManager {
   }
 
   async getAvailableServices() {
-    const servicesPath = path.join(__dirname, 'services')
     const allFiles = await fs.readdir(servicesPath)
     const services: ServiceModule[] = []
     for (const f of allFiles) {
