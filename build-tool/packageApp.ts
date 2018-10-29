@@ -25,8 +25,14 @@ export default async function packageApp(usedModules: string[]) {
     dependencies: depndenciesToPackage,
     bin: 'chatplug.js',
     pkg: {
-      scripts: ['services/**/*.js', 'chatplug.lib.js', 'chatplug.js'],
-      assets: ['dashboard-web/**/*', 'services/**/*.json'],
+      scripts: [],
+      assets: [
+        'dashboard-web/**/*',
+        'services/**/*.json',
+        'services/**/*.js',
+        'chatplug.lib.js',
+        'chatplug.js',
+      ],
     },
   })
   await runCommand('npm install', path.resolve(__dirname, '../dist/'))
@@ -37,6 +43,6 @@ export default async function packageApp(usedModules: string[]) {
       'Pruning of node_modules is disabled, install node-prune and run with --node-prune for smaller binaries.',
     )
   }
-
+  console.log({ packagePath })
   pkg([packagePath, '--out-path', path.resolve(__dirname, '../dist-bin')])
 }
