@@ -33,7 +33,7 @@ async function run() {
   const baseCfg: Configuration = {
     mode: production ? 'production' : 'development',
     target: 'node',
-    devtool: (packageMode || production) ? false : undefined,
+    devtool: packageMode || production ? false : undefined,
     module: {
       rules: [
         {
@@ -189,4 +189,10 @@ async function run() {
   }
 }
 
-run().then(_ => _, console.error)
+run().then(
+  _ => _,
+  err => {
+    console.error(err)
+    process.exit(-1021);
+  },
+)

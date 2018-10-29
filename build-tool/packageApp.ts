@@ -44,5 +44,5 @@ export default async function packageApp(usedModules: string[]) {
     )
   }
   console.log({ packagePath })
-  pkg([packagePath, '--out-path', path.resolve(__dirname, '../dist-bin')])
+  await pkg([packagePath, '--out-path', path.resolve(__dirname, '../dist-bin')])
 }
