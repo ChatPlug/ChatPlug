@@ -21,8 +21,8 @@ import CLIConfigWizard from './CLIConfigWizard'
 import path from 'path'
 import TOML from '@iarna/toml'
 import nativeRequire from '../../utils/nativeRequire';
+import configFolderPath from '../../utils/configFolderPath';
 
-const CONFIG_FOLDER_PATH = path.join(__dirname, '../config/')
 
 export default class CLICommands {
   context: ChatPlugContext
@@ -338,7 +338,7 @@ export default class CLICommands {
 
     fs.writeFileSync(
       path.join(
-        CONFIG_FOLDER_PATH,
+        configFolderPath,
         service.moduleName + '.' + service.id + '.toml',
       ),
       TOML.stringify(configuration),
@@ -398,7 +398,7 @@ export default class CLICommands {
     const configuration = await wizard.promptForConfig(confSchema)
     fs.writeFileSync(
       path.join(
-        CONFIG_FOLDER_PATH,
+        configFolderPath,
         serviceName + '.' + newInstanceName + '.toml',
       ),
       TOML.stringify(configuration),

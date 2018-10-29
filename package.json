@@ -9,6 +9,7 @@
     "test": "npm run tslint",
     "build": "ts-node ./build-tool/buildTool.ts --prod",
     "watch": "ts-node ./build-tool/buildTool.ts --watch",
+    "build-pkg": "ts-node ./build-tool/buildTool.ts --prod --pkg",
     "start": "node dist/chatplug"
   },
   "repository": {
@@ -59,6 +60,7 @@
     "tdl": "^3.8.1",
     "telegraf": "^3.22.1",
     "ts-loader": "^5.2.1",
+    "tslib": "^1.9.3",
     "typeorm": "^0.2.7",
     "webpack": "^4.20.2",
     "webpack-merge": "^4.1.4",
@@ -85,7 +87,7 @@
     "tslint-config-airbnb": "^5.9.2",
     "typescript": "^2.9.2"
   },
-  "bin": "dist/index.js",
+  "bin": "dist/chatplug.js",
   "pkg": {
     "scripts": "dist/**/*.js"
   }
