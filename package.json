@@ -9,7 +9,7 @@
     "test": "npm run tslint",
     "build": "ts-node ./build-tool/buildTool.ts --prod",
     "watch": "ts-node ./build-tool/buildTool.ts --watch",
-    "build-pkg": "ts-node ./build-tool/buildTool.ts --prod --pkg --node-prune",
+    "build-pkg": "ts-node ./build-tool/buildTool.ts --prod --pkg",
     "start": "node dist/chatplug"
   },
   "repository": {
