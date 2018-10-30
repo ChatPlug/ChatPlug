@@ -30,6 +30,7 @@ export default async function packageApp(usedModules: string[]) {
   await fs.writeJSON(packagePath, {
     ...fullPackage,
     scripts: undefined, // unset scripts, useless in built app
+    devDependencies: undefined,
     dependencies: depndenciesToPackage,
     bin: 'chatplug.js',
     pkg: {
