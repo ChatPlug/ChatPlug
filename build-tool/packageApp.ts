@@ -7,6 +7,7 @@ import { flag } from './buildTool'
 import loggingHelper from './loggingHelper'
 
 export default async function packageApp(usedModules: string[]) {
+  usedModules.push('sqlite3') // include sqlite3 even if it isn't directly required
   await fs.mkdirp(path.resolve(__dirname, '../dist-bin'))
   const fullPackage = await fs.readJSON(
     path.resolve(__dirname, '../package.json'),
@@ -44,5 +45,5 @@ export default async function packageApp(usedModules: string[]) {
     )
   }
   console.log({ packagePath })
-  await pkg([packagePath, '--out-path', path.resolve(__dirname, '../dist-bin')])
+  await pkg([packagePath, '--output', path.resolve(__dirname, `../dist-bin/ChatPlug-${process.env.TRAVIS_TAG || 'dev'}`), '--target', 'linux,macos,win'])
 }
