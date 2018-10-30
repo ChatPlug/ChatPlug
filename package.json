@@ -5,6 +5,7 @@
   "main": "/dist/index",
   "typings": "/src/types/index.d.ts",
   "scripts": {
+    "postinstall": "cd src/services/dashboard/web && npm install",
     "cli": "ts-node ./node_modules/typeorm/cli.js",
     "test": "npm run tslint",
     "build": "ts-node ./build-tool/buildTool.ts --prod",

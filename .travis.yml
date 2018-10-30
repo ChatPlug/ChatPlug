@@ -6,7 +6,6 @@ cache:
     - "node_modules"
 install:
     - npm i
-    - (cd src/services/dashboard/web; npm i)
 script: npm run build-pkg
 deploy:
   provider: releases
