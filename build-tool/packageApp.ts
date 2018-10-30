@@ -56,7 +56,12 @@ export default async function packageApp(usedModules: string[]) {
   const targetMatrix: { [key in NodeJS.Platform]?: string } = {
     darwin: 'macos',
     win32: 'win',
-    linux: 'linux-x64,linux-x86,linux-armv6,linux-armv7,',
+    linux: 'linux-x64,linux-x86,linux-armv7,',
+  }
+  const nicePlatformNames: { [key in NodeJS.Platform]?: string } = {
+    darwin: 'macos',
+    win32: 'windows',
+    linux: 'linux',
   }
   const target = targetMatrix[os.platform()]
 
@@ -69,9 +74,12 @@ export default async function packageApp(usedModules: string[]) {
     '--output',
     path.resolve(
       __dirname,
-      `../dist-bin/chatplug-${process.env.TRAVIS_TAG || 'dev'}`,
+      `../dist-bin/chatplug-${process.env.TRAVIS_TAG || 'dev'}-${
+        nicePlatformNames[os.platform()]
+      }`,
     ),
     '--target',
     target,
+    '--public',
   ])
 }
