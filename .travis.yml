@@ -1,20 +1,17 @@
 language: node_js
 node_js:
-  - "10"
+- '10'
 cache:
   directories:
-    - "node_modules"
+  - node_modules
 install:
-    - npm i
+- npm i
 script: npm run build-pkg
 deploy:
   provider: releases
   api_key:
-    secure: YOUR_API_KEY_ENCRYPTED
-  file:
-    - "bin/chatplug-linux"
-    - "bin/chatplug-macos"
-    - "bin/chatplug-win.exe"
-  skip_cleanup: true
+    secure: h6jGZ72H3ngQWIGyC3zapGn2MJR39vtWIAU7Wiz6qZENtUxkqZTmn6zMXB8WmvA6FG7XHbE/BFYwb21hzHOwQ8w/akMw9vfHyDTSrhvdCOJHhj0Ci/tqYqJm+z9KX2+gmjNHalBxyyhXM/CfGPjfKBQc2WiBd23DWeGpDqnr0hkBXIToTqQJOsXQaLRlT42m8l1EOkSoe1zTdzVUU65PlTv9Ui6qqTbSCtM1bpg/firibhoL1VZqueMCHPNs09pDvJa35fTG6OrvsIwn9vu6qJl6gSJzAuDt9+GmqVkS++Z7WJ9i8fs0AkqFL3v+eb8PcqOR3XaIbb0WD6kMUrmlpMZB3YD5cXem+ulSv2M52c8XQvFeNF2jbjRDvQ3NA03i/EH/uazC/CVAUe7FDV9420Eby+g2kKQXHduoT0liLZxEYOljiipDL1SfHTAJx0Zk4NQ3yqcsQANDGjpL/5A/CcDXRw+uEs2VijqBV3jpIGosPuZU01+hFWuYpj4Wv84W5xHjlz/apEebeNjs6ag3njt5zNA/uOWsdgajG/trnKoPdD19wqTngXZUiGQw+xEgzWGyNl6eG6F/d5SScFuzEiHFEfhpQhf7mtwnmi3UHsz53tjPuqaCXtNYfETNs79UjguHhzjHWb0nhuCC92CbK37xA2ugsL+wwjZQzbYnp18=
+  file: 
+    - dist-bin/**
   on:
     tags: true
