@@ -1,13 +1,9 @@
-import fs from 'fs-extra'
-import { exec as pkg } from 'pkg'
-import path from 'path'
-import runCommand from './runCommand'
-import { flag } from './buildTool'
-import loggingHelper from './loggingHelper'
-import os from 'os'
-import PackagingTarget from './PackagingTarget'
-import PkgPackagingTarget from './PkgPackagingTarget'
-import { OutputPlatform, OutputArch } from './outputTypes'
+import fs from 'fs-extra';
+import path from 'path';
+import { OutputArch, OutputPlatform } from './outputTypes';
+import PackagingTarget from './PackagingTarget';
+import PkgPackagingTarget from './PkgPackagingTarget';
+import RawPackagingTarget from './RawPackagingTarget';
 
 export default async function packageApp(usedModules: string[]) {
   usedModules.push('sqlite3') // include sqlite3 even if it isn't directly required
@@ -52,6 +48,7 @@ export default async function packageApp(usedModules: string[]) {
     new PkgPackagingTarget(OutputPlatform.linux, OutputArch.armv7),
     new PkgPackagingTarget(OutputPlatform.windows, OutputArch.x64),
     new PkgPackagingTarget(OutputPlatform.macos, OutputArch.x64),
+    new RawPackagingTarget()
   ]
 
   for (const target of packagingTargets) {

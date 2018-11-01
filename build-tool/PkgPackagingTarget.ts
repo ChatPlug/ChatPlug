@@ -1,12 +1,12 @@
-import PackagingTarget from './PackagingTarget'
-import fs from 'fs-extra'
-import path from 'path'
-import runCommand from './runCommand'
-import { exec as pkg } from 'pkg'
-import { OutputPlatform, OutputArch, OutputTypesUtils } from './outputTypes'
-import glob from 'glob-promise'
-import archiver from 'archiver'
-import loggingHelper from './loggingHelper'
+import archiver from 'archiver';
+import fs from 'fs-extra';
+import glob from 'glob-promise';
+import path from 'path';
+import { exec as pkg } from 'pkg';
+import loggingHelper from './loggingHelper';
+import { OutputArch, OutputPlatform, OutputTypesUtils } from './outputTypes';
+import PackagingTarget from './PackagingTarget';
+import runCommand from './runCommand';
 
 export default class PkgPackagingTarget implements PackagingTarget {
   distPreTempPath: string
