@@ -16,7 +16,7 @@ import Log from './entity/Log'
 export default class ChatPlugContext {
   exchangeManager: ExchangeManager
   serviceManager: ServiceManager
-  logger: Logger
+  coreLogger: Logger
   config = new ChatPlugConfig()
 
   connection: Connection
@@ -42,7 +42,7 @@ export default class ChatPlugContext {
     })
     this.exchangeManager = new ExchangeManager(this)
     this.serviceManager = new ServiceManager(this)
-    this.logger = new Logger(this)
+    this.coreLogger = new Logger(this)
     this.config.context = this
   }
 }

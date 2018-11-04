@@ -20,9 +20,8 @@ import fs from 'fs'
 import CLIConfigWizard from './CLIConfigWizard'
 import path from 'path'
 import TOML from '@iarna/toml'
-import nativeRequire from '../../utils/nativeRequire';
-import configFolderPath from '../../utils/configFolderPath';
-
+import nativeRequire from '../../utils/nativeRequire'
+import configFolderPath from '../../utils/configFolderPath'
 
 export default class CLICommands {
   context: ChatPlugContext
@@ -83,8 +82,14 @@ export default class CLICommands {
       log.info('', 'Logging out...')
       this.chatplug
         .stopBridge()
-        .then(() => process.exit(log.info('', 'Logged out') || 0))
-        .catch(err => process.exit(log.error('', err) || 1))
+        .then(() => {
+          log.info('', 'Logged out')
+          process.exit(0)
+        })
+        .catch(err => {
+          log.error('', err)
+          process.exit(1)
+        })
     })
   }
 
@@ -325,7 +330,9 @@ export default class CLICommands {
       'services',
       'Configuring instance ' + newInstanceName + ' of service ' + serviceName,
     )
-    const configuration = await wizard.promptForConfig(confSchema)
+    const configuration: { [x: string]: any } = await wizard.promptForConfig(
+      confSchema,
+    )
 
     const service = new Service()
     service.configured = true
@@ -395,7 +402,9 @@ export default class CLICommands {
         ' of service ' +
         serviceName,
     )
-    const configuration = await wizard.promptForConfig(confSchema)
+    const configuration: { [x: string]: any } = await wizard.promptForConfig(
+      confSchema,
+    )
     fs.writeFileSync(
       path.join(
         configFolderPath,

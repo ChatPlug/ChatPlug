@@ -19,7 +19,7 @@ export class ChatPlugService<TConfig = any> {
     this.logger = new Logger(context, service)
     this.id = service.id
     this.context = context
-    this.config = context.config.readConfigForService(service)
+    this.config = context.config.readConfigForService(service) as any
   }
 
   async initialize() {}
