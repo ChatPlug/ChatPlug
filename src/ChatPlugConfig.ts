@@ -1,19 +1,16 @@
-import fs from 'fs'
-import log from 'npmlog'
-import path from 'path'
 import TOML from '@iarna/toml'
-import { IChatPlugConnection } from './models'
-import Service from './entity/Service'
-import ServiceModule from './ServiceModule'
+import { classToPlain } from 'class-transformer'
+import fs from 'fs'
+import path from 'path'
+import ChatPlugContext from './ChatPlugContext'
 import IFieldOptions, {
   fieldListMetadataKey,
   fieldOptionsMetadataKey,
   FieldType,
 } from './configWizard/IFieldOptions'
-import ChatPlugContext from './ChatPlugContext'
-import { classToPlain } from 'class-transformer'
-import nativeRequire from './utils/nativeRequire'
+import Service from './entity/Service'
 import configFolderPath from './utils/configFolderPath'
+import nativeRequire from './utils/nativeRequire'
 
 export class ChatPlugConfig {
   tomlConfig: any

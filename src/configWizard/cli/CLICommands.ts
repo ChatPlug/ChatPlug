@@ -1,27 +1,26 @@
+import TOML from '@iarna/toml'
+import chalk from 'chalk'
+import fs from 'fs'
+import path from 'path'
+import { Connection } from 'typeorm'
+import { ChatPlug } from '../../ChatPlug'
 import ChatPlugContext from '../../ChatPlugContext'
+import Service from '../../entity/Service'
+import Thread from '../../entity/Thread'
+import ThreadConnection from '../../entity/ThreadConnection'
+import configFolderPath from '../../utils/configFolderPath'
+import nativeRequire from '../../utils/nativeRequire'
+import CLIArgument from './CLIArgument'
 import CLIArgumentOptions, {
   CLIArguments,
-  parameterListMetadataKey,
-  helpMessageMetadataKey,
   DescriptionFlags,
   functionListMetadataKey,
+  helpMessageMetadataKey,
+  parameterListMetadataKey,
 } from './CLIArguments'
-import { printHelpMessage } from './CLIHelpCommand'
-import CLIArgument from './CLIArgument'
-import log from 'npmlog'
-import { Connection } from 'typeorm'
-import ThreadConnection from '../../entity/ThreadConnection'
-import Thread from '../../entity/Thread'
-import Service from '../../entity/Service'
-import chalk from 'chalk'
-import { ChatPlug } from '../../ChatPlug'
-import HelpMessage from './HelpMessage'
-import fs from 'fs'
 import CLIConfigWizard from './CLIConfigWizard'
-import path from 'path'
-import TOML from '@iarna/toml'
-import nativeRequire from '../../utils/nativeRequire'
-import configFolderPath from '../../utils/configFolderPath'
+import { printHelpMessage } from './CLIHelpCommand'
+import HelpMessage from './HelpMessage'
 
 export default class CLICommands {
   context: ChatPlugContext
@@ -65,8 +64,7 @@ export default class CLICommands {
       }
     }
 
-    log.error(
-      'core',
+    this.context.coreLogger.error(
       'Invalid command. Use --help to see available commands for ChatPlug.',
     )
   }
@@ -79,15 +77,15 @@ export default class CLICommands {
       .catch()
 
     process.on('SIGINT', () => {
-      log.info('', 'Logging out...')
+      this.context.coreLogger.info('Logging out...')
       this.chatplug
         .stopBridge()
         .then(() => {
-          log.info('', 'Logged out')
+          this.context.coreLogger.info('Logged out')
           process.exit(0)
         })
         .catch(err => {
-          log.error('', err)
+          this.context.coreLogger.info(err)
           process.exit(1)
         })
     })
@@ -112,7 +110,7 @@ export default class CLICommands {
     connection.connectionName = connectionName
     connection.threads = []
     const result = await repository.save(connection)
-    log.info('core', 'Added connection ' + result.connectionName)
+    this.context.coreLogger.info('Added connection ' + result.connectionName)
   }
 
   @HelpMessage(
@@ -144,14 +142,15 @@ export default class CLICommands {
     })
 
     if (!thread) {
-      log.error('core', 'Cannot find thread with specified parameters.')
+      this.context.coreLogger.error(
+        'Cannot find thread with specified parameters.',
+      )
       return
     }
 
     threadRepository.remove(thread)
-    log.info(
-      'core',
-      'Removed thread #' + threadId + ' from connection ' + connName,
+    this.context.coreLogger.info(
+      `Removed thread #${threadId} from connection ${connName}`,
     )
   }
 
@@ -176,12 +175,12 @@ export default class CLICommands {
     })
 
     if (!service) {
-      log.error('core', 'Cannot find service with given name.')
+      this.context.coreLogger.error('Cannot find service with given name.')
       return
     }
 
     if (!connection) {
-      log.error('core', 'Cannot find connection with given name')
+      this.context.coreLogger.error('Cannot find connection with given name')
       return
     }
 
@@ -190,8 +189,7 @@ export default class CLICommands {
         return el.externalServiceId === threadId
       })
     ) {
-      log.error(
-        'core',
+      this.context.coreLogger.error(
         'Thread with given id already exists in this connection',
       )
       return
@@ -204,7 +202,9 @@ export default class CLICommands {
     connection.threads.push(thread)
     connectionRepository.save(connection)
     serviceRepository.save(service)
-    log.info('core', 'Added thread #' + threadId + ' to connection ' + connName)
+    this.context.coreLogger.info(
+      `Added thread ${threadId} to connection ${connName}`,
+    )
   }
 
   @HelpMessage(
@@ -253,10 +253,10 @@ export default class CLICommands {
     })
     for (const connection of connections) {
       const indexText = chalk.gray(connection.id + '')
-      log.info(indexText, chalk.greenBright(connection.connectionName))
-      log.info(indexText, 'Threads:')
+      console.log(indexText, chalk.greenBright(connection.connectionName))
+      console.log(indexText, 'Threads:')
       for (const thread of connection.threads) {
-        log.info(
+        console.log(
           indexText,
           chalk.blueBright(
             thread.service.moduleName + '.' + thread.service.instanceName,
@@ -278,15 +278,14 @@ export default class CLICommands {
       instanceName: newInstanceName,
     })
     if (!instance) {
-      log.error('services', 'Given service instance does not exist')
+      this.context.coreLogger.error('Given service instance does not exist')
       return
     }
 
     await serviceRepository.remove(instance)
 
-    log.info(
-      'services',
-      'Removed instance ' + newInstanceName + ' of service ' + serviceName,
+    this.context.coreLogger.info(
+      `Removed instance ${newInstanceName} of service ${serviceName}`,
     )
   }
 
@@ -311,7 +310,7 @@ export default class CLICommands {
     )
 
     if (!serviceModule) {
-      log.error('services', 'Service with given name does not exist')
+      this.context.coreLogger.error('Service with given name does not exist')
       return
     }
 
@@ -320,15 +319,14 @@ export default class CLICommands {
       instanceName: newInstanceName,
     })
     if (instance) {
-      log.error('services', 'Instance with given name already exists!')
+      this.context.coreLogger.error('Instance with given name already exists!')
       return
     }
 
     const wizard = new CLIConfigWizard()
     const confSchema = nativeRequire(serviceModule.modulePath).Config
-    log.info(
-      'services',
-      'Configuring instance ' + newInstanceName + ' of service ' + serviceName,
+    this.context.coreLogger.info(
+      `Configuring instance ${newInstanceName} of service ${serviceName}`,
     )
     const configuration: { [x: string]: any } = await wizard.promptForConfig(
       confSchema,
@@ -351,12 +349,8 @@ export default class CLICommands {
       TOML.stringify(configuration),
     )
 
-    log.info(
-      'services',
-      'Created and configured instance ' +
-        newInstanceName +
-        ' of service ' +
-        serviceName,
+    this.context.coreLogger.info(
+      `Created and configured instance ${newInstanceName} of service ${serviceName}`,
     )
   }
 
@@ -384,23 +378,19 @@ export default class CLICommands {
       el => el.moduleName === serviceName,
     )
     if (!serviceModule) {
-      log.error('services', 'Given service does not exist')
+      this.context.coreLogger.error('Given service does not exist')
       return
     }
 
     if (!instance) {
-      log.error('services', 'Instance of given service does not exist')
+      this.context.coreLogger.error('Instance of given service does not exist')
       return
     }
 
     const wizard = new CLIConfigWizard()
     const confSchema = nativeRequire(serviceModule.modulePath).Config
-    log.info(
-      'services',
-      'Reconfiguring instance ' +
-        newInstanceName +
-        ' of service ' +
-        serviceName,
+    this.context.coreLogger.info(
+      `Reconfiguring instance ${newInstanceName} of service ${serviceName}`,
     )
     const configuration: { [x: string]: any } = await wizard.promptForConfig(
       confSchema,
@@ -413,7 +403,7 @@ export default class CLICommands {
       TOML.stringify(configuration),
     )
 
-    log.info('services', 'New configuration saved.')
+    this.context.coreLogger.info('New configuration saved.')
   }
 
   @HelpMessage('Reconfigures default instance of given service')
@@ -474,14 +464,13 @@ export default class CLICommands {
     })
 
     if (!instance) {
-      log.info('services', 'Given service instance does not exist')
+      this.context.coreLogger.info('Given service instance does not exist')
       return
     }
 
     instance.enabled = false
     serviceRepository.save(instance)
-    log.info(
-      'services',
+    this.context.coreLogger.info(
       'Disabled instance ' + newInstanceName + ' of service ' + serviceName,
     )
   }
@@ -499,14 +488,13 @@ export default class CLICommands {
     })
 
     if (!instance) {
-      log.info('services', 'Given service instance does not exist')
+      this.context.coreLogger.error('Given service instance does not exist')
       return
     }
 
     instance.enabled = true
     serviceRepository.save(instance)
-    log.info(
-      'services',
+    this.context.coreLogger.info(
       'Enabled instance ' + newInstanceName + ' of service ' + serviceName,
     )
   }

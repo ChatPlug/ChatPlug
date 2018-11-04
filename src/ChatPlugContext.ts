@@ -9,7 +9,6 @@ import ThreadConnection from './entity/ThreadConnection'
 import Service from './entity/Service'
 import { ChatPlugConfig } from './ChatPlugConfig'
 import User from './entity/User'
-import log from 'npmlog'
 import Logger from './Logger'
 import Log from './entity/Log'
 
@@ -22,8 +21,6 @@ export default class ChatPlugContext {
   connection: Connection
 
   async initializeConnection() {
-    log.heading = 'chatplug'
-
     this.connection = await createConnection({
       type: 'sqlite',
       database: 'chatplug.db',
