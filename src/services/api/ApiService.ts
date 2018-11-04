@@ -1,19 +1,17 @@
-import { ChatPlugService } from '../Service'
-import log from 'npmlog'
-import 'reflect-metadata'
-import ThreadConnection from '../../entity/ThreadConnection'
-import { createExpressServer, useContainer, useExpressServer } from 'routing-controllers'
-import ConnectionsController from './controllers/ConnectionsController'
+import cors from 'cors'
 import express, { Application } from 'express'
+import { Server } from 'http'
+import 'reflect-metadata'
+import { useContainer, useExpressServer } from 'routing-controllers'
+import { Subscription } from 'rxjs'
+import { OPEN, Server as WebsocketServer } from 'ws'
+import { ChatPlugService } from '../Service'
 import ContextContainer from './ContextContainer'
+import ConnectionsController from './controllers/ConnectionsController'
+import ServicesController from './controllers/ServicesController'
 import ErrorMiddleware from './ErrorMiddleware'
 import ResponseMiddleware from './ResponseMiddleware'
-import ServicesController from './controllers/ServicesController'
-import { Server as WebsocketServer, OPEN } from 'ws'
-import { Server } from 'http'
-import { Subscription } from 'rxjs'
 import { SocketEvent, SocketPacket } from './SocketEvent'
-import cors from 'cors'
 
 export default class ApiService extends ChatPlugService {
   app: Application
@@ -37,26 +35,34 @@ export default class ApiService extends ChatPlugService {
       port: 2136,
     })
 
-    this.statusSubscription = this.context.serviceManager.statusSubject.subscribe((el) => {
-      this.broadcastPacket({ namespace: 'services', mutation: SocketEvent.ServiceStatusUpdate, data: el })
-    })
+    this.statusSubscription = this.context.serviceManager.statusSubject.subscribe(
+      el => {
+        this.broadcastPacket({
+          namespace: 'services',
+          mutation: SocketEvent.ServiceStatusUpdate,
+          data: el,
+        })
+      },
+    )
 
     new Promise(
       res => (this.httpServer = this.app.listen(this.config.port, _ => res)),
-    ).then().catch()
+    )
+      .then()
+      .catch()
 
-    log.info('api', 'API listening on port ' + this.config.port)
+    this.logger.info(`API listening on port ${this.config.port}`)
   }
 
   async terminate() {
-    log.info('api', 'Closing API server')
+    this.logger.info('Closing API server')
     this.statusSubscription.unsubscribe()
     await this.wsServer.close()
     await this.httpServer.close()
   }
 
   async broadcastPacket(packet: SocketPacket) {
-    this.wsServer.clients.forEach((el) => {
+    this.wsServer.clients.forEach(el => {
       if (el.readyState === OPEN) {
         el.send(JSON.stringify(packet))
       }
