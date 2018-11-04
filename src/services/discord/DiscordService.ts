@@ -1,22 +1,20 @@
-import log from 'npmlog'
-import { IChatPlugMessage, IChatPlugThreadResult } from '../../models'
-import { ChatPlugService } from '../Service'
-import { Subject } from 'rxjs'
-import DiscordConfig from './DiscordConfig'
-import {
-  Client as DiscordClient,
-  Collection,
-  Webhook,
-} from 'discord.js'
-import { DiscordMessageHandler } from './DiscordMessageHandler'
+import { Client as DiscordClient, Collection, Webhook } from 'discord.js'
 import { LogLevel } from '../../Logger'
+import { IChatPlugThreadResult } from '../../models'
+import { ChatPlugService } from '../Service'
+import DiscordConfig from './DiscordConfig'
+import { DiscordMessageHandler } from './DiscordMessageHandler'
 
 export default class DiscordService extends ChatPlugService<DiscordConfig> {
   messageHandler: DiscordMessageHandler
   discord = new DiscordClient()
 
   async initialize() {
-    this.messageHandler = new DiscordMessageHandler(this.discord, this.context.exchangeManager.messageSubject, this.id)
+    this.messageHandler = new DiscordMessageHandler(
+      this.discord,
+      this.context.exchangeManager.messageSubject,
+      this.id,
+    )
 
     this.receiveMessageSubject.subscribe(this.messageHandler.onIncomingMessage)
 
@@ -25,7 +23,9 @@ export default class DiscordService extends ChatPlugService<DiscordConfig> {
     await this.discord.login(this.config.token)
 
     // get array of collections of webhooks from all guilds
-    const allWebhooks = await Promise.all(this.discord.guilds.map(guild => guild.fetchWebhooks()))
+    const allWebhooks = await Promise.all(
+      this.discord.guilds.map(guild => guild.fetchWebhooks()),
+    )
 
     // filter them to get only ChatPlug's webhooks
     const filteredWebhooks = allWebhooks.map(webhooks =>
@@ -34,17 +34,23 @@ export default class DiscordService extends ChatPlugService<DiscordConfig> {
     // save them to a new collection
     let webhooks = new Collection() as Collection<string, Webhook>
     webhooks = webhooks.concat(...filteredWebhooks)
-    this.logger.log(LogLevel.DEBUG, 'discord: webhooks ' + webhooks.map((el) => el.name).join(','))
+    this.logger.log(
+      LogLevel.DEBUG,
+      'discord: webhooks ' + webhooks.map(el => el.name).join(','),
+    )
 
     this.messageHandler.loadWebhooks(webhooks)
-    await this.logger.log(LogLevel.INFO, 'Logged in as ' + this.discord.user.username)
+    await this.logger.log(
+      LogLevel.INFO,
+      'Logged in as ' + this.discord.user.username,
+    )
   }
 
   terminate() {
     return this.discord.destroy()
   }
 
-  discordChannelToTitle = (channel) => {
+  discordChannelToTitle = channel => {
     let title = channel.guild.name
 
     if (channel.parent) {
@@ -56,22 +62,26 @@ export default class DiscordService extends ChatPlugService<DiscordConfig> {
 
   async searchThreads(query: string): Promise<IChatPlugThreadResult[]> {
     return this.discord.channels
-    .filter(b => (
-      this.discordChannelToTitle(b)
-        .toLowerCase().indexOf(query.toLowerCase()) !== -1 ||
-        ('#' + (b as any).name)
-          .toLowerCase()
-          .indexOf(query.toLowerCase()) !== -1) &&  b.type !== 'voice' && b.type !== 'category')
-    .map(channel => {
+      .filter(
+        b =>
+          (this.discordChannelToTitle(b)
+            .toLowerCase()
+            .indexOf(query.toLowerCase()) !== -1 ||
+            ('#' + (b as any).name)
+              .toLowerCase()
+              .indexOf(query.toLowerCase()) !== -1) &&
+          b.type !== 'voice' &&
+          b.type !== 'category',
+      )
+      .map(channel => {
+        const subtitle = this.discordChannelToTitle(channel)
 
-      const subtitle = this.discordChannelToTitle(channel)
-
-      return {
-        subtitle,
-        id: channel.id,
-        title: '#' + ((channel as any).name),
-        avatarUrl: (channel as any).guild.iconURL,
-      } as IChatPlugThreadResult
-    })
+        return {
+          subtitle,
+          id: channel.id,
+          title: '#' + (channel as any).name,
+          avatarUrl: (channel as any).guild.iconURL,
+        } as IChatPlugThreadResult
+      })
   }
 }

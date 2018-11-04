@@ -1,13 +1,7 @@
-import log from 'npmlog'
-import { IChatPlugMessage, IChatPlugThread, IChatPlugThreadResult } from '../../models'
+import { OPEN, Server as WebsocketServer } from 'ws'
+import { IChatPlugMessage } from '../../models'
 import { ChatPlugService } from '../Service'
-import fs from 'fs'
-import { ChatPlugConfig } from '../../ChatPlugConfig'
-import Message from '../../entity/Message'
-import { login } from 'libfb'
 import MessagingConfig from './MessagingConfig'
-import { LogLevel } from '../../Logger'
-import { Server as WebsocketServer, OPEN } from 'ws'
 
 export default class MessagingService extends ChatPlugService<MessagingConfig> {
   wsServer: WebsocketServer
@@ -16,8 +10,8 @@ export default class MessagingService extends ChatPlugService<MessagingConfig> {
       port: 2135,
     })
 
-    this.wsServer.on('connection', (client) => {
-      client.on('message', (message) => {
+    this.wsServer.on('connection', client => {
+      client.on('message', message => {
         try {
           const event = JSON.parse(message.toString())
           if (event.event === 'message') {
@@ -33,8 +27,8 @@ export default class MessagingService extends ChatPlugService<MessagingConfig> {
                 avatar: data!!.author.avatar,
                 externalServiceId: data!!.author.externalServiceId,
               },
-              externalOriginId:  data!!.threadId!!,
-              externalOriginName:  'Primary connected',
+              externalOriginId: data!!.threadId!!,
+              externalOriginName: 'Primary connected',
               originServiceId: this.id,
             } as IChatPlugMessage
 
@@ -47,8 +41,8 @@ export default class MessagingService extends ChatPlugService<MessagingConfig> {
     })
 
     this.receiveMessageSubject.subscribe({
-      next: (message) => {
-        (message as any).message.threadConnection.threads = null
+      next: message => {
+        ;(message as any).message.threadConnection.threads = null
         if (!message.message.attachements) {
           message.message.attachements = []
         }
@@ -62,7 +56,7 @@ export default class MessagingService extends ChatPlugService<MessagingConfig> {
   }
 
   async broadcastPacket(packet: any) {
-    this.wsServer.clients.forEach((el) => {
+    this.wsServer.clients.forEach(el => {
       if (el.readyState === OPEN) {
         el.send(JSON.stringify(packet))
       }

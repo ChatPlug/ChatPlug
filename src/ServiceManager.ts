@@ -1,15 +1,14 @@
-import { plainToClass } from 'class-transformer';
-import { validate } from 'class-validator';
-import fs from 'fs-extra';
-import log from 'npmlog';
-import path from 'path';
-import { Subject } from 'rxjs';
-import ChatPlugContext from './ChatPlugContext';
-import Service from './entity/Service';
-import { IChatPlugServiceStatus, IChatPlugServiceStatusUpdate } from './models';
-import ServiceModule from './ServiceModule';
-import { ChatPlugService } from './services/Service';
-import nativeRequire from './utils/nativeRequire';
+import { plainToClass } from 'class-transformer'
+import { validate } from 'class-validator'
+import fs from 'fs-extra'
+import path from 'path'
+import { Subject } from 'rxjs'
+import ChatPlugContext from './ChatPlugContext'
+import Service from './entity/Service'
+import { IChatPlugServiceStatus, IChatPlugServiceStatusUpdate } from './models'
+import ServiceModule from './ServiceModule'
+import { ChatPlugService } from './services/Service'
+import nativeRequire from './utils/nativeRequire'
 
 export interface ServiceMap {
   [id: number]: ChatPlugService
@@ -125,8 +124,7 @@ export class ServiceManager {
     ) {
       return
     }
-    log.info(
-      'services',
+    this.context.coreLogger.info(
       `Service instance ${dbService.instanceName} (${
         dbService.moduleName
       }) enabled, initializing...`,

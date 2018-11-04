@@ -1,10 +1,8 @@
-import { ChatPlugMessageHandler } from '../MessageHandler'
-import { IChatPlugMessage, MessagePacket } from '../../models'
-import { Subject } from 'rxjs'
-import log from 'npmlog'
-import { Client as DiscordClient, Collection, Webhook, TextChannel } from 'discord.js'
-import Service from '../../entity/Service'
-import Message from '../../entity/Message'
+import { Client as DiscordClient, Collection, TextChannel, Webhook } from 'discord.js';
+import log from 'npmlog';
+import { Subject } from 'rxjs';
+import { IChatPlugMessage, MessagePacket } from '../../models';
+import { ChatPlugMessageHandler } from '../MessageHandler';
 
 export class DiscordMessageHandler implements ChatPlugMessageHandler {
   client: DiscordClient

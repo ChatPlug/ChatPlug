@@ -1,14 +1,14 @@
-import { ChatPlugMessageHandler } from '../MessageHandler'
-import TelegramBot from 'node-telegram-bot-api'
-import { IChatPlugMessage, IChatPlugAttachement, IChatPlugAttachementType, MessagePacket } from '../../models'
-import { promisify } from 'util'
 import { Subject } from 'rxjs'
-import { parse } from 'url'
-import log from 'npmlog'
-import { ContextMessageUpdate, Telegram } from 'telegraf'
+import { Telegram } from 'telegraf'
 import { Message } from 'telegram-typings'
 import ChatPlugContext from '../../ChatPlugContext'
 import User from '../../entity/User'
+import {
+  IChatPlugAttachement,
+  IChatPlugMessage,
+  MessagePacket,
+} from '../../models'
+import { ChatPlugMessageHandler } from '../MessageHandler'
 
 export class TelegramMessageHandler implements ChatPlugMessageHandler {
   client: Telegram
@@ -16,14 +16,17 @@ export class TelegramMessageHandler implements ChatPlugMessageHandler {
   handledMessages: any[] = []
   context: ChatPlugContext
 
-  constructor(client: Telegram, subject: Subject<IChatPlugMessage>, context: ChatPlugContext) {
+  constructor(
+    client: Telegram,
+    subject: Subject<IChatPlugMessage>,
+    context: ChatPlugContext,
+  ) {
     this.client = client
     this.messageSubject = subject
     this.context = context
   }
 
   async onOutgoingMessage(message: Message) {
-
     console.time('telegramPrepare' + message.message_id)
     // Duplicates handling
     let listOfAttachments: IChatPlugAttachement[] = []
@@ -32,25 +35,36 @@ export class TelegramMessageHandler implements ChatPlugMessageHandler {
       // @ts-ignore
       const picUrl = await this.client.getFileLink(photoId)
       if (typeof picUrl === 'string') {
-        listOfAttachments = [{
-          url: picUrl,
-          name: /[^/]*$/.exec(picUrl as string)!![0],
-        } as IChatPlugAttachement]
+        listOfAttachments = [
+          {
+            url: picUrl,
+            name: /[^/]*$/.exec(picUrl as string)!![0],
+          } as IChatPlugAttachement,
+        ]
       }
     }
 
     let avatar: string
-    const dbUser = await this.context.connection.getRepository(User).findOne({ externalServiceId: '' + message.from!!.id })
+    const dbUser = await this.context.connection
+      .getRepository(User)
+      .findOne({ externalServiceId: '' + message.from!!.id })
 
     if (!dbUser) {
       // @ts-ignore
-      const profilePics = await this.client.getUserProfilePhotos(message.from!!.id)
+      const profilePics = await this.client.getUserProfilePhotos(
+        message.from!!.id,
+      )
       // @ts-ignore
-      avatar = (profilePics instanceof Error || profilePics.photos.length < 1) ? '' : await this.client.getFileLink(profilePics.photos[0][0].file_id)
+      avatar =
+        profilePics instanceof Error || profilePics.photos.length < 1
+          ? ''
+          : await (this.client as any).getFileLink(
+              profilePics.photos[0][0].file_id,
+            )
     } else {
       avatar = dbUser.avatarUrl
     }
-      /*const attachment = await this.fileIdToAttachement(photoId)
+    /*const attachment = await this.fileIdToAttachement(photoId)
       attachment.type = IChatPlugAttachementType.IMAGE
       listOfAttachments = [attachment]
     }
