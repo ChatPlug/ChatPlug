@@ -8,6 +8,8 @@ import buildService from './buildService'
 import buildDashboard from './buildDashboard'
 import { rejects } from 'assert'
 import packageApp from './packageApp'
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
+
 
 export function flag(f: string) {
   return process.argv.indexOf(f) !== -1
@@ -62,7 +64,9 @@ async function run() {
       __dirname: false,
       __filename: false,
     },
-    plugins: [],
+    plugins: [
+      new ForkTsCheckerWebpackPlugin()
+    ],
     optimization: {
       minimize: false,
     },
@@ -193,6 +197,6 @@ run().then(
   _ => _,
   err => {
     console.error(err)
-    process.exit(-1021);
+    process.exit(-1021)
   },
 )

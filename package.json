@@ -84,6 +84,7 @@
     "@types/node": "^10.12.2",
     "@types/node-telegram-bot-api": "^0.30.3",
     "@types/npmlog": "^4.1.1",
+    "fork-ts-checker-webpack-plugin": "^0.4.14",
     "jest": "^23.6.0",
     "pkg": "^4.3.4",
     "shx": "^0.3.2",
