@@ -4,7 +4,7 @@ import fs from 'fs-extra'
 
 export default async function runCommand(command: string, cwd?: string) {
   await new Promise((res, rej) => {
-    let nuxtProc = exec(command, {
+    const nuxtProc = exec(command, {
       cwd,
     })
     nuxtProc.stdout.pipe(process.stdout)

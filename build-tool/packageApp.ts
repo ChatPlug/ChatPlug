@@ -1,10 +1,9 @@
 import fs from 'fs-extra'
-import { exec as pkg } from 'pkg'
 import path from 'path'
-import runCommand from './runCommand'
-import { flag } from './buildTool'
-import loggingHelper from './loggingHelper'
-import os from 'os'
+import { OutputArch, OutputPlatform } from './outputTypes'
+import PackagingTarget from './PackagingTarget'
+import PkgPackagingTarget from './PkgPackagingTarget'
+import RawPackagingTarget from './RawPackagingTarget'
 
 export default async function packageApp(usedModules: string[]) {
   usedModules.push('sqlite3') // include sqlite3 even if it isn't directly required
@@ -25,9 +24,8 @@ export default async function packageApp(usedModules: string[]) {
   Object.keys(allDependencies)
     .filter(dep => usedModules.includes(dep))
     .forEach(dep => (depndenciesToPackage[dep] = allDependencies[dep]))
-  const packagePath = path.resolve(__dirname, '../dist/package.json')
-  // save the new package with some extra data for PKG
-  await fs.writeJSON(packagePath, {
+
+  const packageContents = {
     ...fullPackage,
     scripts: undefined, // unset scripts, useless in built app
     devDependencies: undefined,
@@ -43,44 +41,21 @@ export default async function packageApp(usedModules: string[]) {
         'chatplug.js',
       ],
     },
-  })
-  await runCommand('npm install', path.resolve(__dirname, '../dist/'))
-  if (flag('--node-prune')) {
-    await runCommand('node-prune', path.resolve(__dirname, '../dist/'))
-  } else {
-    loggingHelper.warn(
-      'Pruning of node_modules is disabled, install node-prune and run with --node-prune for smaller binaries.',
+  }
+
+  const packagingTargets: PackagingTarget[] = [
+    new PkgPackagingTarget(OutputPlatform.linux, OutputArch.x64),
+    new PkgPackagingTarget(OutputPlatform.linux, OutputArch.armv7),
+    new PkgPackagingTarget(OutputPlatform.windows, OutputArch.x64),
+    new PkgPackagingTarget(OutputPlatform.macos, OutputArch.x64),
+    new RawPackagingTarget(),
+  ]
+
+  for (const target of packagingTargets) {
+    await target.installDependencies(
+      packageContents,
+      path.resolve(__dirname, '../dist'),
     )
+    await target.packageApp(path.resolve(__dirname, '../dist-bin'))
   }
-  console.log({ packagePath })
-
-  const targetMatrix: { [key in NodeJS.Platform]?: string } = {
-    darwin: 'macos',
-    win32: 'win',
-    linux: 'linux-x64,linux-x86,linux-armv7,',
-  }
-  const nicePlatformNames: { [key in NodeJS.Platform]?: string } = {
-    darwin: 'macos',
-    win32: 'windows',
-    linux: 'linux',
-  }
-  const target = targetMatrix[os.platform()]
-
-  if (!target) {
-    throw new Error(`Unsupported build platform ${os.platform()}.`)
-  }
-
-  await pkg([
-    packagePath,
-    '--output',
-    path.resolve(
-      __dirname,
-      `../dist-bin/chatplug-${process.env.TRAVIS_TAG || 'dev'}-${
-        nicePlatformNames[os.platform()]
-      }`,
-    ),
-    '--target',
-    target,
-    '--public',
-  ])
 }

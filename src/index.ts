@@ -11,23 +11,6 @@ import './services/ServiceCapabilities'
 import 'tslib'
 
 export default async function() {
-  // function walk(dir: string, lvl: number = 0) {
-  //   var list = fs.readdirSync(dir)
-  //   list.forEach(function(file) {
-  //     file = dir + '/' + file
-  //     console.log(
-  //       Array(lvl)
-  //         .fill(' ')
-  //         .join('') + file,
-  //     )
-  //     var stat = fs.statSync(file)
-  //     if (stat && stat.isDirectory()) {
-  //       /* Recurse into a subdirectory */
-  //       walk(file, lvl + 2)
-  //     }
-  //   })
-  // }
-  // walk(__dirname)
   const argv = require('yargs-parser')(process.argv.slice(2), {
     alias: getAliasMap(),
   })

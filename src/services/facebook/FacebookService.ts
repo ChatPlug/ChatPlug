@@ -59,14 +59,14 @@ export default class FacebookService extends ChatPlugService<FacebookConfig> {
     setTimeout(
       () => {
         fs.writeFileSync('session.json', JSON.stringify(this.facebook.getSession()))
-        this.log(LogLevel.INFO, 'Logged in as ' + this.facebook.getSession().identifier)
+        this.logger.log(LogLevel.INFO, 'Logged in as ' + this.facebook.getSession().identifier)
       },
       15000)
 
   }
 
   async terminate() {
-    if (!this.facebook) return this.log(LogLevel.INFO, 'Not logged in')
+    if (!this.facebook) return this.logger.log(LogLevel.INFO, 'Not logged in')
 
     // await this.facebook.logout
   }

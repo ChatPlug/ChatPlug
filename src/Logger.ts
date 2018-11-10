@@ -1,7 +1,7 @@
 import ChatPlugContext from './ChatPlugContext'
-import Service from './entity/Service'
 import Log from './entity/Log'
-import consola from 'consola'
+import Service from './entity/Service'
+import chalk from 'chalk'
 
 export enum LogLevel {
   ERROR = 'error',
@@ -11,21 +11,63 @@ export enum LogLevel {
   FATAL = 'fatal',
 }
 
-class Logger {
-  context: ChatPlugContext
-  constructor (context: ChatPlugContext) {
-    this.context = context
-  }
+type LevelMap = { [x in LogLevel]: string }
 
-  log(service: Service, logLevel: LogLevel, msg: string) {
+const levelBadges: LevelMap = {
+  error: chalk.bgRed.white(' ERROR '),
+  info: chalk.bgBlue.black(' INFO '),
+  warn: chalk.bgYellow.black(' WARN '),
+  fatal: chalk.bgWhite.bgRed(' FATAL '),
+  debug: chalk.bgCyan.bgGreen(' DEBUG '),
+}
+
+const levelArrows: LevelMap = {
+  error: chalk.red('›'),
+  info: chalk.blue('›'),
+  warn: chalk.yellow('›'),
+  fatal: chalk.white('›'),
+  debug: chalk.cyan('›'),
+}
+
+export default class Logger {
+  constructor(public context: ChatPlugContext, public service?: Service) {}
+
+  async log(logLevel: LogLevel, msg: string) {
+    const scope = this.service ? this.service.moduleName : 'core'
+    console.log(
+      levelBadges[logLevel],
+      chalk.gray(
+        new Date()
+          .toISOString()
+          .replace('T', ' ')
+          .substr(0, 19),
+      ),
+      chalk.reset(scope),
+      levelArrows[logLevel],
+      chalk.reset(msg),
+    )
+
     const log = new Log()
     log.logLevel = logLevel
     log.systemLog = false
     log.message = msg
-    log.service = service
-    this.context.connection.getRepository(Log).save(log)
-    consola[logLevel]({ message: msg, badge: true, scope: service.moduleName })
+    log.service = this.service
+    await this.context.connection.getRepository(Log).save(log)
+  }
+
+  error(msg: string) {
+    return this.log(LogLevel.ERROR, msg)
+  }
+  info(msg: string) {
+    return this.log(LogLevel.INFO, msg)
+  }
+  fatal(msg: string) {
+    return this.log(LogLevel.FATAL, msg)
+  }
+  warn(msg: string) {
+    return this.log(LogLevel.WARN, msg)
+  }
+  debug(msg: string) {
+    return this.log(LogLevel.DEBUG, msg)
   }
 }
-
-export default Logger

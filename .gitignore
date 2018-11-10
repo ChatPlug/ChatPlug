@@ -8,3 +8,4 @@ config/
 session.json
 chatplug.db-journal
 dist-bin/
+dist-temp/

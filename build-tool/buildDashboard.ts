@@ -3,7 +3,7 @@ import path from 'path'
 import fs from 'fs-extra'
 import runCommand from './runCommand'
 
-export default async function() {
+export default async function () {
   await runCommand(
     `${path.resolve(
       __dirname,

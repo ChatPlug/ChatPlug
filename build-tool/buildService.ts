@@ -23,13 +23,11 @@ export default async function buildService(
   await fs.copy(manifestPath, path.resolve(outDir, 'manifest.json'))
 
   const done = loggingHelper.timed(`building service ${serviceName}`)
-  let defineFields = {}
+  const defineFields = {}
   if (prod) {
-    defineFields['process.env.CHATPLUG_DASHBOARD_STATIC_DIR'] = `require('path').join(__dirname, '../../dashboard-web')`
+    defineFields['process.env.CHATPLUG_DASHBOARD_STATIC_DIR'] = "require('path').join(__dirname, '../../dashboard-web')"
   } else {
-    defineFields[
-      'process.env.CHATPLUG_DASHBOARD_DEV_HTTP_HANDLER'
-    ] = JSON.stringify(
+    defineFields['process.env.CHATPLUG_DASHBOARD_DEV_HTTP_HANDLER'] = JSON.stringify(
       path.resolve(
         __dirname,
         '../src/services/dashboard/web/dashboardHttpHandler',

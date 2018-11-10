@@ -16,7 +16,7 @@ export class TelegramMessageHandler implements ChatPlugMessageHandler {
   handledMessages: any[] = []
   context: ChatPlugContext
 
-  constructor(client: Telegram, subject: Subject<IChatPlugMessage>, context: ChatPlugContext) {
+  constructor(client: Telegram, subject: Subject<IChatPlugMessage>, context: ChatPlugContext, public id: number) {
     this.client = client
     this.messageSubject = subject
     this.context = context
@@ -50,40 +50,6 @@ export class TelegramMessageHandler implements ChatPlugMessageHandler {
     } else {
       avatar = dbUser.avatarUrl
     }
-      /*const attachment = await this.fileIdToAttachement(photoId)
-      attachment.type = IChatPlugAttachementType.IMAGE
-      listOfAttachments = [attachment]
-    }
-
-    if (message.sticker) {
-      const photoId = message.sticker.file_id
-      const attachment = await this.fileIdToAttachement(photoId)
-      attachment.type = IChatPlugAttachementType.IMAGE
-      listOfAttachments = [attachment]
-    }
-
-    if (message.sticker) {
-      const photoId = message.sticker.file_id
-      const attachment = await this.fileIdToAttachement(photoId)
-      attachment.type = IChatPlugAttachementType.IMAGE
-      listOfAttachments = [attachment]
-    }
-
-    if (message.document) {
-      // @ts-ignore
-      const photoId = message.document.file_id
-      const attachment = await this.fileIdToAttachement(photoId)
-      attachment.type = IChatPlugAttachementType.FILE
-      listOfAttachments = [attachment]
-    }
-
-    if (message.video) {
-      // @ts-ignore
-      const photoId = message.video.file_id
-      const attachment = await this.fileIdToAttachement(photoId)
-      attachment.type = IChatPlugAttachementType.VIDEO
-      listOfAttachments = [attachment]
-    }*/
 
     const chatPlugMessage = {
       message: message.text,
@@ -94,27 +60,29 @@ export class TelegramMessageHandler implements ChatPlugMessageHandler {
         externalServiceId: message.from!!.id.toString(),
       },
       externalOriginId: message.chat!!.id.toString(),
+      externalOriginName:  message.chat!!.title,
+      originServiceId: this.id,
     } as IChatPlugMessage
+
+    console.log(chatPlugMessage)
 
     // send a message to the chat acknowledging receipt of their message
     this.messageSubject.next(chatPlugMessage)
-    console.timeEnd('telegramPrepare' + message.message_id)
   }
 
-  onIncomingMessage = async (message: MessagePacket) => {
-    /*console.time('telegramSend' + message.externalOriginId)
-    if (!message.externalTargetId) return
-    const formattedMsg = '*' + message.author.username + '*' + ': ' + message.message
+  onIncomingMessage = async (packet: MessagePacket) => {
+    const message = packet.message
+    if (!packet.targetThread) return
+    const formattedMsg = '*' + message.author.username + '*' + ': ' + message.content
     // @ts-ignore
     await this.client.sendMessage(
-      message.externalTargetId,
+      packet.targetThread.externalServiceId,
       formattedMsg,
       { parse_mode: 'Markdown' } as any,
     )
-    for (const attachment of message.attachments) {
-      await this.client.sendPhoto(message.externalTargetId, attachment.url)
+    for (const attachment of message.attachements) {
+      await this.client.sendPhoto(packet.targetThread.externalServiceId, attachment.url)
     }
-    console.timeEnd('telegramSend' + message.externalOriginId)*/
   }
 
   setClient(client) {

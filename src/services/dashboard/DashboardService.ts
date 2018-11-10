@@ -4,11 +4,10 @@ import Service from '../../entity/Service'
 import ApiService from '../api/ApiService'
 import express from 'express'
 import path from 'path'
-import Logger, { LogLevel } from '../../Logger'
+import { LogLevel } from '../../Logger'
 import nativeRequire from '../../utils/nativeRequire';
 
 export default class DashboardService extends ChatPlugService<DashboardConfig> {
-  logger = new Logger(this.context)
   async getAPIExpressInstance() {
     const dataFromDB = (await this.context.connection
       .getRepository(Service)
@@ -27,7 +26,7 @@ export default class DashboardService extends ChatPlugService<DashboardConfig> {
     }
     const app = await this.getAPIExpressInstance()
     if (process.env.CHATPLUG_DASHBOARD_DEV_HTTP_HANDLER) {
-      this.log(
+      this.logger.log(
         LogLevel.INFO,
         'Using process.env.CHATPLUG_DASHBOARD_DEV_HTTP_HANDLER',
       )
@@ -46,7 +45,7 @@ export default class DashboardService extends ChatPlugService<DashboardConfig> {
     }
     const chatplugStaticDir = process.env.CHATPLUG_DASHBOARD_STATIC_DIR
     if (chatplugStaticDir) {
-      this.log(
+      this.logger.log(
         LogLevel.INFO,
         ' Using process.env.CHATPLUG_DASHBOARD_STATIC_DIR = ' +
           chatplugStaticDir,

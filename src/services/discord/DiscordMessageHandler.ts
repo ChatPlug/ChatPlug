@@ -1,10 +1,8 @@
-import { ChatPlugMessageHandler } from '../MessageHandler'
-import { IChatPlugMessage, MessagePacket } from '../../models'
-import { Subject } from 'rxjs'
+import { Client as DiscordClient, Collection, TextChannel, Webhook } from 'discord.js'
 import log from 'npmlog'
-import { Client as DiscordClient, Collection, Webhook, TextChannel } from 'discord.js'
-import Service from '../../entity/Service'
-import Message from '../../entity/Message'
+import { Subject } from 'rxjs'
+import { IChatPlugMessage, MessagePacket } from '../../models'
+import { ChatPlugMessageHandler } from '../MessageHandler'
 
 export class DiscordMessageHandler implements ChatPlugMessageHandler {
   client: DiscordClient
@@ -60,6 +58,12 @@ export class DiscordMessageHandler implements ChatPlugMessageHandler {
       )
       this.webhooks.set(webhook.id, webhook)
     }
+
+    if (message.content.length === 0) {
+      message.content = ''
+    }
+
+    console.log(message)
 
     message.content = resolveMentions(message.content, channel)
 

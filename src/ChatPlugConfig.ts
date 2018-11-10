@@ -1,38 +1,44 @@
-import fs from 'fs'
-import log from 'npmlog'
-import path from 'path'
 import TOML from '@iarna/toml'
-import { IChatPlugConnection } from './models'
-import Service from './entity/Service'
-import ServiceModule from './ServiceModule'
+import { classToPlain } from 'class-transformer'
+import fs from 'fs'
+import path from 'path'
+import ChatPlugContext from './ChatPlugContext'
 import IFieldOptions, {
   fieldListMetadataKey,
   fieldOptionsMetadataKey,
   FieldType,
 } from './configWizard/IFieldOptions'
-import ChatPlugContext from './ChatPlugContext'
-import { classToPlain } from 'class-transformer'
-import nativeRequire from './utils/nativeRequire';
-import configFolderPath from './utils/configFolderPath';
-
-
+import Service from './entity/Service'
+import configFolderPath from './utils/configFolderPath'
+import nativeRequire from './utils/nativeRequire'
 
 export class ChatPlugConfig {
   tomlConfig: any
   context: ChatPlugContext
-  constructor () {
+  constructor() {
     // If config folder doesn't exist, create one
     if (!fs.existsSync(configFolderPath)) {
       fs.mkdirSync(configFolderPath)
     }
   }
 
-  readConfigForService (service: Service) {
-    return TOML.parse(fs.readFileSync(path.join(configFolderPath, service.moduleName + '.' + service.id + '.toml')))
+  readConfigForService(service: Service) {
+    return TOML.parse(fs.readFileSync(
+      path.join(
+        configFolderPath,
+        service.moduleName + '.' + service.id + '.toml',
+      ),
+      'utf8',
+    ) as string)
   }
 
   configurationExists(service: Service) {
-    return fs.existsSync(path.join(configFolderPath, service.moduleName + '.' + service.id + '.toml'))
+    return fs.existsSync(
+      path.join(
+        configFolderPath,
+        service.moduleName + '.' + service.id + '.toml',
+      ),
+    )
   }
 
   async getConfigurationWithSchema(service: Service) {
@@ -47,7 +53,9 @@ export class ChatPlugConfig {
     const schema = nativeRequire(serviceModule.modulePath).Config
     const cfg = new schema()
     const fieldList = Reflect.getMetadata(fieldListMetadataKey, cfg) as string[]
-    const config = service.configured ? this.context.config.readConfigForService(service) : null
+    const config = service.configured
+      ? this.context.config.readConfigForService(service)
+      : null
     return fieldList.map(key => {
       const options = classToPlain(Reflect.getMetadata(
         fieldOptionsMetadataKey,

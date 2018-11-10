@@ -28,7 +28,7 @@ export default {
           chalk.reset(''),
 
         ...args,
-        chalk.green('in ' + (new Date().getTime() - start.getTime()) + 'ms'),
+        chalk.green(`in ${(new Date().getTime() - start.getTime())}ms`),
       )
     }
   },

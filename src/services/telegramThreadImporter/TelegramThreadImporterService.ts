@@ -1,11 +1,8 @@
-import log from 'npmlog'
+import { Subject } from 'rxjs'
+import { ChatPlugConfig } from '../../ChatPlugConfig'
 import { IChatPlugMessage, MessagePacket } from '../../models'
 import { ChatPlugService } from '../Service'
-import { Subject } from 'rxjs'
 import TelegramThreadImporterConfig from './TelegramThreadImporterConfig'
-import { ExchangeManager } from '../../ExchangeManager'
-import { ThreadConnectionsManager } from '../../ThreadConnectionsManager'
-import { ChatPlugConfig } from '../../ChatPlugConfig'
 //import { Client } from 'tdl'
 
 export default class TelegramThreadImporterService extends ChatPlugService<
@@ -55,7 +52,7 @@ export default class TelegramThreadImporterService extends ChatPlugService<
     //       // msg.target = newThread
     //       // this.messageSubject.next(msg)
     //   })
-    log.info('telegram', 'Registered bot handlers')
+    this.logger.info('Registered bot handlers')
   }
 
   async terminate() {

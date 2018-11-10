@@ -9,21 +9,18 @@ import ThreadConnection from './entity/ThreadConnection'
 import Service from './entity/Service'
 import { ChatPlugConfig } from './ChatPlugConfig'
 import User from './entity/User'
-import log from 'npmlog'
 import Logger from './Logger'
 import Log from './entity/Log'
 
 export default class ChatPlugContext {
   exchangeManager: ExchangeManager
   serviceManager: ServiceManager
-  logger: Logger
+  coreLogger: Logger
   config = new ChatPlugConfig()
 
   connection: Connection
 
   async initializeConnection() {
-    log.heading = 'chatplug'
-
     this.connection = await createConnection({
       type: 'sqlite',
       database: 'chatplug.db',
@@ -42,7 +39,7 @@ export default class ChatPlugContext {
     })
     this.exchangeManager = new ExchangeManager(this)
     this.serviceManager = new ServiceManager(this)
-    this.logger = new Logger(this)
+    this.coreLogger = new Logger(this)
     this.config.context = this
   }
 }

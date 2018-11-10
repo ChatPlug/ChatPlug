@@ -8,6 +8,7 @@ import buildService from './buildService'
 import buildDashboard from './buildDashboard'
 import { rejects } from 'assert'
 import packageApp from './packageApp'
+import ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin'
 
 export function flag(f: string) {
   return process.argv.indexOf(f) !== -1
@@ -62,7 +63,9 @@ async function run() {
       __dirname: false,
       __filename: false,
     },
-    plugins: [],
+    plugins: [
+      new ForkTsCheckerWebpackPlugin(),
+    ],
     optimization: {
       minimize: false,
     },
@@ -115,13 +118,13 @@ async function run() {
   )
 
   const servicesDirectory = path.resolve(__dirname, '../src/services')
-  let serviceDirs = await fs.readdir(servicesDirectory)
+  const serviceDirs = await fs.readdir(servicesDirectory)
   for (const s of serviceDirs) {
     const dirPath = path.join(servicesDirectory, s)
     if (!(await fs.stat(dirPath)).isDirectory()) {
       continue
     }
-    let c = await buildService(dirPath, baseCfg)
+    const c = await buildService(dirPath, baseCfg)
     if (c) {
       compilers.push(c)
     }
@@ -193,6 +196,6 @@ run().then(
   _ => _,
   err => {
     console.error(err)
-    process.exit(-1021);
+    process.exit(-1021)
   },
 )
