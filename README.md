@@ -1,8 +1,8 @@
 <p align="center">
   <h1 align="center">
     <img src="./chatplug.v2-text.svg" width="300px" alt="Chat Plug"/><br/><br/>
-     <img src="https://img.shields.io/github/license/feelfreelinux/ChatPlug.svg?style=for-the-badge" alt="GitHub"/>
-     <a href="https://github.com/feelfreelinux/ChatPlug/issues"><img src="https://img.shields.io/github/issues/feelfreelinux/ChatPlug.svg?style=for-the-badge" alt="GitHub issues" /></a>
+     <img src="https://img.shields.io/github/license/ChatPlug/ChatPlug.svg?style=for-the-badge" alt="GitHub"/>
+     <a href="https://github.com/ChatPlug/ChatPlug/issues"><img src="https://img.shields.io/github/issues/ChatPlug/ChatPlug.svg?style=for-the-badge" alt="GitHub issues" /></a>
      <img src="https://img.shields.io/badge/Built%20with-%E2%9D%A4%20LOVE-red.svg?longCache=true&amp;style=for-the-badge" alt="LOVE" />
   </h1>
 </p>
@@ -17,7 +17,7 @@ Everytime ChatPlug receives a message, it will be relayed to another chat on any
 
 # :electric_plug: Quick start
 
-You can grab the binaries [here](https://github.com/feelfreelinux/ChatPlug/releases).
+You can grab the binaries [here](https://github.com/ChatPlug/ChatPlug/releases).
 
 
 ~~A configuration guide will run when you first start ChatPlug.~~ (TODO: remove strikethrough when ready)
@@ -47,9 +47,9 @@ $ npm run start # run everytime you want to restart the app while developing
 *TODO: update*
 
 # :clap: Contributing
-If you want to help with the project, you can have a look at [some issues](https://github.com/feelfreelinux/ChatPlug/issues) or join our discord server [discordapp.com/invite](https://discord.gg/xdWemhA). All help is much appreciated :smile:
+If you want to help with the project, you can have a look at [some issues](https://github.com/ChatPlug/ChatPlug/issues) or join our discord server [discordapp.com/invite](https://discord.gg/xdWemhA). All help is much appreciated :smile:
 
-# :warning: Disclameratus
+# :warning: Disclaimer
 
 We do not guarantee that this bridge will work correctly. We are not responsible for getting banned on any serivices integrated with ChatPlug. Use at your own discretion.
 
