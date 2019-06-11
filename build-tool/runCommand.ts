@@ -7,8 +7,8 @@ export default async function runCommand(command: string, cwd?: string) {
     const nuxtProc = exec(command, {
       cwd,
     })
-    nuxtProc.stdout.pipe(process.stdout)
-    nuxtProc.stderr.pipe(process.stderr)
+    nuxtProc!.stdout!.pipe(process.stdout)
+    nuxtProc!.stderr!.pipe(process.stderr)
     nuxtProc.on('exit', code => {
       if (code === 0) {
         res()
