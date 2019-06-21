@@ -1,9 +1,9 @@
-import fs from 'fs';
-import { Subject } from 'rxjs';
-import { ChatPlugConfig } from './ChatPlugConfig';
-import ChatPlugContext from './ChatPlugContext';
-import { IChatPlugMessage } from './models';
-import { ThreadConnectionsManager } from './ThreadConnectionsManager';
+import fs from 'fs'
+import { Subject } from 'rxjs'
+import { ChatPlugConfig } from './ChatPlugConfig'
+import ChatPlugContext from './ChatPlugContext'
+import { IChatPlugMessage } from './models'
+import { ThreadConnectionsManager } from './ThreadConnectionsManager'
 
 export class ChatPlug {
   config: ChatPlugConfig

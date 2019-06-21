@@ -55,7 +55,7 @@ export default class ConnectionsController {
         .orderBy('message.createdAt', 'DESC')
         .where('message.id < :after', { after })
         .andWhere('threadConnection.id = :id', { id })
-        .andWhere('deleted = false')
+        // .andWhere('deleted = false')
         .take(25)
         .getMany()
     }
@@ -66,7 +66,7 @@ export default class ConnectionsController {
       .leftJoinAndSelect('message.author', 'author')
       .leftJoinAndSelect('message.service', 'service')
       .where('threadConnection.id = :id', { id })
-      .andWhere('deleted = false')
+      // .andWhere('deleted = false')
       .orderBy('message.createdAt', 'DESC')
       .take(25)
       .getMany()

@@ -42,7 +42,7 @@ export default class MessagingService extends ChatPlugService<MessagingConfig> {
 
     this.receiveMessageSubject.subscribe({
       next: message => {
-        ;(message as any).message.threadConnection.threads = null
+        (message as any).message.threadConnection.threads = null
         if (!message.message.attachements) {
           message.message.attachements = []
         }

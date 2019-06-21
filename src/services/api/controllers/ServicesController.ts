@@ -1,17 +1,17 @@
-import TOML from '@iarna/toml';
-import { classToPlain } from 'class-transformer';
-import fs from 'fs-extra';
-import path from 'path';
-import { BadRequestError, Body, BodyParam, Delete, Get, JsonController, NotFoundError, Param, Post, Put, QueryParam } from 'routing-controllers';
-import { Repository } from 'typeorm';
-import ChatPlugContext from '../../../ChatPlugContext';
-import IFieldOptions, { fieldListMetadataKey, fieldOptionsMetadataKey, FieldType } from '../../../configWizard/IFieldOptions';
-import Log from '../../../entity/Log';
-import Service from '../../../entity/Service';
-import Thread from '../../../entity/Thread';
-import User from '../../../entity/User';
-import nativeRequire from '../../../utils/nativeRequire';
-import configFolderPath from '../../../utils/configFolderPath';
+import TOML from '@iarna/toml'
+import { classToPlain } from 'class-transformer'
+import fs from 'fs-extra'
+import path from 'path'
+import { BadRequestError, Body, BodyParam, Delete, Get, JsonController, NotFoundError, Param, Post, Put, QueryParam } from 'routing-controllers'
+import { Repository } from 'typeorm'
+import ChatPlugContext from '../../../ChatPlugContext'
+import IFieldOptions, { fieldListMetadataKey, fieldOptionsMetadataKey, FieldType } from '../../../configWizard/IFieldOptions'
+import Log from '../../../entity/Log'
+import Service from '../../../entity/Service'
+import Thread from '../../../entity/Thread'
+import User from '../../../entity/User'
+import nativeRequire from '../../../utils/nativeRequire'
+import configFolderPath from '../../../utils/configFolderPath'
 
 
 @JsonController('/services')

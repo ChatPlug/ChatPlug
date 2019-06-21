@@ -51,6 +51,7 @@ export class TelegramMessageHandler implements ChatPlugMessageHandler {
       }
     }
 
+    // Handle documents | GIFs
     if (message.document) {
       const photoId = message.document.file_id
       const picUrl = await this.client.getFileLink(photoId)

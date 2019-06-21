@@ -1,4 +1,4 @@
-import ServiceInstance from "./ServiceInstance";
+import ServiceInstance from "./ServiceInstance"
 
 export default interface Log {
   id: number,
