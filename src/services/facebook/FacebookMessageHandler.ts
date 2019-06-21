@@ -2,6 +2,7 @@ import { Collection } from 'discord.js'
 import { Subject } from 'rxjs'
 import { IChatPlugMessage, MessagePacket } from '../../models'
 import { ChatPlugMessageHandler } from '../MessageHandler'
+import { Client } from 'libfb'
 
 export class FacebookMessageHandler implements ChatPlugMessageHandler {
   name = 'facebook'
@@ -10,7 +11,7 @@ export class FacebookMessageHandler implements ChatPlugMessageHandler {
   userCache = new Collection<String, any>()
 
   constructor(
-    public client,
+    public client: Client,
     public messageSubject: Subject<IChatPlugMessage>,
     public id: number,
   ) {}
@@ -53,9 +54,9 @@ export class FacebookMessageHandler implements ChatPlugMessageHandler {
       author: {
         username: nickname || sender.name,
         avatar: sender.profilePicLarge,
-        externalServiceId: message.authorId.toFixed(),
+        externalServiceId: message.authorId,
       },
-      externalOriginId: thread.id.toFixed(),
+      externalOriginId: thread.id,
       externalOriginName: originName,
       originServiceId: this.id,
     } as IChatPlugMessage
@@ -67,7 +68,7 @@ export class FacebookMessageHandler implements ChatPlugMessageHandler {
   onIncomingMessage = async (message: MessagePacket) => {
     if (!message.targetThread.externalServiceId) return
     this.client.sendMessage(
-      Number(message.targetThread.externalServiceId),
+      message.targetThread.externalServiceId,
       `*${message.message.author.username}*: ${message.message.content}`,
     )
   }

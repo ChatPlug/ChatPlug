@@ -28,8 +28,31 @@ export class TelegramMessageHandler implements ChatPlugMessageHandler {
     // Duplicates handling
     let listOfAttachments: IChatPlugAttachement[] = []
     if (message.photo) {
+
       const photoId = message.photo[message.photo.length - 1].file_id
-      // @ts-ignore
+      const picUrl = await this.client.getFileLink(photoId)
+      if (typeof picUrl === 'string') {
+        listOfAttachments = [{
+          url: picUrl,
+          name: /[^/]*$/.exec(picUrl as string)!![0],
+        } as IChatPlugAttachement]
+      }
+    }
+
+    // Handle stickers
+    if (message.sticker) {
+      const photoId = message.sticker.file_id
+      const picUrl = await this.client.getFileLink(photoId)
+      if (typeof picUrl === 'string') {
+        listOfAttachments = [{
+          url: picUrl,
+          name: /[^/]*$/.exec(picUrl as string)!![0],
+        } as IChatPlugAttachement]
+      }
+    }
+
+    if (message.document) {
+      const photoId = message.document.file_id
       const picUrl = await this.client.getFileLink(photoId)
       if (typeof picUrl === 'string') {
         listOfAttachments = [{
@@ -81,7 +104,12 @@ export class TelegramMessageHandler implements ChatPlugMessageHandler {
       { parse_mode: 'Markdown' } as any,
     )
     for (const attachment of message.attachements) {
-      await this.client.sendPhoto(packet.targetThread.externalServiceId, attachment.url)
+      console.log(attachment)
+      if (attachment.url.endsWith('.gif')) {
+        await this.client.sendAnimation(packet.targetThread.externalServiceId, attachment.url)
+      } else {
+        await this.client.sendPhoto(packet.targetThread.externalServiceId, attachment.url)
+      }
     }
   }
 

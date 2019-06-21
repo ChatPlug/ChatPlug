@@ -3,9 +3,9 @@ import { ChatPlugService } from '../Service'
 import TelegramConfig from './TelegramConfig'
 import Telegraf, { ContextMessageUpdate, Telegram } from 'telegraf'
 import { TelegramMessageHandler } from './TelegramMessageHandler'
-import { Client as TelegramClient } from 'tdl'
 import { IChatPlugThreadResult } from '../../models'
-import { Chat } from 'tdl/types/tdlib'
+import { Client as TelegramClient } from 'tglib/node'
+import { Chat } from 'telegram-typings'
 
 export default class TelegramService extends ChatPlugService<TelegramConfig> {
   messageHandler: TelegramMessageHandler
@@ -29,10 +29,22 @@ export default class TelegramService extends ChatPlugService<TelegramConfig> {
       apiHash: this.config.apiHash,
     })
 
-    await this.telegramClient.connect()
-    await (this.telegramClient as any).login(() => ({
-      phoneNumber: this.config.phoneNumber,
-    }))
+    // Save tglib default handler which prompt input at console
+    const defaultHandler = this.telegramClient.callbacks['td:getInput']
+
+    // Register own callback for returning auth details
+    this.telegramClient.registerCallback('td:getInput', async (args) => {
+      if (args.string === 'tglib.input.AuthorizationType') {
+        return 'user'
+      }
+
+      if (args.string === 'tglib.input.AuthorizationValue') {
+        return this.config.phoneNumber
+      }
+      return await defaultHandler(args)
+    })
+
+    await this.telegramClient.ready
 
     log.info('telegram', 'Registered bot handlers')
     this.telegraf.startPolling()
@@ -44,25 +56,26 @@ export default class TelegramService extends ChatPlugService<TelegramConfig> {
   }
 
   async searchThreads(query: string): Promise<IChatPlugThreadResult[]> {
-    const results = await this.telegramClient.invoke({
+    const result = await this.telegramClient.fetch({
       query,
-      _: 'searchChatsOnServer',
+      '@type': 'searchChatsOnServer',
       limit: 30,
     })
 
-    const promises = results.chat_ids.map((el) => {
-      return this.telegramClient.invoke({
-        _: 'getChat',
+    const promises = result.chat_ids.map((el) => {
+      return this.telegramClient.fetch({
+        '@type': 'getChat',
         chat_id: el,
       })
-    }) as any
+    })
 
-    return (await Promise.all(promises)).map((el: Chat) => {
+    const res = (await Promise.all(promises)).map((el: Chat) => {
       return {
-        subtitle: el.type._,
-        id: '' + el.id,
+        subtitle: el.type['@type'],
+        id: `${el.id}`,
         title: el.title,
       } as IChatPlugThreadResult
     })
+    return res
   }
 }

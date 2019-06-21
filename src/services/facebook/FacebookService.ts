@@ -5,23 +5,23 @@ import fs from 'fs'
 import { FacebookMessageHandler } from './FacebookMessageHandler'
 import { ChatPlugConfig } from '../../ChatPlugConfig'
 import Message from '../../entity/Message'
-import { login } from 'libfb'
+import { Client } from 'libfb'
 import FacebookConfig from './FacebookConfig'
 import { LogLevel } from '../../Logger'
 
 export default class FacebookService extends ChatPlugService<FacebookConfig> {
   messageHandler: FacebookMessageHandler
-  facebook: any
   importedThreads: IChatPlugThreadResult[] = []
+  client: Client
   async initialize() {
     await this.login()
 
     this.importedThreads = await this.getThreads()
-    this.messageHandler = new FacebookMessageHandler(this.facebook, this.context.exchangeManager.messageSubject, this.id)
+    this.messageHandler = new FacebookMessageHandler(this.client, this.context.exchangeManager.messageSubject, this.id)
 
     this.receiveMessageSubject.subscribe(this.messageHandler.onIncomingMessage)
 
-    this.facebook.on('message', message => this.messageHandler.onOutgoingMessage(message))
+    this.client.on('message', message => this.messageHandler.onOutgoingMessage(message))
   }
 
   listener = async (err, message) => {
@@ -30,7 +30,7 @@ export default class FacebookService extends ChatPlugService<FacebookConfig> {
   }
 
   async getThreads() {
-    const threads = await this.facebook.getThreadList(500)
+    const threads = await this.client.getThreadList(500)
     return threads.filter((el) => el.name !== null).map((el) => {
       let subtitle = 'Group'
       if (!el.isGroup) {
@@ -39,7 +39,7 @@ export default class FacebookService extends ChatPlugService<FacebookConfig> {
       return {
         subtitle,
         title: el.name,
-        id: el.id.toFixed(),
+        id: el.id,
       } as IChatPlugThreadResult
     })
   }
@@ -50,23 +50,20 @@ export default class FacebookService extends ChatPlugService<FacebookConfig> {
       session = JSON.parse(fs.readFileSync('session.json', 'utf8'))
     }
 
-    if (session) {
-      this.facebook = await login(this.config.email, this.config.password, { session, selfListen: true })
-    } else {
-      this.facebook = await login(this.config.email, this.config.password, { selfListen: true })
-    }
+    this.client = new Client({ session: session || undefined, selfListen: false })
+    await this.client.login(this.config.email, this.config.password)
 
     setTimeout(
       () => {
-        fs.writeFileSync('session.json', JSON.stringify(this.facebook.getSession()))
-        this.logger.log(LogLevel.INFO, 'Logged in as ' + this.facebook.getSession().identifier)
+        fs.writeFileSync('session.json', JSON.stringify(this.client.getSession()))
+        this.logger.log(LogLevel.INFO, `Logged in as ${this.client.getSession().deviceId}`)
       },
       15000)
 
   }
 
   async terminate() {
-    if (!this.facebook) return this.logger.log(LogLevel.INFO, 'Not logged in')
+    if (!this.client) return this.logger.log(LogLevel.INFO, 'Not logged in')
 
     // await this.facebook.logout
   }

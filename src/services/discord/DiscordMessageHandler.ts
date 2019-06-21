@@ -39,6 +39,7 @@ export class DiscordMessageHandler implements ChatPlugMessageHandler {
       externalOriginName:  message.channel.name,
       originServiceId: this.id,
     } as IChatPlugMessage
+    console.log(chatPlugMessage)
 
     this.messageSubject.next(chatPlugMessage)
   }
