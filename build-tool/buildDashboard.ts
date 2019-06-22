@@ -1,4 +1,3 @@
-import { exec } from 'child_process'
 import path from 'path'
 import fs from 'fs-extra'
 import runCommand from './runCommand'

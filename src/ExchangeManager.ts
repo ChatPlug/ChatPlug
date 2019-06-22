@@ -74,11 +74,7 @@ export class ExchangeManager {
                 serviceInstance.receiveMessageSubject.next(toSend)
               } else {
                 this.context.coreLogger.debug(
-                  'Instance ' +
-                  dbService.instanceName +
-                  ' of service ' +
-                  dbService.moduleName +
-                  ' disabled, or not running ignoring.',
+                  `Instance ${dbService.instanceName} of service ${dbService.moduleName} disabled, or not running ignoring.`,
                 )
               }
             }
@@ -125,8 +121,7 @@ export class ExchangeManager {
         const originThread = new Thread()
         originThread.title =
           message.externalOriginName || message.externalOriginId
-        originThread.avatarUrl =
-          'https://pbs.twimg.com/profile_images/1047758884780294144/_-wbVBfz_400x400.jpg'
+        originThread.avatarUrl = 'https://pbs.twimg.com/profile_images/1047758884780294144/_-wbVBfz_400x400.jpg'
         originThread.externalServiceId = message.externalOriginId
         originThread.subtitle = ''
         originThread.service = await this.context.connection
@@ -136,9 +131,8 @@ export class ExchangeManager {
 
         const targetThread = new Thread()
         targetThread.title = 'Primary connected'
-        targetThread.avatarUrl =
-          'https://pbs.twimg.com/profile_images/1047758884780294144/_-wbVBfz_400x400.jpg'
-        targetThread.externalServiceId = '' + conn.id
+        targetThread.avatarUrl = 'https://pbs.twimg.com/profile_images/1047758884780294144/_-wbVBfz_400x400.jpg'
+        targetThread.externalServiceId = conn.id.toString()
         targetThread.subtitle = ''
         targetThread.service = await this.context.connection
           .getRepository(Service)
@@ -163,7 +157,7 @@ export class ExchangeManager {
             .getRepository(Service)
             .findOneOrFail({ id: service.id })
           if (dbService.enabled && dbService.status === 'running') {
-            ; (message as any).threadConnectionId = conn.id
+            (message as any).threadConnectionId = conn.id
             const toSend = JSON.parse(
               JSON.stringify({ targetThread, message: (msg) }),
             )
@@ -172,11 +166,7 @@ export class ExchangeManager {
             serviceInstance.receiveMessageSubject.next(toSend)
           } else {
             this.context.coreLogger.debug(
-              'Instance ' +
-              dbService.instanceName +
-              ' of service ' +
-              dbService.moduleName +
-              ' disabled, or not running ignoring.',
+              `Instance ${dbService.instanceName} of service ${dbService.moduleName} disabled, or not running ignoring.`,
             )
           }
         }
@@ -217,7 +207,7 @@ export class ExchangeManager {
       user.username = message.author.username
       user.externalServiceId = message.author.externalServiceId
       user.service = service
-      userRepository.save(user)
+      await userRepository.save(user)
     }
 
     dbMessage.author = user
@@ -229,7 +219,7 @@ export class ExchangeManager {
       dbAttachement.name = attachment.name
       dbAttachement.url = attachment.url
       msgAttachments.push(dbAttachement)
-      attachementsRepository.save(dbAttachement)
+      await attachementsRepository.save(dbAttachement)
     }
 
     dbMessage.attachements = msgAttachments

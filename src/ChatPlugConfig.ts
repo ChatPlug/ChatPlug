@@ -26,7 +26,7 @@ export class ChatPlugConfig {
     return TOML.parse(fs.readFileSync(
       path.join(
         configFolderPath,
-        service.moduleName + '.' + service.id + '.toml',
+        `${service.moduleName}.${service.id}.toml`,
       ),
       'utf8',
     ) as string)
@@ -36,7 +36,7 @@ export class ChatPlugConfig {
     return fs.existsSync(
       path.join(
         configFolderPath,
-        service.moduleName + '.' + service.id + '.toml',
+        `${service.moduleName}.${service.id}.toml`,
       ),
     )
   }

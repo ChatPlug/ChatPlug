@@ -28,21 +28,20 @@ export default class DiscordService extends ChatPlugService<DiscordConfig> {
     )
 
     // filter them to get only ChatPlug's webhooks
-    const filteredWebhooks = allWebhooks.map(webhooks =>
-      webhooks.filter(webhook => webhook.name.startsWith('ChatPlug')),
-    )
+    const filteredWebhooks = allWebhooks.map(webhooks => webhooks.filter(webhook => webhook.name.startsWith('ChatPlug')))
+
     // save them to a new collection
     let webhooks = new Collection() as Collection<string, Webhook>
     webhooks = webhooks.concat(...filteredWebhooks)
     this.logger.log(
       LogLevel.DEBUG,
-      'discord: webhooks ' + webhooks.map(el => el.name).join(','),
+      `discord: webhooks ${webhooks.map(el => el.name).join(',')}`,
     )
 
     this.messageHandler.loadWebhooks(webhooks)
     await this.logger.log(
       LogLevel.INFO,
-      'Logged in as ' + this.discord.user.username,
+      `Logged in as ${this.discord.user.username}`,
     )
   }
 
@@ -54,7 +53,7 @@ export default class DiscordService extends ChatPlugService<DiscordConfig> {
     let title = channel.guild.name
 
     if (channel.parent) {
-      title += ': ' + channel.parent.name
+      title += `: ${channel.parent.name}`
     }
 
     return title
@@ -65,9 +64,9 @@ export default class DiscordService extends ChatPlugService<DiscordConfig> {
       .filter(
         b =>
           (this.discordChannelToTitle(b)
-            .toLowerCase()
-            .indexOf(query.toLowerCase()) !== -1 ||
-            ('#' + (b as any).name)
+              .toLowerCase()
+              .indexOf(query.toLowerCase()) !== -1 ||
+            (`#${(b as any).name}`)
               .toLowerCase()
               .indexOf(query.toLowerCase()) !== -1) &&
           b.type !== 'voice' &&
@@ -79,7 +78,7 @@ export default class DiscordService extends ChatPlugService<DiscordConfig> {
         return {
           subtitle,
           id: channel.id,
-          title: '#' + (channel as any).name,
+          title: `#${(channel as any).name}`,
           avatarUrl: (channel as any).guild.iconURL,
         } as IChatPlugThreadResult
       })

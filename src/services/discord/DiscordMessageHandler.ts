@@ -86,9 +86,15 @@ export class DiscordMessageHandler implements ChatPlugMessageHandler {
   }
 }
 
+/* tslint:disable:prefer-template */
 function trim(str: string): string {
-  return str.length <= 32 ? str.length === 1 ? str + '.' : str : str.substr(0, 29) + '...'
+  if (str.length <= 32) {
+    if (str.length === 1) return str + '.'
+    return str
+  }
+  return str.substr(0, 29) + '...'
 }
+/* tslint:enable */
 
 function resolveMentions(message: string, channel: any): string {
   let msg = message

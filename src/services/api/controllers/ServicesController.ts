@@ -2,17 +2,32 @@ import TOML from '@iarna/toml'
 import { classToPlain } from 'class-transformer'
 import fs from 'fs-extra'
 import path from 'path'
-import { BadRequestError, Body, BodyParam, Delete, Get, JsonController, NotFoundError, Param, Post, Put, QueryParam } from 'routing-controllers'
+import {
+  BadRequestError,
+  Body,
+  BodyParam,
+  Delete,
+  Get,
+  JsonController,
+  NotFoundError,
+  Param,
+  Post,
+  Put,
+  QueryParam,
+} from 'routing-controllers'
 import { Repository } from 'typeorm'
 import ChatPlugContext from '../../../ChatPlugContext'
-import IFieldOptions, { fieldListMetadataKey, fieldOptionsMetadataKey, FieldType } from '../../../configWizard/IFieldOptions'
+import IFieldOptions, {
+  fieldListMetadataKey,
+  fieldOptionsMetadataKey,
+  FieldType,
+} from '../../../configWizard/IFieldOptions'
 import Log from '../../../entity/Log'
 import Service from '../../../entity/Service'
 import Thread from '../../../entity/Thread'
 import User from '../../../entity/User'
 import nativeRequire from '../../../utils/nativeRequire'
 import configFolderPath from '../../../utils/configFolderPath'
-
 
 @JsonController('/services')
 export default class ServicesController {
@@ -72,7 +87,7 @@ export default class ServicesController {
     fs.writeFileSync(
       path.join(
         configFolderPath,
-        service.moduleName + '.' + service.id + '.toml',
+        `${service.moduleName}.${service.id}.toml`,
       ),
       TOML.stringify(configuration),
     )
@@ -117,7 +132,7 @@ export default class ServicesController {
   async disableService(@Param('id') id: number) {
     const loadedService = this.context.serviceManager.getServiceForId(id)
     if (loadedService) {
-      this.context.serviceManager.terminateService(loadedService)
+      await this.context.serviceManager.terminateService(loadedService)
     }
     return await this.servicesRepository.update({ id }, { enabled: false })
   }
@@ -133,15 +148,13 @@ export default class ServicesController {
   @Get('/instances/:id/markPrimary')
   async markPrimary(@Param('id') id: number) {
     await this.servicesRepository.update({ id }, { primaryMode: true })
-    const service = await this.servicesRepository.findOneOrFail({ id })
-    return service
+    return this.servicesRepository.findOneOrFail({ id })
   }
 
   @Get('/instances/:id/unmarkPrimary')
   async unmarkPrimary(@Param('id') id: number) {
     await this.servicesRepository.update({ id }, { primaryMode: false })
-    const service = await this.servicesRepository.findOneOrFail({ id })
-    return service
+    return this.servicesRepository.findOneOrFail({ id })
   }
 
   @Get('/instances/:id/users')
@@ -169,9 +182,9 @@ export default class ServicesController {
   @Delete('/instances/:id')
   async deleteService(@Param('id') id: number) {
     const foundService = await this.servicesRepository.findOne({ id })
-    this.context.connection.getRepository(Log).update({ service: foundService }, { deleted: true })
-    this.context.connection.getRepository(Thread).update({ service: foundService }, { deleted: true })
-    this.context.connection.getRepository(User).update({ service: foundService }, { deleted: true })
+    await this.context.connection.getRepository(Log).update({ service: foundService }, { deleted: true })
+    await this.context.connection.getRepository(Thread).update({ service: foundService }, { deleted: true })
+    await this.context.connection.getRepository(User).update({ service: foundService }, { deleted: true })
 
     return this.servicesRepository.remove(foundService!!)
   }
@@ -223,10 +236,9 @@ export default class ServicesController {
 
   @Get('/instances/:id/status/startup')
   async startService(@Param('id') id : number) {
-    const service = await this.servicesRepository.findOneOrFail({ id })
     const loadedService = this.context.serviceManager.getServiceForId(id)
     if (loadedService) {
-      this.context.serviceManager.startupService(loadedService)
+      await this.context.serviceManager.startupService(loadedService)
     }
 
     return this.servicesRepository.findOneOrFail({ id })
@@ -237,7 +249,7 @@ export default class ServicesController {
     const service = await this.servicesRepository.findOneOrFail({ id })
     const loadedService = this.context.serviceManager.getServiceForId(id)
     if (loadedService) {
-      this.context.serviceManager.terminateService(loadedService)
+      await this.context.serviceManager.terminateService(loadedService)
     }
     const serviceModules = await this.context.serviceManager.getAvailableServices()
 
@@ -251,7 +263,7 @@ export default class ServicesController {
   @Get('/instances/:id/status/restart')
   async restartService(@Param('id') id : number) {
     const service = await this.servicesRepository.findOneOrFail({ id })
-    this.context.serviceManager.reloadServiceForInstance(service)
+    await this.context.serviceManager.reloadServiceForInstance(service)
     return this.servicesRepository.findOneOrFail({ id })
   }
 
@@ -280,7 +292,7 @@ export default class ServicesController {
     fs.writeFileSync(
       path.join(
         configFolderPath,
-        service.moduleName + '.' + service.id + '.toml',
+        `${service.moduleName}.${service.id}.toml`,
       ),
       TOML.stringify(configuration),
     )

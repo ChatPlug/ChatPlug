@@ -1,11 +1,7 @@
 import { ChatPlugMessageHandler } from '../MessageHandler'
-import TelegramBot from 'node-telegram-bot-api'
-import { IChatPlugMessage, IChatPlugAttachement, IChatPlugAttachementType, MessagePacket } from '../../models'
-import { promisify } from 'util'
+import { IChatPlugMessage, IChatPlugAttachement, MessagePacket } from '../../models'
 import { Subject } from 'rxjs'
-import { parse } from 'url'
-import log from 'npmlog'
-import { ContextMessageUpdate, Telegram } from 'telegraf'
+import { Telegram } from 'telegraf'
 import { Message } from 'telegram-typings'
 import ChatPlugContext from '../../ChatPlugContext'
 import User from '../../entity/User'
@@ -13,7 +9,6 @@ import User from '../../entity/User'
 export class TelegramMessageHandler implements ChatPlugMessageHandler {
   client: Telegram
   messageSubject: Subject<IChatPlugMessage>
-  handledMessages: any[] = []
   context: ChatPlugContext
 
   constructor(client: Telegram, subject: Subject<IChatPlugMessage>, context: ChatPlugContext, public id: number) {
@@ -24,7 +19,7 @@ export class TelegramMessageHandler implements ChatPlugMessageHandler {
 
   async onOutgoingMessage(message: Message) {
 
-    console.time('telegramPrepare' + message.message_id)
+    console.time(`telegramPrepare ${message.message_id}`)
     // Duplicates handling
     let listOfAttachments: IChatPlugAttachement[] = []
     if (message.photo) {
@@ -64,7 +59,7 @@ export class TelegramMessageHandler implements ChatPlugMessageHandler {
     }
 
     let avatar: string
-    const dbUser = await this.context.connection.getRepository(User).findOne({ externalServiceId: '' + message.from!!.id })
+    const dbUser = await this.context.connection.getRepository(User).findOne({ externalServiceId: `${message.from!!.id}` })
 
     if (!dbUser) {
       // @ts-ignore
@@ -84,7 +79,7 @@ export class TelegramMessageHandler implements ChatPlugMessageHandler {
         externalServiceId: message.from!!.id.toString(),
       },
       externalOriginId: message.chat!!.id.toString(),
-      externalOriginName:  message.chat!!.title,
+      externalOriginName: message.chat!!.title,
       originServiceId: this.id,
     } as IChatPlugMessage
 
@@ -97,7 +92,7 @@ export class TelegramMessageHandler implements ChatPlugMessageHandler {
   onIncomingMessage = async (packet: MessagePacket) => {
     const message = packet.message
     if (!packet.targetThread) return
-    const formattedMsg = '*' + message.author.username + '*' + ': ' + message.content
+    const formattedMsg = `*${message.author.username}*: ${message.content}`
     // @ts-ignore
     await this.client.sendMessage(
       packet.targetThread.externalServiceId,

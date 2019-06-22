@@ -40,8 +40,7 @@ export class ServiceManager {
             )
           } catch (e) {
             throw new Error(
-              `Failed to read and parse service manifest (${e.message}).` +
-                ` Please ensure that the manifest.json file exists and is valid`,
+              `Failed to read and parse service manifest (${e.message}). Please ensure that the manifest.json file exists and is valid`,
             )
           }
           if (Array.isArray(manifestData)) {
@@ -69,7 +68,6 @@ export class ServiceManager {
           s.moduleName = f
           s.displayName = f
           services.push(s)
-          continue
         }
       }
     }

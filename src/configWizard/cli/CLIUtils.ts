@@ -13,22 +13,22 @@ export default class CLIUtils {
       process.stdout.write(chalk.gray(' [') + chalk.red('*') + chalk.gray(']'))
     } else if (opts.defaultValue !== null) {
       process.stdout.write(
-        chalk.gray(' [') + chalk.dim('' + opts.defaultValue) + chalk.gray(']'),
+        chalk.gray(' [') + chalk.dim(opts.defaultValue.toString()) + chalk.gray(']'),
       )
     }
     if (opts.type === FieldType.BOOLEAN) {
       process.stdout.write(
+        // tslint:disable-next-line:prefer-template
         chalk.gray(' (') +
-          chalk.underline.bold('t') +
-          'rue' +
+          chalk.underline.bold('t') + 'rue' +
           chalk.gray('/') +
-          chalk.underline.bold('f') +
-          'alse' +
+          chalk.underline.bold('f') + 'alse' +
           chalk.gray(')'),
       )
     }
     process.stdout.write(chalk.gray(': '))
   }
+
   private convertValue(opts: IFieldOptions, val: string): any {
     if (val === '' && opts.required) {
       throw new Error(`"${opts.name}" is required.`)
@@ -59,18 +59,20 @@ export default class CLIUtils {
     }
     return val
   }
+
   readLine() {
     const rl = readline.createInterface({
       input: process.stdin,
       // output: process.stdout,
     })
-    return new Promise<string>(res =>
+    return new Promise<string>(res => {
       rl.on('line', answer => {
         res(answer)
         rl.close()
-      }),
-    )
+      })
+    })
   }
+
   async askUser(opts: IFieldOptions) {
     while (true) {
       this.printPrompt(opts)

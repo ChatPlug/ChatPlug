@@ -110,7 +110,7 @@ export default class CLICommands {
     connection.connectionName = connectionName
     connection.threads = []
     const result = await repository.save(connection)
-    this.context.coreLogger.info('Added connection ' + result.connectionName)
+    this.context.coreLogger.info(`Added connection ${result.connectionName}`)
   }
 
   @HelpMessage(
@@ -200,8 +200,8 @@ export default class CLICommands {
     thread.service = service
     thread.threadConnection = connection
     connection.threads.push(thread)
-    connectionRepository.save(connection)
-    serviceRepository.save(service)
+    await connectionRepository.save(connection)
+    await serviceRepository.save(service)
     this.context.coreLogger.info(
       `Added thread ${threadId} to connection ${connName}`,
     )
@@ -252,15 +252,15 @@ export default class CLICommands {
       },
     })
     for (const connection of connections) {
-      const indexText = chalk.gray(connection.id + '')
+      const indexText = chalk.gray(connection.id.toString())
       console.log(indexText, chalk.greenBright(connection.connectionName))
       console.log(indexText, 'Threads:')
       for (const thread of connection.threads) {
         console.log(
           indexText,
           chalk.blueBright(
-            thread.service.moduleName + '.' + thread.service.instanceName,
-          ) + chalk.greenBright('#' + thread.externalServiceId),
+            `${thread.service.moduleName}.${thread.service.instanceName}`,
+          ) + chalk.greenBright(`#${thread.externalServiceId}`),
         )
       }
     }
@@ -344,7 +344,7 @@ export default class CLICommands {
     fs.writeFileSync(
       path.join(
         configFolderPath,
-        service.moduleName + '.' + service.id + '.toml',
+        `${service.moduleName}.${service.id}.toml`,
       ),
       TOML.stringify(configuration),
     )
@@ -398,7 +398,7 @@ export default class CLICommands {
     fs.writeFileSync(
       path.join(
         configFolderPath,
-        serviceName + '.' + newInstanceName + '.toml',
+        `${serviceName}.${newInstanceName}.toml`,
       ),
       TOML.stringify(configuration),
     )
@@ -427,10 +427,10 @@ export default class CLICommands {
     const services = await this.context.serviceManager.getAvailableServices()
     for (const service of services) {
       console.log('')
-      console.log('Service ' + chalk.redBright(service.moduleName))
+      console.log(`Service ${chalk.redBright(service.moduleName)}`)
       console.log(
         chalk.green(service.displayName) +
-          chalk.greenBright(' v' + service.version),
+          chalk.greenBright(` v${service.version}`),
       )
       console.log(chalk.blue(service.description))
       const serviceInstances = await serviceRepository.find({
@@ -438,14 +438,13 @@ export default class CLICommands {
       })
       if (serviceInstances.length > 0) {
         console.log(
-          'instances: ' +
-            serviceInstances
-              .map(el => {
-                return el.enabled
-                  ? chalk.green(el.instanceName)
-                  : chalk.red(el.instanceName)
-              })
-              .join(', '),
+          `instances: ${serviceInstances
+            .map(el => {
+              return el.enabled
+                ? chalk.green(el.instanceName)
+                : chalk.red(el.instanceName)
+            })
+            .join(', ')}`,
         )
       }
     }
@@ -471,7 +470,7 @@ export default class CLICommands {
     instance.enabled = false
     serviceRepository.save(instance)
     this.context.coreLogger.info(
-      'Disabled instance ' + newInstanceName + ' of service ' + serviceName,
+      `Disabled instance ${newInstanceName} of service ${serviceName}`,
     )
   }
 
@@ -495,7 +494,7 @@ export default class CLICommands {
     instance.enabled = true
     serviceRepository.save(instance)
     this.context.coreLogger.info(
-      'Enabled instance ' + newInstanceName + ' of service ' + serviceName,
+      `Enabled instance ${newInstanceName} of service ${serviceName}`,
     )
   }
 

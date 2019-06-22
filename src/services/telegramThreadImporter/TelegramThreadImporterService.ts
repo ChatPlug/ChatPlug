@@ -3,7 +3,6 @@ import { ChatPlugConfig } from '../../ChatPlugConfig'
 import { IChatPlugMessage, MessagePacket } from '../../models'
 import { ChatPlugService } from '../Service'
 import TelegramThreadImporterConfig from './TelegramThreadImporterConfig'
-//import { Client } from 'tdl'
 
 export default class TelegramThreadImporterService extends ChatPlugService<
   TelegramThreadImporterConfig
@@ -56,6 +55,6 @@ export default class TelegramThreadImporterService extends ChatPlugService<
   }
 
   async terminate() {
-    //await this.client.destroy()
+    // await this.client.destroy()
   }
 }

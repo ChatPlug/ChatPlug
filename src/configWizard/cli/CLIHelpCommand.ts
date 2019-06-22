@@ -41,9 +41,9 @@ export const printHelpMessage = (instance: CLICommands) => {
       }
 
       if (description) {
-        description = chalk.blue('<' + description + '> ')
+        description = chalk.blue(`<${description}> `)
       }
-      console.log('--' + chalk.gray(cliParameters[alias].parameter) + ' ' + '(-' + chalk.blueBright(alias) + ') ' + description)
+      console.log(`--${chalk.gray(cliParameters[alias].parameter)} (-${chalk.blueBright(alias)}) ${description}`)
     }
   }
 }

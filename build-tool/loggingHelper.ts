@@ -1,20 +1,21 @@
 import chalk from 'chalk'
+
 export default {
   info(...args) {
     console.log(
       chalk.bgGreen.red('build-tool') +
-        chalk.reset(' ') +
-        chalk.blue('info') +
-        chalk.reset(' '),
+      chalk.reset(' ') +
+      chalk.blue('info') +
+      chalk.reset(' '),
       ...args,
     )
   },
   warn(...args) {
     console.log(
       chalk.bgGreen.red('build-tool') +
-        chalk.reset(' ') +
-        chalk.yellow('warn') +
-        chalk.reset(''),
+      chalk.reset(' ') +
+      chalk.yellow('warn') +
+      chalk.reset(''),
       ...args,
     )
   },
@@ -23,9 +24,9 @@ export default {
     return () => {
       console.log(
         chalk.bgGreen.red('build-tool') +
-          chalk.reset(' ') +
-          chalk.green('done') +
-          chalk.reset(''),
+        chalk.reset(' ') +
+        chalk.green('done') +
+        chalk.reset(''),
 
         ...args,
         chalk.green(`in ${(new Date().getTime() - start.getTime())}ms`),

@@ -1,5 +1,6 @@
 import ServiceThread from './ServiceThread'
-import Message from "./Message";
+import Message from './Message'
+
 interface ThreadConnection  {
   id: number,
   connectionName: string
@@ -9,4 +10,3 @@ interface ThreadConnection  {
 }
 
 export default ThreadConnection
- 

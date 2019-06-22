@@ -1,5 +1,3 @@
-import ServiceInstance from "./ServiceInstance"
-
 export default interface Log {
   id: number,
   logLevel: string,

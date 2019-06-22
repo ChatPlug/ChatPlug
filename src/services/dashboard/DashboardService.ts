@@ -5,7 +5,7 @@ import ApiService from '../api/ApiService'
 import express from 'express'
 import path from 'path'
 import { LogLevel } from '../../Logger'
-import nativeRequire from '../../utils/nativeRequire';
+import nativeRequire from '../../utils/nativeRequire'
 
 export default class DashboardService extends ChatPlugService<DashboardConfig> {
   async getAPIExpressInstance() {
@@ -47,8 +47,7 @@ export default class DashboardService extends ChatPlugService<DashboardConfig> {
     if (chatplugStaticDir) {
       this.logger.log(
         LogLevel.INFO,
-        ' Using process.env.CHATPLUG_DASHBOARD_STATIC_DIR = ' +
-          chatplugStaticDir,
+        ` Using process.env.CHATPLUG_DASHBOARD_STATIC_DIR = ${chatplugStaticDir}`,
       )
       app.use(express.static(chatplugStaticDir))
       app.get('*', (req, res, next) => {

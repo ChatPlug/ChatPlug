@@ -1,4 +1,5 @@
 import fs from 'fs'
+import { join } from 'path'
 import { Subject } from 'rxjs'
 import { ChatPlugConfig } from './ChatPlugConfig'
 import ChatPlugContext from './ChatPlugContext'
@@ -27,13 +28,13 @@ export class ChatPlug {
 
   getDirectories(path) {
     return fs.readdirSync(path).filter(file => {
-      return fs.statSync(path + '/' + file).isDirectory()
+      return fs.statSync(join(path, file)).isDirectory()
     })
   }
 
   getFiles(path) {
     return fs.readdirSync(path).filter(file => {
-      return fs.statSync(path + '/' + file).isFile()
+      return fs.statSync(join(path, file)).isFile()
     })
   }
 }

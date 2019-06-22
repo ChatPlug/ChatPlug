@@ -1,4 +1,4 @@
-import ServiceInstance from './ServiceInstance';
+import ServiceInstance from './ServiceInstance'
 
 interface ServiceUser {
   id: number

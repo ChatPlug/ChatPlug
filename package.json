@@ -8,10 +8,15 @@
     "postinstall": "cd src/services/dashboard/web && npm install",
     "cli": "ts-node ./node_modules/typeorm/cli.js",
     "test": "npm run tslint",
+    "tslint": "tslint -c tslint.json 'src/**/*.ts' -e 'src/migration/**/*' -e 'src/services/dashboard/web/node_modules/**/*'",
     "build": "ts-node ./build-tool/buildTool.ts --prod",
     "watch": "ts-node ./build-tool/buildTool.ts --watch",
     "build-pkg": "ts-node ./build-tool/buildTool.ts --prod --pkg",
     "start": "node dist/chatplug"
+  },
+  "bin": "dist/chatplug.js",
+  "pkg": {
+    "scripts": "dist/**/*.js"
   },
   "repository": {
     "type": "git",
@@ -99,9 +104,5 @@
     "tslint": "^5.18.0",
     "tslint-config-airbnb": "^5.11.1",
     "typescript": "^3.5.2"
-  },
-  "bin": "dist/chatplug.js",
-  "pkg": {
-    "scripts": "dist/**/*.js"
   }
 }
