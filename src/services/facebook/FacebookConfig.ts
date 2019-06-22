@@ -7,21 +7,14 @@ export default class FacebookConfig implements IChatPlugServiceConfig {
   @ConfigWizardField({
     type: FieldType.STRING,
     required: true,
-    hint: 'Email address of you facebook account',
+    hint: 'Email address of your facebook account',
   })
   email: string
 
   @ConfigWizardField({
     type: FieldType.STRING,
     required: true,
-    hint: 'Password of you facebook account',
+    hint: 'Password of your facebook account',
   })
   password: string
-
-  @ConfigWizardField({
-    type: FieldType.BOOLEAN,
-    hint: 'Force logging in to Facebook',
-    defaultValue: false,
-  })
-  forceLogin: boolean
 }
