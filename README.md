@@ -15,7 +15,7 @@ ChatPlug is a simple and extensible bridge between Facebook (Messenger), Discord
 
 Everytime ChatPlug receives a message, it will be relayed to another chat on any configured platform. This way you don't have to install Facebook Messenger on your phone.
 
-<img src="https://imgur.com/6B4tXvO"/><br/><br/>
+<img src="https://i.imgur.com/6B4tXvO.png"/><br/><br/>
 
 # :electric_plug: Quick start
 
