@@ -7,6 +7,7 @@
   </h1>
 </p>
 
+## We're currently in the process of rewriting the whole project from scratch. See ChatPlug/ChatPlug-go for updates
 
 ### *TODO: update description with new services*
 ChatPlug is a simple and extensible bridge between Facebook (Messenger), Discord, Telegram and Slack.
