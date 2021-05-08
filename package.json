@@ -71,7 +71,7 @@
     "telegraf": "^3.30.1",
     "ts-loader": "^6.0.2",
     "tslib": "^1.10.0",
-    "typeorm": "^0.2.18",
+    "typeorm": "^0.2.25",
     "webpack": "^4.33.0",
     "webpack-merge": "^4.2.1",
     "webpack-node-externals": "^1.7.2",
